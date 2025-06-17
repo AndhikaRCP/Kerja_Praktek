@@ -36,3 +36,4 @@ Route::apiResource('pembayaran-penjualan', PembayaranPenjualanController::class)
 Route::apiResource('pembelian', PembelianController::class);
 Route::apiResource('detail-pembelian', DetailPembelianController::class);
 
+?>
