@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('pembayaran_penjualans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('penjualan_id')->constrained('penjualans');
+            $table->date('tanggal');
+            $table->decimal('nominal', 12, 2);
+            $table->string('metode', 50);
+            $table->string('bukti_pembayaran', 255)->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

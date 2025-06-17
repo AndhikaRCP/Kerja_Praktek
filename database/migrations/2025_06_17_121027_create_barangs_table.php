@@ -12,9 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('barangs', function (Blueprint $table) {
-            $table->id();
+            $table->string('kode_barang', 50)->primary();
+            $table->string('nama', 100);
+            $table->foreignId('kategori_id')->constrained('kategoris');
+            $table->string('satuan', 20)->default('pcs');
+            $table->integer('stok')->default(0);
+            $table->decimal('harga_beli', 12, 2)->default(0);
+            $table->decimal('harga_jual', 12, 2)->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
+
     }
 
     /**

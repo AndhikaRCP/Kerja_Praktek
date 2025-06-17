@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('detail_penjualans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('penjualan_id')->constrained('penjualans');
+            $table->string('kode_barang', 50);
+            $table->string('nama_barang_snapshot', 100);
+            $table->decimal('harga_jual_snapshot', 12, 2);
+            $table->integer('jumlah');
             $table->timestamps();
+            $table->foreign('kode_barang')->references('kode_barang')->on('barangs');
         });
     }
 
