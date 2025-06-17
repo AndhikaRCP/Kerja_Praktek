@@ -1,65 +1,59 @@
 <?php
-
+// app/Http/Controllers/BarangController.php
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index() {
+        $barangs = Barang::with('kategori')->paginate(10);
+        return view('barangs.index', compact('barangs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function create() {
+        $kategoris = Kategori::all();
+        return view('barangs.create', compact('kategoris'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request) {
+        $request->validate([
+            'kode_barang' => 'required|unique:barangs',
+            'nama' => 'required|string',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'satuan' => 'required',
+            'stok' => 'integer|min:0',
+            'harga_beli' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|min:0',
+        ]);
+
+        Barang::create($request->all());
+        return redirect()->route('barangs.index')->with('success', 'Barang berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Barang $barang)
-    {
-        //
+    public function edit(Barang $barang) {
+        $kategoris = Kategori::all();
+        return view('barangs.edit', compact('barang', 'kategoris'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Barang $barang)
-    {
-        //
+    public function update(Request $request, Barang $barang) {
+        $request->validate([
+            'nama' => 'required|string',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'satuan' => 'required',
+            'stok' => 'integer|min:0',
+            'harga_beli' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|min:0',
+        ]);
+
+        $barang->update($request->all());
+        return redirect()->route('barangs.index')->with('success', 'Barang berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Barang $barang)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Barang $barang)
-    {
-        //
+    public function destroy(Barang $barang) {
+        $barang->delete();
+        return redirect()->route('barangs.index')->with('success', 'Barang dihapus.');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+// app/Http/Controllers/SupplierController.php
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
@@ -7,59 +8,45 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index() {
+        $suppliers = Supplier::paginate(10);
+        return view('suppliers.index', compact('suppliers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function create() {
+        return view('suppliers.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request) {
+        $request->validate([
+            'nama' => 'required|string',
+            'alamat' => 'required|string',
+            'kota' => 'required|string',
+            'telepon' => 'required|string',
+        ]);
+
+        Supplier::create($request->all());
+        return redirect()->route('suppliers.index')->with('success', 'Supplier ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Supplier $supplier)
-    {
-        //
+    public function edit(Supplier $supplier) {
+        return view('suppliers.edit', compact('supplier'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Supplier $supplier)
-    {
-        //
+    public function update(Request $request, Supplier $supplier) {
+        $request->validate([
+            'nama' => 'required|string',
+            'alamat' => 'required|string',
+            'kota' => 'required|string',
+            'telepon' => 'required|string',
+        ]);
+
+        $supplier->update($request->all());
+        return redirect()->route('suppliers.index')->with('success', 'Supplier diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Supplier $supplier)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Supplier $supplier)
-    {
-        //
+    public function destroy(Supplier $supplier) {
+        $supplier->delete();
+        return redirect()->route('suppliers.index')->with('success', 'Supplier dihapus.');
     }
 }

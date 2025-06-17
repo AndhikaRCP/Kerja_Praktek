@@ -1,5 +1,6 @@
 <?php
 
+// app/Http/Controllers/PelangganController.php
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
@@ -7,59 +8,45 @@ use Illuminate\Http\Request;
 
 class PelangganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index() {
+        $pelanggans = Pelanggan::paginate(10);
+        return view('pelanggans.index', compact('pelanggans'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function create() {
+        return view('pelanggans.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request) {
+        $request->validate([
+            'nama' => 'required|string',
+            'alamat' => 'required|string',
+            'kota' => 'required|string',
+            'telepon' => 'required|string',
+        ]);
+
+        Pelanggan::create($request->all());
+        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pelanggan $pelanggan)
-    {
-        //
+    public function edit(Pelanggan $pelanggan) {
+        return view('pelanggans.edit', compact('pelanggan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pelanggan $pelanggan)
-    {
-        //
+    public function update(Request $request, Pelanggan $pelanggan) {
+        $request->validate([
+            'nama' => 'required|string',
+            'alamat' => 'required|string',
+            'kota' => 'required|string',
+            'telepon' => 'required|string',
+        ]);
+
+        $pelanggan->update($request->all());
+        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pelanggan $pelanggan)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pelanggan $pelanggan)
-    {
-        //
+    public function destroy(Pelanggan $pelanggan) {
+        $pelanggan->delete();
+        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan dihapus.');
     }
 }
