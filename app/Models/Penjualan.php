@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Penjualan extends Model
 {
-    //
+    public function pelanggan() {
+        return $this->belongsTo(Pelanggan::class);
+    }
+
+    public function detailPenjualans() {
+        return $this->hasMany(DetailPenjualan::class);
+    }
+
 }
