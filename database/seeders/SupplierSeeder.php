@@ -2,16 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Supplier;
 
 class SupplierSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        for ($i = 1; $i <= 10; $i++) {
+            Supplier::create([
+                'nama' => "Toko Supplier $i",
+                'alamat' => "Jl. Supplier Raya No. $i, Jakarta",
+                'kota' => "Jakarta",
+                'telepon' => "021-80000$i"
+            ]);
+        }
     }
 }

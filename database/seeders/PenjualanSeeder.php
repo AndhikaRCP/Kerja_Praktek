@@ -2,16 +2,28 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Penjualan;
+use App\Models\User;
+use App\Models\Pelanggan;
 
 class PenjualanSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        for ($i = 1; $i <= 10; $i++) {
+            Penjualan::create([
+                'kode_transaksi' => "PJ-000$i",
+                'pelanggan_id' => rand(1, 10),
+                'user_id' => User::where('role', 'admin')->inRandomOrder()->first()->id,
+                'sales_id' => User::where('role', 'sales')->inRandomOrder()->first()->id,
+                'tanggal' => now()->subDays(rand(1, 30)),
+                'total_harga' => rand(100000, 500000),
+                'status_pembayaran' => ['tunai', 'kredit', 'belum lunas'][rand(0, 2)],
+                'status_transaksi' => 'selesai',
+                'keterangan' => 'Penjualan rutin',
+                'created_by' => User::where('role', 'admin')->inRandomOrder()->first()->id,
+            ]);
+        }
     }
 }

@@ -2,16 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Pelanggan;
 
 class PelangganSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        for ($i = 1; $i <= 10; $i++) {
+            Pelanggan::create([
+                'nama' => "Toko Elektronik $i",
+                'alamat' => "Jl. Sudirman No.$i, Palembang",
+                'kota' => "Palembang",
+                'telepon' => "0813-70000$i"
+            ]);
+        }
     }
 }
