@@ -3,63 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\PembayaranPenjualan;
+use App\Models\Penjualan;
 use Illuminate\Http\Request;
 
 class PembayaranPenjualanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Tampilkan semua data pembayaran
     public function index()
     {
-        //
+        $pembayaran = PembayaranPenjualan::with('penjualan')->get();
+        return view('pembayaran_penjualan.index', compact('pembayaran'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Tampilkan form tambah pembayaran
     public function create()
     {
-        //
+        $penjualan = Penjualan::all(); // untuk select penjualan
+        return view('pembayaran_penjualan.create', compact('penjualan'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Simpan data pembayaran baru
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'penjualan_id' => 'required|exists:penjualans,id',
+            'tanggal_pembayaran' => 'required|date',
+            'jumlah_bayar' => 'required|numeric|min:1',
+            'metode_pembayaran' => 'required|string|max:255',
+        ]);
+
+        PembayaranPenjualan::create($request->all());
+
+        return redirect()->route('pembayaran-penjualan.index')
+                         ->with('success', 'Data pembayaran berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(PembayaranPenjualan $pembayaranPenjualan)
+    // Tampilkan form edit pembayaran
+    public function edit(PembayaranPenjualan $pembayaran_penjualan)
     {
-        //
+        $penjualan = Penjualan::all();
+        return view('pembayaran_penjualan.edit', compact('pembayaran_penjualan', 'penjualan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PembayaranPenjualan $pembayaranPenjualan)
+    // Simpan perubahan
+    public function update(Request $request, PembayaranPenjualan $pembayaran_penjualan)
     {
-        //
+        $request->validate([
+            'penjualan_id' => 'required|exists:penjualans,id',
+            'tanggal_pembayaran' => 'required|date',
+            'jumlah_bayar' => 'required|numeric|min:1',
+            'metode_pembayaran' => 'required|string|max:255',
+        ]);
+
+        $pembayaran_penjualan->update($request->all());
+
+        return redirect()->route('pembayaran-penjualan.index')
+                         ->with('success', 'Data pembayaran berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PembayaranPenjualan $pembayaranPenjualan)
+    // Hapus data pembayaran
+    public function destroy(PembayaranPenjualan $pembayaran_penjualan)
     {
-        //
-    }
+        $pembayaran_penjualan->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PembayaranPenjualan $pembayaranPenjualan)
-    {
-        //
+        return redirect()->route('pembayaran-penjualan.index')
+                         ->with('success', 'Data pembayaran berhasil dihapus.');
     }
 }
