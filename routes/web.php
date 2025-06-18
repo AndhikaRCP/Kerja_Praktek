@@ -15,7 +15,7 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\DetailPembelianController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 
