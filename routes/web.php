@@ -30,3 +30,7 @@ Route::resource('detail-penjualan', DetailPenjualanController::class);
 Route::resource('pembayaran-penjualan', PembayaranPenjualanController::class);
 Route::resource('pembelian', PembelianController::class);
 Route::resource('detail-pembelian', DetailPembelianController::class);
+
+Route::get('/dashboard', function () {
+    return view('dashboard.admin');
+});
