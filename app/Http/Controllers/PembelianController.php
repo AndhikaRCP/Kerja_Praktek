@@ -14,15 +14,15 @@ class PembelianController extends Controller
 {
     public function index()
     {
-        $pembelians = Pembelian::with('supplier')->latest()->paginate(10);
-        return view('pembelians.index', compact('pembelians'));
+        $pembelian = Pembelian::with('supplier')->latest()->paginate(10);
+        return view('pembelian.index', compact('pembelian'));
     }
 
     public function create()
     {
         $suppliers = Supplier::all();
         $barangs = Barang::all();
-        return view('pembelians.create', compact('suppliers', 'barangs'));
+        return view('pembelian.create', compact('suppliers', 'barangs'));
     }
 
     public function store(Request $request)
@@ -70,12 +70,12 @@ class PembelianController extends Controller
             $barang->increment('stok', $request->jumlah[$i]);
         }
 
-        return redirect()->route('pembelians.index')->with('success', 'Pembelian berhasil disimpan.');
+        return redirect()->route('pembelian.index')->with('success', 'Pembelian berhasil disimpan.');
     }
 
     public function show(Pembelian $pembelian)
     {
         $pembelian->load(['supplier', 'detailPembelians']);
-        return view('pembelians.show', compact('pembelian'));
+        return view('pembelian.show', compact('pembelian'));
     }
 }

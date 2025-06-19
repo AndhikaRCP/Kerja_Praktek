@@ -125,7 +125,6 @@ $(document).ready(function(){
 	page_sidebar_open = 0,
 	overlay_sidebar_open = 0;
 
-
 	if(!toggle_sidebar) {
 		var toggle = $('.sidenav-toggler');
 

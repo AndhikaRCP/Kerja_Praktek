@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 class PelangganController extends Controller
 {
     public function index() {
-        $pelanggans = Pelanggan::paginate(10);
-        return view('pelanggans.index', compact('pelanggans'));
+        $pelanggan = Pelanggan::paginate(10);
+        return view('pelanggan.index', compact('pelanggan'));
     }
 
     public function create() {
-        return view('pelanggans.create');
+        return view('pelanggan.create');
     }
 
     public function store(Request $request) {
@@ -26,11 +26,11 @@ class PelangganController extends Controller
         ]);
 
         Pelanggan::create($request->all());
-        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan ditambahkan.');
+        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan ditambahkan.');
     }
 
     public function edit(Pelanggan $pelanggan) {
-        return view('pelanggans.edit', compact('pelanggan'));
+        return view('pelanggan.edit', compact('pelanggan'));
     }
 
     public function update(Request $request, Pelanggan $pelanggan) {
@@ -42,11 +42,11 @@ class PelangganController extends Controller
         ]);
 
         $pelanggan->update($request->all());
-        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan diperbarui.');
+        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan diperbarui.');
     }
 
     public function destroy(Pelanggan $pelanggan) {
         $pelanggan->delete();
-        return redirect()->route('pelanggans.index')->with('success', 'Pelanggan dihapus.');
+        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan dihapus.');
     }
 }

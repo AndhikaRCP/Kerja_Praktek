@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 class KategoriController extends Controller
 {
     public function index() {
-        $kategoris = Kategori::paginate(10);
-        return view('kategoris.index', compact('kategoris'));
+        $kategori = Kategori::paginate(10);
+        return view('kategori.index', compact('kategori'));
     }
 
     public function create() {
-        return view('kategoris.create');
+        return view('kategori.create');
     }
 
     public function store(Request $request) {
@@ -23,11 +23,11 @@ class KategoriController extends Controller
         ]);
 
         Kategori::create($request->all());
-        return redirect()->route('kategoris.index')->with('success', 'Kategori ditambahkan.');
+        return redirect()->route('kategori.index')->with('success', 'Kategori ditambahkan.');
     }
 
     public function edit(Kategori $kategori) {
-        return view('kategoris.edit', compact('kategori'));
+        return view('kategori.edit', compact('kategori'));
     }
 
     public function update(Request $request, Kategori $kategori) {
@@ -36,11 +36,11 @@ class KategoriController extends Controller
         ]);
 
         $kategori->update($request->all());
-        return redirect()->route('kategoris.index')->with('success', 'Kategori diperbarui.');
+        return redirect()->route('kategori.index')->with('success', 'Kategori diperbarui.');
     }
 
     public function destroy(Kategori $kategori) {
         $kategori->delete();
-        return redirect()->route('kategoris.index')->with('success', 'Kategori dihapus.');
+        return redirect()->route('kategori.index')->with('success', 'Kategori dihapus.');
     }
 }

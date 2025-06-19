@@ -14,15 +14,15 @@ class PenjualanController extends Controller
 {
     public function index()
     {
-        $penjualans = Penjualan::with(['pelanggan'])->latest()->paginate(10);
-        return view('penjualans.index', compact('penjualans'));
+        $penjualan = Penjualan::with(['pelanggan'])->latest()->paginate(10);
+        return view('penjualan.index', compact('penjualan'));
     }
 
     public function create()
     {
         $pelanggans = Pelanggan::all();
         $barangs = Barang::all();
-        return view('penjualans.create', compact('pelanggans', 'barangs'));
+        return view('penjualan.create', compact('pelanggans', 'barangs'));
     }
 
     public function store(Request $request)
@@ -72,12 +72,12 @@ class PenjualanController extends Controller
             $barang->decrement('stok', $request->jumlah[$i]);
         }
 
-        return redirect()->route('penjualans.index')->with('success', 'Penjualan berhasil disimpan.');
+        return redirect()->route('penjualan.index')->with('success', 'Penjualan berhasil disimpan.');
     }
 
     public function show(Penjualan $penjualan)
     {
         $penjualan->load(['pelanggan', 'detailPenjualans']);
-        return view('penjualans.show', compact('penjualan'));
+        return view('penjualan.show', compact('penjualan'));
     }
 }

@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
     public function index() {
-        $suppliers = Supplier::paginate(10);
-        return view('suppliers.index', compact('suppliers'));
+        $supplier = Supplier::paginate(10);
+        return view('supplier.index', compact('supplier'));
     }
 
     public function create() {
-        return view('suppliers.create');
+        return view('supplier.create');
     }
 
     public function store(Request $request) {
@@ -26,11 +26,11 @@ class SupplierController extends Controller
         ]);
 
         Supplier::create($request->all());
-        return redirect()->route('suppliers.index')->with('success', 'Supplier ditambahkan.');
+        return redirect()->route('supplier.index')->with('success', 'Supplier ditambahkan.');
     }
 
     public function edit(Supplier $supplier) {
-        return view('suppliers.edit', compact('supplier'));
+        return view('supplier.edit', compact('supplier'));
     }
 
     public function update(Request $request, Supplier $supplier) {
@@ -42,11 +42,11 @@ class SupplierController extends Controller
         ]);
 
         $supplier->update($request->all());
-        return redirect()->route('suppliers.index')->with('success', 'Supplier diperbarui.');
+        return redirect()->route('supplier.index')->with('success', 'Supplier diperbarui.');
     }
 
     public function destroy(Supplier $supplier) {
         $supplier->delete();
-        return redirect()->route('suppliers.index')->with('success', 'Supplier dihapus.');
+        return redirect()->route('supplier.index')->with('success', 'Supplier dihapus.');
     }
 }
