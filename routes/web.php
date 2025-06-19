@@ -39,4 +39,6 @@ Route::get('/dashboard', function () {
     return view('dashboard.admin');
 })->name('dashboard.admin');
 
+Route::get('/laporan/pembelian', [LaporanPembelianController::class, 'index'])->name('laporan.pembelian');
+Route::get('/laporan/penjualan', [LaporanPenjualanController::class, 'index'])->name('laporan.penjualan');
 

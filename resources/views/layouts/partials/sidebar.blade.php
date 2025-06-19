@@ -178,15 +178,13 @@
                           <h4 class="text-section">LAPORAN</h4>
                       </li>
                       <li class="nav-item">
-                          <a data-bs-toggle="collapse" href="#laporan-penjualan" class="collapsed"
-                              aria-expanded="false">
+                          <a href="{{ route('laporan.penjualan') }}">
                               <i class="fas fa-th-list"></i>
                               <p>Laporan Penjualan</p>
                           </a>
                       </li>
                       <li class="nav-item">
-                          <a data-bs-toggle="collapse" href="#laporan-pembelian" class="collapsed"
-                              aria-expanded="false">
+                          <a href="{{ route('laporan.pembelian') }}">
                               <i class="fas fa-th-list"></i>
                               <p>Laporan Pembelian</p>
                           </a>

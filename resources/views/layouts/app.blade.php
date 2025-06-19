@@ -83,7 +83,6 @@
     {{-- Kaiadmin JS --}}
     <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
     <script src="{{ asset('assets/js/setting-demo.js') }}"></script>
-    <script src="{{ asset('assets/js/demo.js') }}"></script>
 
     {{-- Tambahan JS dari child view --}}
     @stack('scripts')

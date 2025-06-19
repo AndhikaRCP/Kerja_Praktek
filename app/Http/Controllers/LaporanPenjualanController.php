@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Penjualan;
 use Illuminate\Http\Request;
 
 class LaporanPenjualanController extends Controller
@@ -9,9 +10,18 @@ class LaporanPenjualanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Penjualan::with(['pelanggan', 'user', 'sales']);
+
+        if ($request->filled('dari') && $request->filled('sampai')) {
+            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        }
+
+        $penjualans = $query->orderBy('tanggal', 'desc')->paginate(10);
+        $total_penjualan = (clone $query)->sum('total_harga');
+
+        return view('laporan.penjualan', compact('penjualans', 'total_penjualan'));
     }
 
     /**

@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Penjualan extends Model
 {
     protected $guarded = [];
-    
-    public function pelanggan() {
+
+    public function pelanggan()
+    {
         return $this->belongsTo(Pelanggan::class);
     }
 
-    public function detailPenjualans() {
+    public function detailPenjualans()
+    {
         return $this->hasMany(DetailPenjualan::class);
     }
 
@@ -21,4 +23,13 @@ class Penjualan extends Model
         return $this->hasMany(PembayaranPenjualan::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function sales()
+    {
+        return $this->belongsTo(User::class, 'sales_id');
+    }
 }

@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h4 class="card-title">Riwayat Nota Penjualan</h4>
+                            <h4 class="card-title">Manajemen Akun</h4>
                             <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
                                 data-bs-target="#addRowModal">
                                 <i class="fa fa-plus"></i>
