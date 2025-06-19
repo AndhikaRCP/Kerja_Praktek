@@ -13,6 +13,8 @@ use App\Http\Controllers\DetailPenjualanController;
 use App\Http\Controllers\PembayaranPenjualanController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\DetailPembelianController;
+use App\Http\Controllers\LaporanPembelianController;
+use App\Http\Controllers\LaporanPenjualanController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -30,6 +32,8 @@ Route::resource('detail-penjualan', DetailPenjualanController::class);
 Route::resource('pembayaran_penjualan', PembayaranPenjualanController::class);
 Route::resource('pembelian', PembelianController::class);
 Route::resource('detail-pembelian', DetailPembelianController::class);
+Route::resource('laporan_pembelian', LaporanPembelianController::class);
+Route::resource('laporan_pembelian', LaporanPenjualanController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard.admin');
