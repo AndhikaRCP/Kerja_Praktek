@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 class KategoriController extends Controller
 {
     public function index() {
-        $kategori = Kategori::paginate(10);
-        return view('kategori.index', compact('kategori'));
+        $kategoris = Kategori::paginate(10);
+        return view('kategori.index', compact('kategoris'));
     }
 
     public function create() {

@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 class PelangganController extends Controller
 {
     public function index() {
-        $pelanggan = Pelanggan::paginate(10);
-        return view('pelanggan.index', compact('pelanggan'));
+        $pelanggans = Pelanggan::paginate(10);
+        return view('pelanggan.index', compact('pelanggans'));
     }
 
     public function create() {

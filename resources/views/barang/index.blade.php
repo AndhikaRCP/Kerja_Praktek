@@ -87,7 +87,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($barang as $item)
+                                    @forelse ($barangs as $item)
                                         <tr>
                                             <td>{{ $item->kode_barang }}</td>
                                             <td>{{ $item->nama }}</td>
@@ -122,7 +122,7 @@
 
                             {{-- Pagination --}}
                             <div class="d-flex justify-content-center mt-3">
-                                {{ $barang->links() }}
+                                {{ $barangs->links() }}
                             </div>
 
 

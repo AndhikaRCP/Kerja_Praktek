@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
     public function index() {
-        $supplier = Supplier::paginate(10);
-        return view('supplier.index', compact('supplier'));
+        $suppliers = Supplier::paginate(10);
+        return view('supplier.index', compact('suppliers'));
     }
 
     public function create() {
