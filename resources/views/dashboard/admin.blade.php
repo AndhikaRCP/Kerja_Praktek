@@ -8,7 +8,7 @@
             >
               <div>
                 <h3 class="fw-bold mb-3">Dashboard</h3>
-                <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
+                <h6 class="op-7 mb-2"></h6>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
@@ -192,7 +192,7 @@
                 <div class="card card-round">
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
-                      <h4 class="card-title">Users Geolocation</h4>
+                      <h4 class="card-title">TEMPLATE CARD HEADER</h4>
                       <div class="card-tools">
                         <button
                           class="btn btn-icon btn-link btn-primary btn-xs"
@@ -212,7 +212,7 @@
                       </div>
                     </div>
                     <p class="card-category">
-                      Map of the distribution of users around the world
+                      ini deskripsi sekilas nya
                     </p>
                   </div>
                   <div class="card-body">
@@ -302,16 +302,7 @@
                             </tbody>
                           </table>
                         </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="mapcontainer">
-                          <div
-                            id="world-map"
-                            class="w-100"
-                            style="height: 300px"
-                          ></div>
-                        </div>
-                      </div>
+                    </div>
                     </div>
                   </div>
                 </div>
