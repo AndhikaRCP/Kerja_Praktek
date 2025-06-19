@@ -14,8 +14,8 @@ class PenjualanController extends Controller
 {
     public function index()
     {
-        $penjualan = Penjualan::with(['pelanggan'])->latest()->paginate(10);
-        return view('penjualan.index', compact('penjualan'));
+        $penjualans = Penjualan::with(['pelanggan'])->latest()->paginate(10);
+        return view('penjualan.index', compact('penjualans'));
     }
 
     public function create()

@@ -20,14 +20,14 @@ Route::get('/', function () {
 
 
 // Route resource (CRUD) untuk semua tabel
-Route::resource('users', UserController::class);
+Route::resource('user', UserController::class);
 Route::resource('pelanggan', PelangganController::class);
 Route::resource('supplier', SupplierController::class);
 Route::resource('barang', BarangController::class);
 Route::resource('kategori', KategoriController::class);
 Route::resource('penjualan', PenjualanController::class);
 Route::resource('detail-penjualan', DetailPenjualanController::class);
-Route::resource('pembayaran-penjualan', PembayaranPenjualanController::class);
+Route::resource('pembayaran_penjualan', PembayaranPenjualanController::class);
 Route::resource('pembelian', PembelianController::class);
 Route::resource('detail-pembelian', DetailPembelianController::class);
 

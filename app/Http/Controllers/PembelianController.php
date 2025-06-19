@@ -14,8 +14,8 @@ class PembelianController extends Controller
 {
     public function index()
     {
-        $pembelian = Pembelian::with('supplier')->latest()->paginate(10);
-        return view('pembelian.index', compact('pembelian'));
+        $pembelians = Pembelian::with('supplier')->latest()->paginate(10);
+        return view('pembelian.index', compact('pembelians'));
     }
 
     public function create()

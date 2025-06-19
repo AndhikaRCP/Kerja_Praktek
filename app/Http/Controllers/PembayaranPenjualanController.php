@@ -11,9 +11,10 @@ class PembayaranPenjualanController extends Controller
     // Tampilkan semua data pembayaran
     public function index()
     {
-        $pembayaran = PembayaranPenjualan::with('penjualan')->get();
-        return view('pembayaran_penjualan.index', compact('pembayaran'));
+        $pembayaran_penjualans = PembayaranPenjualan::with('penjualan')->paginate(10);
+        return view('pembayaran_penjualan.index', compact('pembayaran_penjualans'));
     }
+
 
     // Tampilkan form tambah pembayaran
     public function create()
@@ -35,7 +36,7 @@ class PembayaranPenjualanController extends Controller
         PembayaranPenjualan::create($request->all());
 
         return redirect()->route('pembayaran-penjualan.index')
-                         ->with('success', 'Data pembayaran berhasil ditambahkan.');
+            ->with('success', 'Data pembayaran berhasil ditambahkan.');
     }
 
     // Tampilkan form edit pembayaran
@@ -58,7 +59,7 @@ class PembayaranPenjualanController extends Controller
         $pembayaran_penjualan->update($request->all());
 
         return redirect()->route('pembayaran-penjualan.index')
-                         ->with('success', 'Data pembayaran berhasil diperbarui.');
+            ->with('success', 'Data pembayaran berhasil diperbarui.');
     }
 
     // Hapus data pembayaran
@@ -67,6 +68,6 @@ class PembayaranPenjualanController extends Controller
         $pembayaran_penjualan->delete();
 
         return redirect()->route('pembayaran-penjualan.index')
-                         ->with('success', 'Data pembayaran berhasil dihapus.');
+            ->with('success', 'Data pembayaran berhasil dihapus.');
     }
 }
