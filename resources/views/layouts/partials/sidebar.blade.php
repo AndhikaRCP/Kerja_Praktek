@@ -3,7 +3,7 @@
           <div class="sidebar-logo">
               <!-- Logo Header -->
               <div class="logo-header" data-background-color="dark">
-                  <a href="{{ url('/') }}" class="logo">
+                   <a href="{{ route('dashboard.admin') }}" class="logo">
                       <img src="{{ asset('assets/img/logo-perusahaan-text.png') }}" alt="navbar brand" class="navbar-brand"
                           height="90" />
                   </a>
@@ -26,7 +26,7 @@
               <div class="sidebar-content">
                   <ul class="nav nav-secondary">
                       <li class="nav-item active">
-                          <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
+                          <a href="{{ route('dashboard.admin') }}" class="nav-link">
                               <i class="fas fa-home"></i>
                               <p>Dashboard</p>
                           </a>
@@ -78,12 +78,12 @@
                           <div class="collapse" id="pelanggan">
                               <ul class="nav nav-collapse">
                                   <li>
-                                     <a href="{{ route('pelanggan.index') }}">
+                                      <a href="{{ route('pelanggan.index') }}">
                                           <span class="sub-item">Data Pelanggan</span>
                                       </a>
                                   </li>
                                   <li>
-                                     <a href="{{ route('pelanggan.create') }}">
+                                      <a href="{{ route('pelanggan.create') }}">
                                           <span class="sub-item">Tambah Data Pelanggan</span>
                                       </a>
                                   </li>
@@ -156,12 +156,12 @@
                           <div class="collapse" id="pembelian">
                               <ul class="nav nav-collapse">
                                   <li>
-                                       <a href="{{ route('pembelian.index') }}">
+                                      <a href="{{ route('pembelian.index') }}">
                                           <span class="sub-item">Riwayat Transaksi Pembelian</span>
                                       </a>
                                   </li>
                                   <li>
-                                       <a href="{{ route('pembelian.create') }}">
+                                      <a href="{{ route('pembelian.create') }}">
                                           <span class="sub-item">Tambah Nota Pembelian</span>
                                       </a>
                                   </li>

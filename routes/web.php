@@ -33,4 +33,6 @@ Route::resource('detail-pembelian', DetailPembelianController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard.admin');
-});
+})->name('dashboard.admin');
+
+

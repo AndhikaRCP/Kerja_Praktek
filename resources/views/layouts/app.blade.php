@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +18,9 @@
     <script src="{{ asset('assets/js/plugin/webfont/webfont.min.js') }}"></script>
     <script>
         WebFont.load({
-            google: { families: ["Public Sans:300,400,500,600,700"] },
+            google: {
+                families: ["Public Sans:300,400,500,600,700"]
+            },
             custom: {
                 families: [
                     "Font Awesome 5 Solid",
@@ -27,7 +30,7 @@
                 ],
                 urls: ["{{ asset('assets/css/fonts.min.css') }}"],
             },
-            active: function () {
+            active: function() {
                 sessionStorage.fonts = true;
             },
         });
@@ -42,22 +45,23 @@
     {{-- Tambahan CSS dari child view --}}
     @stack('styles')
 </head>
+
 <body>
-   <div class="wrapper">
-      <!-- Sidebar -->
-      @include('layouts.partials.sidebar')
-      {{-- END OF SIDE BAR --}}
+    <div class="wrapper">
+        <!-- Sidebar -->
+        @include('layouts.partials.sidebar')
+        {{-- END OF SIDE BAR --}}
 
-      <div class="main-panel">
-        <div class="main-header">
-          <!-- Navbar Header -->
-        @include("layouts.partials.navbar")
-          <!-- End Navbar -->
+        <div class="main-panel">
+            <div class="main-header">
+                <!-- Navbar Header -->
+                @include('layouts.partials.navbar')
+                <!-- End Navbar -->
+            </div>
+            @yield('content')
+
+            @include('layouts.partials.footer')
         </div>
-        @yield('content')
-
-       @include("layouts.partials.footer")
-      </div>
     </div>
 
 
@@ -76,7 +80,6 @@
     <script src="{{ asset('assets/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/jsvectormap/world.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
-
     {{-- Kaiadmin JS --}}
     <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
     <script src="{{ asset('assets/js/setting-demo.js') }}"></script>
@@ -85,4 +88,5 @@
     {{-- Tambahan JS dari child view --}}
     @stack('scripts')
 </body>
+
 </html>
