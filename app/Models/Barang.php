@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Barang extends Model
 {
     protected $guarded = [];
+    protected $primaryKey = 'kode_barang';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     public function kategori()
     {

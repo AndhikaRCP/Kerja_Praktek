@@ -10,7 +10,8 @@ class BarangController extends Controller
 {
     public function index() {
         $barangs = Barang::with('kategori')->paginate(10);
-        return view('barang.index', compact('barangs'));
+        $kategoris = Kategori::all();
+        return view('barang.index', compact('barangs', 'kategoris'));
     }
 
     public function create() {
@@ -20,7 +21,7 @@ class BarangController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'kode_barang' => 'required|unique:barang',
+            'kode_barang' => 'required|unique:barangs',
             'nama' => 'required|string',
             'kategori_id' => 'required|exists:kategoris,id',
             'satuan' => 'required',
