@@ -36,6 +36,32 @@
         });
     </script>
 
+    <style>
+        /* Perkecil tinggi baris table DataTables */
+        table.dataTable tbody tr {
+            height: 10px !important;
+        }
+
+        table.dataTable tbody td,
+        table.dataTable thead th {
+            padding: 4px 28px !important;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        table.dataTable .btn {
+            padding: 7px 14px;
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        table.dataTable td {
+            white-space: nowrap;
+        }
+    </style>
+
+    @stack('styles')
+
     {{-- Custom Theme CSS --}}
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins.min.css') }}">

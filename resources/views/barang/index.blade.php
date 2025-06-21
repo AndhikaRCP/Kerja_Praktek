@@ -119,7 +119,7 @@
 
 
                         <div class="table-responsive">
-                            <table id="add-row" class="display table table-striped table-hover">
+                            <table id="add-row" class="display table table-striped table-hover nowrap" style="width:100%">
                                 <thead class="table-light">
                                     <tr>
                                         <th style="white-space: nowrap;">No</th>
