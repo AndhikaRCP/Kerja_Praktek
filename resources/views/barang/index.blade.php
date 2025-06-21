@@ -39,7 +39,7 @@
                                                     <div class="form-group form-group-default">
                                                         <label>Kode Barang</label>
                                                         <input name="kode_barang" type="text" class="form-control"
-                                                            required>
+                                                            value="{{ old('kode_barang') }}" required>
                                                     </div>
                                                 </div>
 
@@ -47,7 +47,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group form-group-default">
                                                         <label>Nama Barang</label>
-                                                        <input name="nama" type="text" class="form-control" required>
+                                                        <input name="nama" type="text" class="form-control"
+                                                            value="{{ old('nama') }}" required>
                                                     </div>
                                                 </div>
 
@@ -58,8 +59,10 @@
                                                         <select name="kategori_id" class="form-control" required>
                                                             <option value="">-- Pilih Kategori --</option>
                                                             @foreach ($kategoris as $kategori)
-                                                                <option value="{{ $kategori->id }}">
-                                                                    {{ $kategori->nama_kategori }}</option>
+                                                                <option value="{{ $kategori->id }}"
+                                                                    {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>
+                                                                    {{ $kategori->nama_kategori }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -70,7 +73,7 @@
                                                     <div class="form-group form-group-default">
                                                         <label>Satuan</label>
                                                         <input name="satuan" type="text" class="form-control"
-                                                            value="pcs" required>
+                                                            value="{{ old('satuan', 'pcs') }}" required>
                                                     </div>
                                                 </div>
 
@@ -79,7 +82,7 @@
                                                     <div class="form-group form-group-default">
                                                         <label>Stok</label>
                                                         <input name="stok" type="number" min="0"
-                                                            class="form-control" value="0" required>
+                                                            class="form-control" value="{{ old('stok', 0) }}" required>
                                                     </div>
                                                 </div>
 
@@ -88,7 +91,7 @@
                                                     <div class="form-group form-group-default">
                                                         <label>Harga Beli</label>
                                                         <input name="harga_beli" type="number" min="0"
-                                                            class="form-control" required>
+                                                            class="form-control" value="{{ old('harga_beli') }}" required>
                                                     </div>
                                                 </div>
 
@@ -97,7 +100,7 @@
                                                     <div class="form-group form-group-default">
                                                         <label>Harga Jual</label>
                                                         <input name="harga_jual" type="number" min="0"
-                                                            class="form-control" required>
+                                                            class="form-control" value="{{ old('harga_jual') }}" required>
                                                     </div>
                                                 </div>
 
@@ -119,6 +122,7 @@
                             <table id="add-row" class="display table table-striped table-hover">
                                 <thead class="table-light">
                                     <tr>
+                                        <th style="white-space: nowrap;">No</th>
                                         <th>Kode Barang</th>
                                         <th>Nama</th>
                                         <th>Kategori</th>
@@ -132,13 +136,17 @@
                                 <tbody>
                                     @forelse ($barangs as $item)
                                         <tr>
-                                            <td>{{ $item->kode_barang }}</td>
-                                            <td>{{ $item->nama }}</td>
-                                            <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
-                                            <td>{{ $item->satuan }}</td>
-                                            <td>{{ $item->stok }}</td>
-                                            <td>Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
-                                            <td>Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
+                                            <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
+                                            <td style="white-space: nowrap;">{{ $item->kode_barang }}</td>
+                                            <td style="white-space: nowrap;">{{ $item->nama }}</td>
+                                            <td style="white-space: nowrap;">{{ $item->kategori->nama_kategori ?? '-' }}
+                                            </td>
+                                            <td style="white-space: nowrap;">{{ $item->satuan }}</td>
+                                            <td style="white-space: nowrap;">{{ $item->stok }}</td>
+                                            <td style="white-space: nowrap;">Rp
+                                                {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
+                                            <td style="white-space: nowrap;">Rp
+                                                {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('barang.edit', $item->kode_barang) }}"
                                                     class="btn btn-sm btn-primary" title="Edit">
@@ -148,11 +156,12 @@
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Yakin ingin menghapus?')" title="Hapus">
+                                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                                        onclick="confirmDelete(event, this)"
+                                                        data-url="{{ route('barang.destroy', $item->kode_barang) }}">
                                                         <i class="fa fa-times"></i>
                                                     </button>
-                                                </form>
+
 
                                             </td>
                                         </tr>
@@ -174,9 +183,15 @@
 
     @push('scripts')
         <script>
+            @if ($errors->any())
+                $(document).ready(function() {
+                    $('#addRowModal').modal('show');
+                });
+            @endif
+
             $(document).ready(function() {
                 $('#add-row').DataTable({
-                    pageLength: 5,
+                    pageLength: 10,
                 });
 
                 var action =
@@ -207,6 +222,23 @@
 
 @push('scripts')
     <script>
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.oninvalid = function(e) {
+                // Reset error
+                e.target.setCustomValidity('');
+
+                // Cek apakah kosong
+                if (!e.target.value) {
+                    e.target.setCustomValidity('Harap isi kolom ini');
+                }
+
+                // Cek angka negatif untuk input type number
+                if (e.target.type === 'number' && parseFloat(e.target.value) < 0) {
+                    e.target.setCustomValidity('tidak boleh negatif');
+                };
+            }
+        });
+
         // Sukses Umum (misalnya tambah/update/hapus berhasil)
         @if (session('success'))
             Swal.fire({
@@ -232,7 +264,7 @@
         @if ($errors->any())
             Swal.fire({
                 icon: 'error',
-                title: 'Gagal Menyimpan!',
+                title: 'Terjadi Kesalahan!',
                 html: `{!! implode('<br>', $errors->all()) !!}`,
                 confirmButtonColor: '#d33'
             });

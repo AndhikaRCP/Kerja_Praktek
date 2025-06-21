@@ -98,3 +98,24 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.oninvalid = function(e) {
+                // Reset error
+                e.target.setCustomValidity('');
+
+                // Cek apakah kosong
+                if (!e.target.value) {
+                    e.target.setCustomValidity('Harap isi kolom ini');
+                }
+
+                // Cek angka negatif untuk input type number
+                if (e.target.type === 'number' && parseFloat(e.target.value) < 0) {
+                    e.target.setCustomValidity('tidak boleh negatif');
+                };
+            }
+        });
+    </script>
+@endpush
