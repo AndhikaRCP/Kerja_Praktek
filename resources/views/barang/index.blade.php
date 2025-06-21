@@ -34,7 +34,7 @@
 
                                         <div class="modal-body">
                                             <div class="row">
-                                                <!-- Kode Barang -->
+
                                                 <div class="col-md-6">
                                                     <div class="form-group form-group-default">
                                                         <label>Kode Barang</label>
@@ -43,7 +43,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Nama Barang -->
                                                 <div class="col-md-6">
                                                     <div class="form-group form-group-default">
                                                         <label>Nama Barang</label>
@@ -52,7 +51,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Kategori -->
                                                 <div class="col-md-6">
                                                     <div class="form-group form-group-default">
                                                         <label>Kategori</label>
@@ -68,7 +66,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Satuan -->
                                                 <div class="col-md-6">
                                                     <div class="form-group form-group-default">
                                                         <label>Satuan</label>
@@ -77,7 +74,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Stok -->
                                                 <div class="col-md-4">
                                                     <div class="form-group form-group-default">
                                                         <label>Stok</label>
@@ -86,7 +82,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Harga Beli -->
                                                 <div class="col-md-4">
                                                     <div class="form-group form-group-default">
                                                         <label>Harga Beli</label>
@@ -95,7 +90,6 @@
                                                     </div>
                                                 </div>
 
-                                                <!-- Harga Jual -->
                                                 <div class="col-md-4">
                                                     <div class="form-group form-group-default">
                                                         <label>Harga Jual</label>
@@ -116,7 +110,6 @@
                                 </form>
                             </div>
                         </div>
-
 
                         <div class="table-responsive">
                             <table id="add-row" class="display table table-striped table-hover nowrap" style="width:100%">
@@ -161,8 +154,6 @@
                                                         data-url="{{ route('barang.destroy', $item->kode_barang) }}">
                                                         <i class="fa fa-times"></i>
                                                     </button>
-
-
                                             </td>
                                         </tr>
                                     @empty
@@ -172,159 +163,17 @@
                                     @endforelse
                                 </tbody>
                             </table>
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    @push('scripts')
-        <script>
-            @if ($errors->any())
-                $(document).ready(function() {
-                    $('#addRowModal').modal('show');
-                });
-            @endif
-
-            $(document).ready(function() {
-                $('#add-row').DataTable({
-                    pageLength: 10,
-                });
-
-                var action =
-                    '<td><div class="form-button-action">' +
-                    '<button type="button" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">' +
-                    '<i class="fa fa-edit"></i></button>' +
-                    '<button type="button" class="btn btn-link btn-danger" data-original-title="Remove">' +
-                    '<i class="fa fa-times"></i></button></div></td>';
-
-                $('#addRowButton').click(function() {
-                    $('#add-row')
-                        .DataTable()
-                        .row.add([
-                            $('#addName').val(),
-                            $('#addPosition').val(),
-                            $('#addOffice').val(),
-                            action,
-                        ])
-                        .draw();
-
-                    $('#addRowModal').modal('hide');
-                });
-            });
-        </script>
-    @endpush
 @endsection
 
-
 @push('scripts')
-    <script>
-        document.querySelectorAll('input[required], select[required]').forEach(field => {
-            field.oninvalid = function(e) {
-                // Reset error
-                e.target.setCustomValidity('');
-
-                // Cek apakah kosong
-                if (!e.target.value) {
-                    e.target.setCustomValidity('Harap isi kolom ini');
-                }
-
-                // Cek angka negatif untuk input type number
-                if (e.target.type === 'number' && parseFloat(e.target.value) < 0) {
-                    e.target.setCustomValidity('tidak boleh negatif');
-                };
-            }
-        });
-
-        // Sukses Umum (misalnya tambah/update/hapus berhasil)
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('success') }}',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        @endif
-
-        // Peringatan (data belum lengkap, konfirmasi manual, dll)
-        @if (session('warning'))
-            Swal.fire({
-                icon: 'warning',
-                title: 'Perhatian!',
-                text: '{{ session('warning') }}',
-                confirmButtonColor: '#f0ad4e'
-            });
-        @endif
-
-        // Error Validasi (dari Validator Laravel)
-        @if ($errors->any())
-            Swal.fire({
-                icon: 'error',
-                title: 'Terjadi Kesalahan!',
-                html: `{!! implode('<br>', $errors->all()) !!}`,
-                confirmButtonColor: '#d33'
-            });
-        @endif
-
-        // Info umum/netral
-        @if (session('info'))
-            Swal.fire({
-                icon: 'info',
-                title: 'Info',
-                text: '{{ session('info') }}',
-                confirmButtonColor: '#3085d6'
-            });
-        @endif
-
-        //  Notifikasi Hapus Sukses
-        @if (session('deleted'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Data Dihapus!',
-                text: '{{ session('deleted') }}',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        @endif
-
-        // Konfirmasi hapus (dipanggil via JS onClick)
-        function confirmDelete(e, el) {
-            e.preventDefault();
-            const url = el.getAttribute('data-url');
-            Swal.fire({
-                title: 'Yakin ingin menghapus?',
-                text: "Data yang dihapus tidak bisa dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Buat form dinamis lalu submit
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = url;
-
-                    const csrf = document.createElement('input');
-                    csrf.name = '_token';
-                    csrf.value = '{{ csrf_token() }}';
-                    form.appendChild(csrf);
-
-                    const method = document.createElement('input');
-                    method.name = '_method';
-                    method.value = 'DELETE';
-                    form.appendChild(method);
-
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        }
-    </script>
+    @include('layouts.components.scripts.form_validation')
+    @include('layouts.components.scripts.sweetalerts')
+    @include('layouts.components.scripts.datatables')
+    @include('layouts.components.scripts.confirm_delete')
 @endpush
