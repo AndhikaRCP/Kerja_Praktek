@@ -41,18 +41,5 @@
 @endsection
 
 @push('scripts')
-    <script>
-        document.querySelectorAll('input[required]').forEach(field => {
-            field.oninvalid = function(e) {
-                e.target.setCustomValidity('');
-                if (!e.target.value) {
-                    e.target.setCustomValidity('Harap isi kolom ini');
-                }
-            };
-
-            field.oninput = function(e) {
-                e.target.setCustomValidity('');
-            };
-        });
-    </script>
+    @include('layouts.components.scripts.form_validation')
 @endpush
