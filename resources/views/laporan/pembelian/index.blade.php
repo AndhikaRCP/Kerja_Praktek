@@ -106,6 +106,10 @@
                                                 target="_blank" class="btn btn-sm btn-danger">
                                                 <i class="fa fa-file-pdf"></i> PDF
                                             </a>
+                                            <a href="{{ route('laporan.pembelian.export.excel', $pembelian->id) }}"
+                                                class="btn btn-sm btn-success">
+                                                <i class="fa fa-file-excel"></i> Excel
+                                            </a>
                                         </td>
 
                                     </tr>

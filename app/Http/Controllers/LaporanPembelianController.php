@@ -6,6 +6,9 @@ use App\Models\Pembelian;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Response;
 
 
 class LaporanPembelianController extends Controller
@@ -83,5 +86,50 @@ class LaporanPembelianController extends Controller
             ->setPaper('A4', 'portrait');
 
         return $pdf->download('Detail-Pembelian-' . $pembelian->kode_transaksi . '.pdf');
+    }
+
+
+    public function exportExcel($id)
+    {
+        $pembelian = Pembelian::with(['supplier', 'user', 'detailPembelian.barang.kategori'])->findOrFail($id);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Judul
+        $sheet->setCellValue('A1', 'Detail Pembelian - ' . $pembelian->kode_transaksi);
+        $sheet->setCellValue('A2', 'Tanggal: ' . $pembelian->tanggal);
+        $sheet->setCellValue('A3', 'Supplier: ' . $pembelian->supplier->nama);
+        $sheet->setCellValue('A4', 'User Input: ' . $pembelian->user->name);
+        $sheet->setCellValue('A5', 'Status: ' . ucfirst($pembelian->status_transaksi));
+        $sheet->setCellValue('A6', 'Keterangan: ' . $pembelian->keterangan);
+
+        // Header tabel mulai dari A8
+        $sheet->fromArray([
+            ['No', 'Kode Barang', 'Nama', 'Kategori', 'Satuan', 'Harga Beli', 'Jumlah', 'Subtotal']
+        ], NULL, 'A8');
+
+        // Data baris
+        $start = 9;
+        foreach ($pembelian->detailPembelian as $i => $detail) {
+            $sheet->fromArray([
+                $i + 1,
+                $detail->barang_kode,
+                $detail->nama_barang_snapshot,
+                $detail->barang->kategori->nama_kategori ?? '-',
+                $detail->barang->satuan ?? '-',
+                $detail->harga_beli_snapshot,
+                $detail->jumlah,
+                $detail->harga_beli_snapshot * $detail->jumlah
+            ], NULL, 'A' . ($start + $i));
+        }
+
+        // Kirim file
+        $filename = 'Detail_Pembelian_' . $pembelian->kode_transaksi . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $temp_file = tempnam(sys_get_temp_dir(), $filename);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }
 }

@@ -44,6 +44,8 @@ Route::get('/laporan/pembelian/{id}', [LaporanPembelianController::class, 'show'
 Route::get('/laporan/pembelian/export/pdf', [LaporanPembelianController::class, 'exportPdf'])
     ->name('laporan.pembelian.export.pdf');
 Route::get('/laporan/pembelian/{id}/pdf', [LaporanPembelianController::class, 'exportDetailPdf'])->name('laporan.pembelian.export.detail.pdf');
+Route::get('/laporan/pembelian/{id}/export-excel', [LaporanPembelianController::class, 'exportExcel'])
+    ->name('laporan.pembelian.export.excel');
+
 
 Route::get('/laporan/penjualan/index', [LaporanPenjualanController::class, 'index'])->name('laporan.penjualan');
-
