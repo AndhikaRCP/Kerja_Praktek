@@ -62,7 +62,7 @@
                                                 <select name="role" class="form-control" value="{{ old('role') }}"
                                                     required>
                                                     <option value="">-- Pilih Role --</option>
-                                                    <option value="manager">Manager</option>
+                                                    <option value="superadmin">SuperAdmin</option>
                                                     <option value="admin">Admin</option>
                                                     <option value="staff">Staff</option>
                                                 </select>
@@ -102,7 +102,7 @@
                                             <td>{{ $user->email }}</td>
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $user->role === 'manager' ? 'primary' : ($user->role === 'admin' ? 'warning text-dark' : 'info') }}">
+                                                    class="badge bg-{{ $user->role === 'superadmin' ? 'primary' : ($user->role === 'admin' ? 'warning text-dark' : 'info') }}">
                                                     {{ ucfirst($user->role) }}
                                                 </span>
                                             </td>

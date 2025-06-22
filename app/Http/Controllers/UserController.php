@@ -29,7 +29,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:100',
                 'email' => 'required|email|max:100|unique:users,email',
                 'password' => 'required|string|min:6|confirmed',
-                'role' => ['required', Rule::in(['manager', 'admin', 'sales'])],
+                'role' => ['required', Rule::in(['superadmin', 'admin', 'sales'])],
             ],
             [
                 'username.required' => 'Username wajib diisi.',
@@ -50,7 +50,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
-            'is_active' => true, 
+            'is_active' => true,
             'password' => Hash::make($request->password),
         ]);
 
@@ -70,7 +70,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:100',
                 'email' => 'required|email|max:100|unique:users,email,' . $user->id,
                 'password' => 'nullable|string|min:6|confirmed',
-                'role' => ['required', Rule::in(['manager', 'admin', 'sales'])],
+                'role' => ['required', Rule::in(['superadmin', 'admin', 'sales'])],
             ],
             [
                 'username.required' => 'Username wajib diisi.',

@@ -64,7 +64,7 @@
                                 <label>Role</label>
                                 <select name="role" class="form-control" required>
                                     <option value="">-- Pilih Role --</option>
-                                    <option value="manager" {{ old('role', $user->role) === 'manager' ? 'selected' : '' }}>Manager</option>
+                                    <option value="superadmin" {{ old('role', $user->role) === 'superadmin' ? 'selected' : '' }}>SuperAdmin</option>
                                     <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
                                     <option value="staff" {{ old('role', $user->role) === 'staff' ? 'selected' : '' }}>Staff</option>
                                 </select>
