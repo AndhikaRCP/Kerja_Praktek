@@ -11,71 +11,65 @@
                             <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
                                 data-bs-target="#addRowModal">
                                 <i class="fa fa-plus"></i>
-                                Add Row
+                                Tambah Data Supplier
                             </button>
                         </div>
                     </div>
+                    
                     <div class="card-body">
-                        <!-- Modal -->
+                        <!-- Modal Tambah Supplier -->
                         <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header border-0">
-                                        <h5 class="modal-title">
-                                            <span class="fw-mediumbold"> New</span>
-                                            <span class="fw-light"> Row </span>
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="small">
-                                            Create a new row using this form, make sure you
-                                            fill them all
-                                        </p>
-                                        <form>
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Name</label>
-                                                        <input id="addName" type="text" class="form-control"
-                                                            placeholder="fill name" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 pe-0">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Position</label>
-                                                        <input id="addPosition" type="text" class="form-control"
-                                                            placeholder="fill position" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Office</label>
-                                                        <input id="addOffice" type="text" class="form-control"
-                                                            placeholder="fill office" />
-                                                    </div>
-                                                </div>
+                                <form action="{{ route('supplier.store') }}" method="POST">
+                                    @csrf
+                                    <div class="modal-content">
+                                        <div class="modal-header border-0">
+                                            <h5 class="modal-title">Tambah Supplier</h5>
+                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="form-group form-group-default">
+                                                <label>Nama</label>
+                                                <input type="text" name="nama" class="form-control"
+                                                    value="{{ old('nama') }}" required>
                                             </div>
-                                        </form>
+                                            <div class="form-group form-group-default">
+                                                <label>Alamat</label>
+                                                <input type="text" name="alamat" class="form-control"
+                                                    value="{{ old('alamat') }}" required>
+                                            </div>
+                                            <div class="form-group form-group-default">
+                                                <label>Kota</label>
+                                                <input type="text" name="kota" class="form-control"
+                                                    value="{{ old('kota') }}" required>
+                                            </div>
+                                            <div class="form-group form-group-default">
+                                                <label>Telepon</label>
+                                                <input type="text" name="telepon" class="form-control"
+                                                    value="{{ old('telepon') }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer border-0">
+                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <button type="button" class="btn btn-danger"
+                                                data-bs-dismiss="modal">Batal</button>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer border-0">
-                                        <button type="button" id="addRowButton" class="btn btn-primary">
-                                            Add
-                                        </button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
 
+                        <!-- Tabel -->
                         <div class="table-responsive">
-                            <table id="add-row" class="display table table-striped table-hover">
+                            <table id="add-row" class="display table table-striped table-hover nowrap" style="width:100%">
                                 <thead class="table-light">
                                     <tr>
+                                        <th style="white-space: nowrap;">No</th>
                                         <th>Nama</th>
                                         <th>Alamat</th>
                                         <th>Kota</th>
@@ -86,7 +80,8 @@
                                 <tbody>
                                     @forelse ($suppliers as $supplier)
                                         <tr>
-                                            <td>{{ $supplier->nama }}</td>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td style="white-space: nowrap;">{{ $supplier->nama }}</td>
                                             <td>{{ $supplier->alamat }}</td>
                                             <td>{{ $supplier->kota }}</td>
                                             <td>{{ $supplier->telepon }}</td>
@@ -98,8 +93,10 @@
                                                 <form action="{{ route('supplier.destroy', $supplier->id) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Yakin ingin menghapus?')" title="Hapus">
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="confirmDelete(event, this)"
+                                                        data-url="{{ route('supplier.destroy', $supplier->id) }}"
+                                                        title="Hapus">
                                                         <i class="fa fa-times"></i>
                                                     </button>
                                                 </form>
@@ -107,15 +104,11 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center">Belum ada data supplier.</td>
+                                            <td colspan="6" class="text-center">Belum ada data supplier.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
                             </table>
-
-                            <div class="d-flex justify-content-center mt-3">
-                                {{ $suppliers->links() }}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,33 +117,9 @@
     </div>
 
     @push('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#add-row').DataTable({
-                    pageLength: 5,
-                });
-
-                var action =
-                    '<td><div class="form-button-action">' +
-                    '<button type="button" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">' +
-                    '<i class="fa fa-edit"></i></button>' +
-                    '<button type="button" class="btn btn-link btn-danger" data-original-title="Remove">' +
-                    '<i class="fa fa-times"></i></button></div></td>';
-
-                $('#addRowButton').click(function() {
-                    $('#add-row')
-                        .DataTable()
-                        .row.add([
-                            $('#addName').val(),
-                            $('#addPosition').val(),
-                            $('#addOffice').val(),
-                            action,
-                        ])
-                        .draw();
-
-                    $('#addRowModal').modal('hide');
-                });
-            });
-        </script>
+        @include('layouts.components.scripts.form_validation')
+        @include('layouts.components.scripts.sweetalerts')
+        @include('layouts.components.scripts.datatables')
+        @include('layouts.components.scripts.confirm_delete')
     @endpush
 @endsection
