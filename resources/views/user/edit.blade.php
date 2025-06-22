@@ -98,5 +98,6 @@
 @endsection
 
 @push('scripts')
+    @include('layouts.components.scripts.sweetalerts')
     @include('layouts.components.scripts.form_validation')
 @endpush
