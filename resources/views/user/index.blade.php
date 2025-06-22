@@ -89,6 +89,7 @@
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         <th>Dibuat Pada</th>
                                         <th style="text-align: center;">Aksi</th>
                                     </tr>
@@ -105,6 +106,13 @@
                                                     class="badge bg-{{ $user->role === 'superadmin' ? 'primary' : ($user->role === 'admin' ? 'warning text-dark' : 'info') }}">
                                                     {{ ucfirst($user->role) }}
                                                 </span>
+                                            </td>
+                                            <td>
+                                                @if ($user->is_active)
+                                                    <span class="badge bg-success">Aktif</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Nonaktif</span>
+                                                @endif
                                             </td>
                                             <td>{{ $user->created_at->format('d-m-Y') }}</td>
                                             <td class="text-center">

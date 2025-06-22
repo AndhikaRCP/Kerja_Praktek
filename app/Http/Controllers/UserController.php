@@ -70,7 +70,8 @@ class UserController extends Controller
                 'name' => 'required|string|max:100',
                 'email' => 'required|email|max:100|unique:users,email,' . $user->id,
                 'password' => 'nullable|string|min:6|confirmed',
-                'role' => ['required', Rule::in(['superadmin', 'admin', 'sales'])],
+                'role' => ['required', Rule::in(['manager', 'admin', 'sales'])],
+                'is_active' => ['required', Rule::in(['0', '1'])], // ✅ Tambahan validasi
             ],
             [
                 'username.required' => 'Username wajib diisi.',
@@ -82,10 +83,12 @@ class UserController extends Controller
                 'password.confirmed' => 'Konfirmasi password tidak cocok.',
                 'role.required' => 'Role harus dipilih.',
                 'role.in' => 'Role tidak valid.',
+                'is_active.required' => 'Status akun harus dipilih.',
+                'is_active.in' => 'Status akun tidak valid.',
             ]
         );
 
-        $data = $request->only(['username', 'name', 'email', 'role']);
+        $data = $request->only(['username', 'name', 'email', 'role', 'is_active']);
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
