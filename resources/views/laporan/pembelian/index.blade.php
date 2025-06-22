@@ -102,6 +102,10 @@
                                                 class="btn btn-sm btn-info">
                                                 <i class="fa fa-eye"></i> Detail
                                             </a>
+                                            <a href="{{ route('laporan.pembelian.export.detail.pdf', $pembelian->id) }}"
+                                                target="_blank" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-file-pdf"></i> PDF
+                                            </a>
                                         </td>
 
                                     </tr>

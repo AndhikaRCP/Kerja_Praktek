@@ -74,4 +74,14 @@ class LaporanPembelianController extends Controller
 
         return $pdf->download('laporan-pembelian.pdf');
     }
+
+    public function exportDetailPdf($id)
+    {
+        $pembelian = Pembelian::with(['supplier', 'user', 'detailPembelian.barang.kategori'])->findOrFail($id);
+
+        $pdf = Pdf::loadView('laporan.pembelian.detail_pdf', compact('pembelian'))
+            ->setPaper('A4', 'portrait');
+
+        return $pdf->download('Detail-Pembelian-' . $pembelian->kode_transaksi . '.pdf');
+    }
 }
