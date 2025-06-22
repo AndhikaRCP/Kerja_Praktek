@@ -54,38 +54,38 @@
                         <table class="table table-striped table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>No</th>
-                                    <th>Kode Transaksi</th>
-                                    <th>Tanggal</th>
-                                    <th>Supplier</th>
-                                    <th>User Input</th>
-                                    <th>Total Harga</th>
-                                    <th>Status</th>
-                                    <th>Keterangan</th>
-                                    <th>Aksi</th>
+                                    <th class="text-nowrap">No</th>
+                                    <th class="text-nowrap">Kode Transaksi</th>
+                                    <th class="text-nowrap">Tanggal</th>
+                                    <th class="text-nowrap">Supplier</th>
+                                    <th class="text-nowrap">User Input</th>
+                                    <th class="text-nowrap">Total Harga</th>
+                                    <th class="text-nowrap">Status</th>
+                                    <th class="text-nowrap">Keterangan</th>
+                                    <th class="text-nowrap">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($pembelians as $index => $pembelian)
                                     <tr>
-                                        <td>{{ $index + $pembelians->firstItem() }}</td>
-                                        <td>{{ $pembelian->kode_transaksi }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
-                                        <td>{{ $pembelian->supplier->nama ?? '-' }}</td>
-                                        <td>{{ $pembelian->user->name ?? '-' }}</td>
-                                        <td>Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}</td>
-                                        <td>
+                                        <td class="text-nowrap">{{ $index + $pembelians->firstItem() }}</td>
+                                        <td class="text-nowrap">{{ $pembelian->kode_transaksi }}</td>
+                                        <td class="text-nowrap">{{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
+                                        <td class="text-nowrap">{{ $pembelian->supplier->nama ?? '-' }}</td>
+                                        <td class="text-nowrap">{{ $pembelian->user->name ?? '-' }}</td>
+                                        <td class="text-nowrap">Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}</td>
+                                        <td class="text-nowrap">
                                             <span
                                                 class="badge bg-{{ $pembelian->status_transaksi === 'selesai' ? 'success' : 'secondary' }}">
                                                 {{ ucfirst($pembelian->status_transaksi) }}
                                             </span>
                                         </td>
-                                        <td>{{ $pembelian->keterangan ?? '-' }}</td>
-                                        <td>
+                                        <td class="text-nowrap">{{ $pembelian->keterangan ?? '-' }}</td>
+                                        <td class="text-nowrap">
                                             <a href="{{ route('laporan.pembelian.show', $pembelian->id) }}"
                                                 class="btn btn-sm btn-info">
                                                 <i class="fa fa-eye"></i> Detail
-                                            </a>
+                                         </a>
                                         </td>
 
                                     </tr>
