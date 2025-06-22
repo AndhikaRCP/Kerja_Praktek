@@ -26,6 +26,15 @@ class LaporanPenjualanController extends Controller
         return view('laporan.penjualan.index', compact('penjualans', 'total_penjualan', 'pelanggans'));
     }
 
+
+    public function show($id)
+    {
+        $penjualan = Penjualan::with(['pelanggan', 'user', 'sales', 'detailPenjualan'])->findOrFail($id);
+
+        return view('laporan.penjualan.show', compact('penjualan'));
+    }
+
+
     public function exportPdf(Request $request)
     {
         $query = Penjualan::with(['pelanggan', 'user', 'sales']);

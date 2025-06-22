@@ -13,7 +13,7 @@ class Penjualan extends Model
         return $this->belongsTo(Pelanggan::class);
     }
 
-    public function detailPenjualans()
+    public function detailPenjualan()
     {
         return $this->hasMany(DetailPenjualan::class);
     }

@@ -81,6 +81,7 @@
                                     <th>Status Pembayaran</th>
                                     <th>Status Transaksi</th>
                                     <th>Keterangan</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,6 +102,20 @@
                                             </span>
                                         </td>
                                         <td>{{ $penjualan->keterangan ?? '-' }}</td>
+                                        <td class="text-nowrap">
+                                            <a href="{{ route('laporan.penjualan.show', $penjualan->id) }}"
+                                                class="btn btn-sm btn-info">
+                                                <i class="fa fa-eye"></i> Detail
+                                            </a>
+                                            {{-- <a href="{{ route('laporan.penjualan.export.detail.pdf', $penjualan->id) }}"
+                                                target="_blank" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-file-pdf"></i> PDF
+                                            </a>
+                                            <a href="{{ route('laporan.penjualan.export.detail.excel', $penjualan->id) }}"
+                                                class="btn btn-sm btn-success">
+                                                <i class="fa fa-file-excel"></i> Excel
+                                            </a> --}}
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
