@@ -26,7 +26,7 @@ class SupplierController extends Controller
                 'nama' => 'required|string|max:100|unique:suppliers,nama',
                 'alamat' => 'required|string|max:255',
                 'kota' => 'required|string|max:100',
-                'telepon' => 'required|regex:/^[0-9]{10,15}$/',
+                'telepon' => 'required|regex:/^0[0-9]{9,19}$/',
             ],
             [
                 'nama.required' => 'Nama supplier wajib diisi.',
@@ -34,7 +34,7 @@ class SupplierController extends Controller
                 'alamat.required' => 'Alamat wajib diisi.',
                 'kota.required' => 'Kota wajib diisi.',
                 'telepon.required' => 'Nomor telepon wajib diisi.',
-                'telepon.regex' => 'Format nomor telepon tidak valid. Gunakan hanya angka 10-15 digit.',
+                'telepon.regex' => 'Format nomor telepon tidak valid. Gunakan hanya angka 10-20 digit dan awali dengan angka 0',
             ]
         );
 
@@ -54,7 +54,7 @@ class SupplierController extends Controller
                 'nama' => 'required|string|max:100|unique:suppliers,nama,' . $supplier->id,
                 'alamat' => 'required|string|max:255',
                 'kota' => 'required|string|max:100',
-                'telepon' => 'required|regex:/^[0-9]{10,15}$/',
+                'telepon' => 'required|regex:/^0[0-9]{9,19}$/',
             ],
             [
                 'nama.required' => 'Nama supplier wajib diisi.',
@@ -62,7 +62,7 @@ class SupplierController extends Controller
                 'alamat.required' => 'Alamat wajib diisi.',
                 'kota.required' => 'Kota wajib diisi.',
                 'telepon.required' => 'Nomor telepon wajib diisi.',
-                'telepon.regex' => 'Format nomor telepon tidak valid. Gunakan hanya angka 10-15 digit.',
+                'telepon.regex' => 'Format nomor telepon tidak valid. Gunakan hanya angka 10-20 digit dan awali dengan angka 0',
             ]
         );
 

@@ -15,7 +15,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="card-body">
                         <!-- Modal Tambah Supplier -->
                         <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -84,7 +84,7 @@
                                             <td style="white-space: nowrap;">{{ $supplier->nama }}</td>
                                             <td>{{ $supplier->alamat }}</td>
                                             <td>{{ $supplier->kota }}</td>
-                                            <td>{{ $supplier->telepon }}</td>
+                                            <td>{{ substr($supplier->telepon, 0, 4) }}-{{ substr($supplier->telepon, 4, 4) }}-{{ substr($supplier->telepon, 8) }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('supplier.edit', $supplier->id) }}"
                                                     class="btn btn-sm btn-primary" title="Edit">

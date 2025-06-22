@@ -77,7 +77,7 @@
                                             <td style="white-space: nowrap;">{{ $pelanggan->nama }}</td>
                                             <td>{{ $pelanggan->alamat }}</td>
                                             <td>{{ $pelanggan->kota }}</td>
-                                            <td>{{ $pelanggan->telepon }}</td>
+                                            <td>{{ substr($pelanggan->telepon, 0, 4) }}-{{ substr($pelanggan->telepon, 4, 4) }}-{{ substr($pelanggan->telepon, 8) }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('pelanggan.edit', $pelanggan->id) }}"
                                                     class="btn btn-sm btn-primary" title="Edit">

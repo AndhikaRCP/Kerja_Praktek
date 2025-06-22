@@ -26,7 +26,7 @@ class PelangganController extends Controller
                 'nama' => 'required|string|max:100|unique:pelanggans,nama',
                 'alamat' => 'required|string|max:255',
                 'kota' => 'required|string|max:100',
-                'telepon' => 'required|string|max:20',
+                'telepon' => 'required|regex:/^0[0-9]{9,19}$/',
             ],
             [
                 'nama.required' => 'Nama pelanggan wajib diisi.',
@@ -34,6 +34,7 @@ class PelangganController extends Controller
                 'alamat.required' => 'Alamat wajib diisi.',
                 'kota.required' => 'Kota wajib diisi.',
                 'telepon.required' => 'Nomor telepon wajib diisi.',
+                'telepon.regex' => 'Format nomor telepon tidak valid. Gunakan hanya angka 10-20 digit dan awali dengan angka 0',
             ]
         );
 
@@ -53,7 +54,7 @@ class PelangganController extends Controller
                 'nama' => 'required|string|max:100|unique:pelanggans,nama,' . $pelanggan->id,
                 'alamat' => 'required|string|max:255',
                 'kota' => 'required|string|max:100',
-                'telepon' => 'required|string|max:20',
+                'telepon' => 'required|regex:/^0[0-9]{9,19}$/',
             ],
             [
                 'nama.required' => 'Nama pelanggan wajib diisi.',
@@ -61,6 +62,7 @@ class PelangganController extends Controller
                 'alamat.required' => 'Alamat wajib diisi.',
                 'kota.required' => 'Kota wajib diisi.',
                 'telepon.required' => 'Nomor telepon wajib diisi.',
+                'telepon.regex' => 'Format nomor telepon tidak valid. Gunakan hanya angka 10-20 digit dan awali dengan angka 0',
             ]
         );
 
