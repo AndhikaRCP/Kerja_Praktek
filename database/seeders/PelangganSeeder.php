@@ -14,7 +14,7 @@ class PelangganSeeder extends Seeder
                 'nama' => "Toko Elektronik $i",
                 'alamat' => "Jl. Sudirman No.$i, Palembang",
                 'kota' => "Palembang",
-                'telepon' => "0813-70000$i"
+                'telepon' => "083199881234$i"
             ]);
         }
     }

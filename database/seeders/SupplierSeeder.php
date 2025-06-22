@@ -14,7 +14,7 @@ class SupplierSeeder extends Seeder
                 'nama' => "Toko Supplier $i",
                 'alamat' => "Jl. Supplier Raya No. $i, Jakarta",
                 'kota' => "Jakarta",
-                'telepon' => "021-80000$i"
+                'telepon' => "082299881234$i"
             ]);
         }
     }
