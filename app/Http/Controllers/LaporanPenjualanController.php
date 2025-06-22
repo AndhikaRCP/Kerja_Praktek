@@ -34,7 +34,6 @@ class LaporanPenjualanController extends Controller
         return view('laporan.penjualan.show', compact('penjualan'));
     }
 
-
     public function exportPdf(Request $request)
     {
         $query = Penjualan::with(['pelanggan', 'user', 'sales']);
@@ -50,6 +49,13 @@ class LaporanPenjualanController extends Controller
             ->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-penjualan.pdf');
+    }
+
+    public function exportDetailPdf($id)
+    {
+        $penjualan = Penjualan::with(['pelanggan', 'user', 'detailPenjualan.barang'])->findOrFail($id);
+        $pdf = Pdf::loadView('laporan.penjualan.detail_pdf', compact('penjualan'));
+        return $pdf->download('detail-penjualan-' . $penjualan->kode_transaksi . '.pdf');
     }
 
     public function exportExcel(Request $request)

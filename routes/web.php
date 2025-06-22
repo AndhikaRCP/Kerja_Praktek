@@ -56,6 +56,7 @@ Route::get('/laporan/penjualan/index', [LaporanPenjualanController::class, 'inde
 
 Route::get('/laporan/penjualan/export/pdf', [LaporanPenjualanController::class, 'exportPdf'])
     ->name('laporan.penjualan.export.pdf');
+Route::get('/laporan/penjualan/{id}/pdf', [LaporanPenjualanController::class, 'exportDetailPdf'])->name('laporan.penjualan.export.detail.pdf');
 Route::get('/laporan/penjualan/{id}', [LaporanPenjualanController::class, 'show'])->name('laporan.penjualan.show');
 Route::get('/laporan/penjualan/export/excel', [LaporanPenjualanController::class, 'exportExcel'])
     ->name('laporan.penjualan.export.excel');
