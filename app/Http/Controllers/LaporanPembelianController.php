@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pembelian;
@@ -33,10 +34,16 @@ class LaporanPembelianController extends Controller
         // Ambil semua supplier untuk dropdown filter
         $suppliers = Supplier::orderBy('nama')->get();
 
-        return view('laporan.pembelian', compact(
+        return view('laporan.pembelian.index', compact(
             'pembelians',
             'total_pembelian',
             'suppliers'
         ));
+    }
+
+    public function show($id)
+    {
+        $pembelian = Pembelian::with(['supplier', 'user', 'detailPembelian'])->findOrFail($id);
+        return view('laporan.pembelian.show', compact('pembelian'));
     }
 }

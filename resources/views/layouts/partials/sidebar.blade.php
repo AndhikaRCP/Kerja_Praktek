@@ -140,7 +140,7 @@
                                       </a>
                                   </li>
                                   <li>
-                                       <a href="{{ route('pembayaran_penjualan.index') }}">
+                                      <a href="{{ route('pembayaran_penjualan.index') }}">
                                           <span class="sub-item">Riwajyat Pembayaran Penjualan</span>
                                       </a>
                                   </li>
@@ -184,7 +184,7 @@
                           </a>
                       </li>
                       <li class="nav-item">
-                          <a href="{{ route('laporan.pembelian') }}">
+                          <a href="{{ route('laporan.pembelian.index') }}">
                               <i class="fas fa-th-list"></i>
                               <p>Laporan Pembelian</p>
                           </a>

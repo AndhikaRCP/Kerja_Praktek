@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DetailPembelian extends Model
 {
     protected $guarded = [];
-    
+
     public function pembelian() {
     return $this->belongsTo(Pembelian::class);
     }

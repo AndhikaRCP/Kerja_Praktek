@@ -10,7 +10,7 @@
 
                 <div class="card-body">
                     <!-- Filter -->
-                    <form method="GET" action="{{ route('laporan.pembelian') }}" class="row g-3 mb-4">
+                    <form method="GET" action="{{ route('laporan.pembelian.index') }}" class="row g-3 mb-4">
                         <div class="col-md-3">
                             <label>Tanggal Mulai</label>
                             <input type="date" name="tanggal_mulai" class="form-control"
@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-md-12 d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary me-2">Terapkan Filter</button>
-                            <a href="{{ route('laporan.pembelian') }}" class="btn btn-secondary">Reset</a>
+                            <a href="{{ route('laporan.pembelian.index') }}" class="btn btn-secondary">Reset</a>
                         </div>
                     </form>
 
@@ -62,6 +62,7 @@
                                     <th>Total Harga</th>
                                     <th>Status</th>
                                     <th>Keterangan</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,6 +81,13 @@
                                             </span>
                                         </td>
                                         <td>{{ $pembelian->keterangan ?? '-' }}</td>
+                                        <td>
+                                            <a href="{{ route('laporan.pembelian.show', $pembelian->id) }}"
+                                                class="btn btn-sm btn-info">
+                                                <i class="fa fa-eye"></i> Detail
+                                            </a>
+                                        </td>
+
                                     </tr>
                                 @empty
                                     <tr>
