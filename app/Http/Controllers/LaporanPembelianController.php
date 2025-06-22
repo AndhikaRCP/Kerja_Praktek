@@ -1,75 +1,42 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pembelian;
+use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class LaporanPembelianController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $query = Pembelian::with(['supplier', 'user']);
 
-        if ($request->filled('dari') && $request->filled('sampai')) {
-            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        // Filter tanggal
+        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
         }
 
-        $pembelians = $query->orderBy('tanggal', 'desc')->paginate(10);
+        // Filter supplier
+        if ($request->filled('supplier_id')) {
+            $query->where('supplier_id', $request->supplier_id);
+        }
 
-        // Hitung total harga dari query yang sama (tanpa pagination)
-        $total_pembelian = (clone $query)->sum('total_harga');
+        // Filter status transaksi
+        if ($request->filled('status_transaksi')) {
+            $query->where('status_transaksi', $request->status_transaksi);
+        }
 
-        return view('laporan.pembelian', compact('pembelians', 'total_pembelian'));
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Ambil data yang sudah difilter
+        $pembelians = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
+        $total_pembelian = $query->sum('total_harga');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Ambil semua supplier untuk dropdown filter
+        $suppliers = Supplier::orderBy('nama')->get();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('laporan.pembelian', compact(
+            'pembelians',
+            'total_pembelian',
+            'suppliers'
+        ));
     }
 }
