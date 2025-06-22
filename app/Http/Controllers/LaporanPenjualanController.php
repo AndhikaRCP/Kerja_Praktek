@@ -2,15 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pelanggan;
 use App\Models\Penjualan;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class LaporanPenjualanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
+    {
+        $query = Penjualan::with(['pelanggan', 'user', 'sales']);
+        $pelanggans = Pelanggan::orderBy('nama')->get();
+
+        if ($request->filled('dari') && $request->filled('sampai')) {
+            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        }
+
+        $penjualans = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
+        $total_penjualan = (clone $query)->sum('total_harga');
+
+        return view('laporan.penjualan.index', compact('penjualans', 'total_penjualan', 'pelanggans'));
+    }
+
+    public function exportPdf(Request $request)
     {
         $query = Penjualan::with(['pelanggan', 'user', 'sales']);
 
@@ -18,57 +34,61 @@ class LaporanPenjualanController extends Controller
             $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
         }
 
-        $penjualans = $query->orderBy('tanggal', 'desc')->paginate(10);
-        $total_penjualan = (clone $query)->sum('total_harga');
+        $penjualans = $query->orderBy('tanggal', 'desc')->get();
+        $total_penjualan = $penjualans->sum('total_harga');
 
-        return view('laporan.penjualan', compact('penjualans', 'total_penjualan'));
+        $pdf = Pdf::loadView('laporan.penjualan.pdf', compact('penjualans', 'total_penjualan'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-penjualan.pdf');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function exportExcel(Request $request)
     {
-        //
-    }
+        $query = Penjualan::with(['pelanggan', 'user', 'sales']);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($request->filled('dari') && $request->filled('sampai')) {
+            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $penjualans = $query->orderBy('tanggal', 'desc')->get();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        // Header
+        $sheet->fromArray([
+            ['No', 'Kode Transaksi', 'Tanggal', 'Pelanggan', 'Sales', 'User Input', 'Total Harga', 'Status Pembayaran', 'Status Transaksi', 'Keterangan']
+        ], NULL, 'A1');
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // Data
+        $row = 2;
+        foreach ($penjualans as $i => $penjualan) {
+            $sheet->fromArray([
+                $i + 1,
+                $penjualan->kode_transaksi,
+                $penjualan->tanggal,
+                $penjualan->pelanggan->nama ?? '-',
+                $penjualan->sales->name ?? '-',
+                $penjualan->user->name ?? '-',
+                $penjualan->total_harga,
+                ucfirst($penjualan->status_pembayaran),
+                ucfirst($penjualan->status_transaksi),
+                $penjualan->keterangan ?? '-'
+            ], NULL, 'A' . $row);
+            $row++;
+        }
+
+        // Total
+        $total = $penjualans->sum('total_harga');
+        $sheet->setCellValue('F' . $row, 'Total:');
+        $sheet->setCellValue('G' . $row, $total);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'laporan_penjualan_' . now()->format('Ymd_His') . '.xlsx';
+        $tempFile = storage_path($filename);
+        $writer->save($tempFile);
+
+        return response()->download($tempFile)->deleteFileAfterSend(true);
     }
 }

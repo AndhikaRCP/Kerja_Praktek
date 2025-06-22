@@ -178,7 +178,7 @@
                           <h4 class="text-section">LAPORAN</h4>
                       </li>
                       <li class="nav-item">
-                          <a href="{{ route('laporan.penjualan') }}">
+                          <a href="{{ route('laporan.penjualan.index') }}">
                               <i class="fas fa-th-list"></i>
                               <p>Laporan Penjualan</p>
                           </a>
