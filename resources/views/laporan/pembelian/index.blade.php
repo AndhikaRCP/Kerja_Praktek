@@ -43,11 +43,25 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-md-12 d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary me-2">Terapkan Filter</button>
-                            <a href="{{ route('laporan.pembelian.index') }}" class="btn btn-secondary">Reset</a>
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap justify-content-end gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-filter"></i> Terapkan Filter
+                                </button>
+
+                                <a href="{{ route('laporan.pembelian.index') }}" class="btn btn-secondary">
+                                    <i class="fa fa-sync-alt"></i> Reset
+                                </a>
+
+                                <a href="{{ route('laporan.pembelian.export.pdf', request()->all()) }}" target="_blank"
+                                    class="btn btn-danger">
+                                    <i class="fa fa-file-pdf"></i> Export PDF
+                                </a>
+                            </div>
                         </div>
+
                     </form>
+
 
                     <!-- Tabel -->
                     <div class="table-responsive">
@@ -70,10 +84,12 @@
                                     <tr>
                                         <td class="text-nowrap">{{ $index + $pembelians->firstItem() }}</td>
                                         <td class="text-nowrap">{{ $pembelian->kode_transaksi }}</td>
-                                        <td class="text-nowrap">{{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
+                                        <td class="text-nowrap">
+                                            {{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
                                         <td class="text-nowrap">{{ $pembelian->supplier->nama ?? '-' }}</td>
                                         <td class="text-nowrap">{{ $pembelian->user->name ?? '-' }}</td>
-                                        <td class="text-nowrap">Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}</td>
+                                        <td class="text-nowrap">Rp
+                                            {{ number_format($pembelian->total_harga, 0, ',', '.') }}</td>
                                         <td class="text-nowrap">
                                             <span
                                                 class="badge bg-{{ $pembelian->status_transaksi === 'selesai' ? 'success' : 'secondary' }}">
@@ -85,7 +101,7 @@
                                             <a href="{{ route('laporan.pembelian.show', $pembelian->id) }}"
                                                 class="btn btn-sm btn-info">
                                                 <i class="fa fa-eye"></i> Detail
-                                         </a>
+                                            </a>
                                         </td>
 
                                     </tr>
