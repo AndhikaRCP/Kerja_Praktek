@@ -14,7 +14,7 @@ class PembelianController extends Controller
 {
     public function index()
     {
-        $pembelians = Pembelian::with('supplier')->latest()->paginate(10);
+        $pembelians = Pembelian::with('supplier')->latest()->get();
         return view('pembelian.index', compact('pembelians'));
     }
 
@@ -48,8 +48,10 @@ class PembelianController extends Controller
         $pembelian = Pembelian::create([
             'kode_transaksi' => 'PB-' . strtoupper(Str::random(6)),
             'supplier_id' => $request->supplier_id,
-            'user_id' => Auth::id(),
-            'created_by' => Auth::id(),
+            // 'user_id' => Auth::id(),
+            // 'created_by' => Auth::id(),
+            'user_id' => 1, // <<--- sementara, isi dengan ID user yang sudah ada
+            'created_by' => 1, // atau 'Testing'
             'tanggal' => $request->tanggal,
             'total_harga' => $total,
             'keterangan' => $request->keterangan,
@@ -66,7 +68,7 @@ class PembelianController extends Controller
                 'jumlah' => $request->jumlah[$i],
             ]);
 
-            $pembelian->detailPembelians()->save($detail);
+            $pembelian->detailPembelian()->save($detail);
 
             // Update stok
             $barang->increment('stok', $request->jumlah[$i]);

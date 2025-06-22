@@ -26,6 +26,7 @@ Route::resource('user', UserController::class);
 Route::resource('pelanggan', PelangganController::class);
 Route::resource('supplier', SupplierController::class);
 Route::resource('barang', BarangController::class);
+Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
 Route::resource('kategori', KategoriController::class);
 Route::resource('penjualan', PenjualanController::class);
 Route::resource('detail-penjualan', DetailPenjualanController::class);

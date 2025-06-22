@@ -71,41 +71,101 @@
             </div>
         </div>
     </div>
+@endsection
 
-    <!-- Barang Data & Script -->
-    <script>
-        let barangs = @json($barangs); // data dari controller
-
-        function tambahBaris() {
-            let options = barangs.map(b => `<option value="${b.kode_barang}">${b.kode_barang}</option>`).join('');
-            let row = `
-            <tr>
-                <td>
-                    <select name="barang_kode[]" class="form-select" onchange="updateBarang(this)">
-                        <option value="">--Pilih--</option>
-                        ${options}
-                    </select>
-                </td>
-                <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
-                <td><input type="number" name="harga_beli_snapshot[]" class="form-control text-end" readonly></td>
-                <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
-                <td><input type="text" class="form-control text-end" readonly></td>
-                <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>
-            </tr>
-        `;
-            document.querySelector('#barangTable tbody').insertAdjacentHTML('beforeend', row);
+@push('styles')
+    <style>
+        #barangTable th,
+        #barangTable td {
+            font-size: 0.85rem;
+            padding: 0.4rem !important;
+            vertical-align: middle;
         }
 
-        function updateBarang(select) {
-            const kode = select.value;
-            const barang = barangs.find(b => b.kode_barang === kode);
-            const row = select.closest('tr');
+        #barangTable select,
+        #barangTable input {
+            font-size: 0.85rem;
+            padding: 0.3rem 0.5rem;
+        }
 
-            if (barang) {
-                row.querySelector('[name="nama_barang_snapshot[]"]').value = barang.nama;
-                row.querySelector('[name="harga_beli_snapshot[]"]').value = barang.harga_beli;
-                hitungTotal(row.querySelector('[name="jumlah[]"]'));
-            }
+        #barangTable th:nth-child(1),
+        #barangTable td:nth-child(1) {
+            max-width: 110px;
+            width: 110px;
+        }
+
+        #barangTable th:nth-child(2),
+        #barangTable td:nth-child(2) {
+            min-width: 150px;
+        }
+
+        #barangTable th:nth-child(3),
+        #barangTable td:nth-child(3),
+        #barangTable th:nth-child(4),
+        #barangTable td:nth-child(4),
+        #barangTable th:nth-child(5),
+        #barangTable td:nth-child(5) {
+            max-width: 100px;
+            width: 100px;
+        }
+
+        #barangTable th:nth-child(6),
+        #barangTable td:nth-child(6) {
+            width: 50px;
+            text-align: center;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+    <script>
+        const barangList = @json($barangs);
+
+        $(document).ready(function() {
+            $('select[name="supplier_id"]').select2({
+                placeholder: "Pilih atau cari supplier",
+                allowClear: true
+            });
+        });
+
+        function tambahBaris() {
+            let row = document.createElement('tr');
+
+            let barangOptions = `<option value="">-- Pilih Barang --</option>`;
+            barangList.forEach(barang => {
+                barangOptions += `<option value="${barang.kode_barang}"
+                                data-nama="${barang.nama}"
+                                data-harga="${barang.harga_beli}">
+                                ${barang.kode_barang} - ${barang.nama}
+                            </option>`;
+            });
+
+            row.innerHTML = `
+            <td>
+                <select name="barang_kode[]" class="form-select-barang" style="width: 100%" required>
+                    ${barangOptions}
+                </select>
+            </td>
+            <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
+            <td><input type="number" name="harga_beli_snapshot[]" class="form-control text-end" readonly></td>
+            <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
+            <td><input type="text" class="form-control text-end" readonly></td>
+            <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>
+        `;
+
+            document.querySelector('#barangTable tbody').appendChild(row);
+
+            $(row).find('.form-select-barang').select2({
+                placeholder: 'Pilih barang',
+                allowClear: true
+            }).on('change', function() {
+                let selected = $(this).find('option:selected');
+                let rowEl = $(this).closest('tr');
+                rowEl.find('[name="nama_barang_snapshot[]"]').val(selected.data('nama'));
+                rowEl.find('[name="harga_beli_snapshot[]"]').val(selected.data('harga'));
+                hitungTotal(rowEl.find('[name="jumlah[]"]')[0]);
+            });
         }
 
         function hitungTotal(input) {
@@ -130,4 +190,4 @@
             hitungGrandTotal();
         }
     </script>
-@endsection
+@endpush

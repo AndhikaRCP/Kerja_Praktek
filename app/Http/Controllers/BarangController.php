@@ -90,4 +90,27 @@ class BarangController extends Controller
                 ->with('error', 'Terjadi kesalahan saat menghapus barang.');
         }
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->q;
+
+        $barangs = Barang::where('kode_barang', 'like', "%{$search}%")
+            ->orWhere('nama', 'like', "%{$search}%")
+            ->select('kode_barang', 'nama', 'harga_beli')
+            ->limit(10)
+            ->get();
+
+        $results = [];
+        foreach ($barangs as $barang) {
+            $results[] = [
+                'id' => $barang->kode_barang,
+                'text' => "{$barang->kode_barang} - {$barang->nama}",
+                'nama' => $barang->nama,
+                'harga_beli' => $barang->harga_beli,
+            ];
+        }
+
+        return response()->json(['results' => $results]);
+    }
 }

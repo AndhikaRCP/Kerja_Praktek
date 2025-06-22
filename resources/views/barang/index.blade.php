@@ -136,9 +136,10 @@
                                             </td>
                                             <td style="white-space: nowrap;">{{ $item->satuan }}</td>
                                             <td style="white-space: nowrap;">{{ $item->stok }}</td>
-                                            <td style="white-space: nowrap;">Rp
+                                            <td data-order="{{ $item->harga_beli }}" style="white-space: nowrap;" >
+                                                Rp
                                                 {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
-                                            <td style="white-space: nowrap;">Rp
+                                            <td data-order="{{ $item->harga_jual }}" style="white-space: nowrap;">Rp
                                                 {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('barang.edit', $item->kode_barang) }}"
