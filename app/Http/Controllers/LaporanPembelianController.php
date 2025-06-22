@@ -89,7 +89,7 @@ class LaporanPembelianController extends Controller
     }
 
 
-    public function exportExcel($id)
+    public function exportDetailExcel($id)
     {
         $pembelian = Pembelian::with(['supplier', 'user', 'detailPembelian.barang.kategori'])->findOrFail($id);
 
@@ -131,5 +131,66 @@ class LaporanPembelianController extends Controller
         $writer->save($temp_file);
 
         return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $query = Pembelian::with(['supplier', 'user'])->orderBy('tanggal', 'desc');
+
+        if ($request->tanggal_mulai && $request->tanggal_akhir) {
+            $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
+        }
+
+        if ($request->supplier_id) {
+            $query->where('supplier_id', $request->supplier_id);
+        }
+
+        if ($request->status_transaksi) {
+            $query->where('status_transaksi', $request->status_transaksi);
+        }
+
+        $pembelians = $query->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Kode Transaksi');
+        $sheet->setCellValue('C1', 'Tanggal');
+        $sheet->setCellValue('D1', 'Supplier');
+        $sheet->setCellValue('E1', 'User Input');
+        $sheet->setCellValue('F1', 'Total Harga');
+        $sheet->setCellValue('G1', 'Status');
+        $sheet->setCellValue('H1', 'Keterangan');
+
+        // Isi data
+        $row = 2;
+        foreach ($pembelians as $i => $pembelian) {
+            $sheet->setCellValue('A' . $row, $i + 1);
+            $sheet->setCellValue('B' . $row, $pembelian->kode_transaksi);
+            $sheet->setCellValue('C' . $row, \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y'));
+            $sheet->setCellValue('D' . $row, $pembelian->supplier->nama ?? '-');
+            $sheet->setCellValue('E' . $row, $pembelian->user->name ?? '-');
+            $sheet->setCellValue('F' . $row, $pembelian->total_harga);
+            $sheet->setCellValue('G' . $row, ucfirst($pembelian->status_transaksi));
+            $sheet->setCellValue('H' . $row, $pembelian->keterangan ?? '-');
+            $row++;
+        }
+
+        // Total di akhir
+        $totalHarga = $pembelians->sum('total_harga');
+        $sheet->setCellValue('E' . $row, 'Total:');
+        $sheet->setCellValue('F' . $row, $totalHarga);
+
+        // Export
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'laporan_pembelian_' . now()->format('Ymd_His') . '.xlsx';
+
+        // Simpan ke penyimpanan sementara
+        $tempFile = storage_path($filename);
+        $writer->save($tempFile);
+
+        return response()->download($tempFile)->deleteFileAfterSend(true);
     }
 }

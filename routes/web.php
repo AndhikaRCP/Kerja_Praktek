@@ -39,13 +39,17 @@ Route::get('/dashboard', function () {
     return view('dashboard.admin');
 })->name('dashboard.admin');
 
+// LAPORAN PEMBELIAN
 Route::get('/laporan/pembelian/index', [LaporanPembelianController::class, 'index'])->name('laporan.pembelian.index');
 Route::get('/laporan/pembelian/{id}', [LaporanPembelianController::class, 'show'])->name('laporan.pembelian.show');
 Route::get('/laporan/pembelian/export/pdf', [LaporanPembelianController::class, 'exportPdf'])
     ->name('laporan.pembelian.export.pdf');
 Route::get('/laporan/pembelian/{id}/pdf', [LaporanPembelianController::class, 'exportDetailPdf'])->name('laporan.pembelian.export.detail.pdf');
-Route::get('/laporan/pembelian/{id}/export-excel', [LaporanPembelianController::class, 'exportExcel'])
+
+Route::get('/laporan/pembelian/export/excel', [LaporanPembelianController::class, 'exportExcel'])
     ->name('laporan.pembelian.export.excel');
+Route::get('/laporan/pembelian/{id}/export-excel', [LaporanPembelianController::class, 'exportDetailExcel'])
+    ->name('laporan.pembelian.export.detail.excel');
 
-
+// LAPORAN PENJUALAN
 Route::get('/laporan/penjualan/index', [LaporanPenjualanController::class, 'index'])->name('laporan.penjualan');
