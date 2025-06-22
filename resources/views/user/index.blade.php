@@ -8,7 +8,8 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">Manajemen Akun</h4>
-                            <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
+                            <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
+                                data-bs-target="#addRowModal">
                                 <i class="fa fa-plus"></i> Tambah Akun
                             </button>
                         </div>
@@ -23,7 +24,8 @@
                                     <div class="modal-content">
                                         <div class="modal-header border-0">
                                             <h5 class="modal-title">Tambah Akun Pengguna</h5>
-                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-bs-dismiss="modal"
+                                                aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -31,23 +33,34 @@
                                         <div class="modal-body">
                                             <div class="form-group form-group-default">
                                                 <label>Username</label>
-                                                <input type="text" name="username" class="form-control" required>
+                                                <input type="text" name="username" class="form-control"
+                                                    value="{{ old('username') }}" required>
                                             </div>
                                             <div class="form-group form-group-default">
                                                 <label>Nama</label>
-                                                <input type="text" name="name" class="form-control" required>
+                                                <input type="text" name="name" class="form-control"
+                                                    value="{{ old('name') }}"required>
                                             </div>
                                             <div class="form-group form-group-default">
                                                 <label>Email</label>
-                                                <input type="email" name="email" class="form-control" required>
+                                                <input type="email" name="email" class="form-control"
+                                                    value="{{ old('email') }}" required>
                                             </div>
                                             <div class="form-group form-group-default">
                                                 <label>Password</label>
-                                                <input type="password" name="password" class="form-control" required>
+                                                <input type="password" name="password" class="form-control"
+                                                    value="{{ old('password') }}" required>
                                             </div>
                                             <div class="form-group form-group-default">
+                                                <label>Konfirmasi Password</label>
+                                                <input type="password" name="password_confirmation" class="form-control"
+                                                    required>
+                                            </div>
+
+                                            <div class="form-group form-group-default">
                                                 <label>Role</label>
-                                                <select name="role" class="form-control" required>
+                                                <select name="role" class="form-control" value="{{ old('role') }}"
+                                                    required>
                                                     <option value="">-- Pilih Role --</option>
                                                     <option value="manager">Manager</option>
                                                     <option value="admin">Admin</option>
@@ -58,7 +71,8 @@
 
                                         <div class="modal-footer border-0">
                                             <button type="submit" class="btn btn-primary">Simpan</button>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
+                                            <button type="button" class="btn btn-danger"
+                                                data-bs-dismiss="modal">Batal</button>
                                         </div>
                                     </div>
                                 </form>
@@ -82,28 +96,22 @@
                                 <tbody>
                                     @forelse ($users as $index => $user)
                                         <tr>
-                                            <td>{{ $index + $users->firstItem() }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $user->username }}</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>
-                                                <span class="badge bg-{{ $user->role === 'manager' ? 'primary' : ($user->role === 'admin' ? 'warning text-dark' : 'info') }}">
+                                                <span
+                                                    class="badge bg-{{ $user->role === 'manager' ? 'primary' : ($user->role === 'admin' ? 'warning text-dark' : 'info') }}">
                                                     {{ ucfirst($user->role) }}
                                                 </span>
                                             </td>
                                             <td>{{ $user->created_at->format('d-m-Y') }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-primary" title="Edit">
+                                                <a href="{{ route('user.edit', $user->id) }}"
+                                                    class="btn btn-sm btn-primary" title="Edit">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('user.destroy', $user->id) }}" method="POST" style="display:inline;">
-                                                    @csrf @method('DELETE')
-                                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                                        onclick="confirmDelete(event, this)"
-                                                        data-url="{{ route('user.destroy', $user->id) }}">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </form>
                                             </td>
                                         </tr>
                                     @empty
@@ -113,11 +121,6 @@
                                     @endforelse
                                 </tbody>
                             </table>
-
-                            {{-- Pagination --}}
-                            <div class="d-flex justify-content-center mt-3">
-                                {{ $users->links() }}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -129,6 +132,5 @@
         @include('layouts.components.scripts.form_validation')
         @include('layouts.components.scripts.sweetalerts')
         @include('layouts.components.scripts.datatables')
-        @include('layouts.components.scripts.confirm_delete')
     @endpush
 @endsection
