@@ -94,10 +94,19 @@
                                             <td>{{ $penjualan->sales->name ?? '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
                                             <td>Rp {{ number_format($penjualan->total_harga, 0, ',', '.') }}</td>
+                                            @php
+                                                $warnaStatus = [
+                                                    'selesai' => 'success', // Hijau
+                                                    'batal' => 'danger', // Merah
+                                                    'diproses' => 'warning', // Kuning
+                                                    'draft' => 'secondary', // Abu
+                                                ];
+                                            @endphp
+
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $penjualan->status_pembayaran === 'tunai' ? 'success' : ($penjualan->status_pembayaran === 'kredit' ? 'warning' : 'danger') }}">
-                                                    {{ ucfirst($penjualan->status_pembayaran) }}
+                                                    class="badge bg-{{ $warnaStatus[$penjualan->status_transaksi] ?? 'dark' }}">
+                                                    {{ ucfirst($penjualan->status_transaksi) }}
                                                 </span>
                                             </td>
                                             <td>

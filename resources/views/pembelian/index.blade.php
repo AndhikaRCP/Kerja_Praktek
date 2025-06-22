@@ -81,7 +81,7 @@
                                         <th>User Input</th>
                                         <th>Tanggal</th>
                                         <th>Total Harga</th>
-                                        <th>Status</th>
+                                        <th>Status Transaksi</th>
                                         <th style="width: 15%; text-align: center;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -93,9 +93,18 @@
                                             <td>{{ $pembelian->user->name ?? '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
                                             <td>Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}</td>
+                                            @php
+                                                $warnaStatus = [
+                                                    'selesai' => 'success', // Hijau
+                                                    'batal' => 'danger', // Merah
+                                                    'diproses' => 'warning', // Kuning
+                                                    'draft' => 'secondary', // Abu
+                                                ];
+                                            @endphp
+
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $pembelian->status_transaksi === 'selesai' ? 'success' : 'secondary' }}">
+                                                    class="badge bg-{{ $warnaStatus[$pembelian->status_transaksi] ?? 'dark' }}">
                                                     {{ ucfirst($pembelian->status_transaksi) }}
                                                 </span>
                                             </td>

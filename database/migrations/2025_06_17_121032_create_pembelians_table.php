@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->date('tanggal');
             $table->decimal('total_harga', 12, 2)->default(0);
-            $table->enum('status_transaksi', ['selesai', 'batal'])->default('selesai');
+            $table->enum('status_transaksi', ['selesai','draft','diproses','batal'])->default('selesai');
             $table->text('keterangan')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();

@@ -22,7 +22,9 @@ class PembelianController extends Controller
     {
         $suppliers = Supplier::all();
         $barangs = Barang::all();
-        return view('pembelian.create', compact('suppliers', 'barangs'));
+        $kodeBaru = 'PB-' . str_pad(Pembelian::max('id') + 1, 5, '0', STR_PAD_LEFT); // Contoh: PB-00001
+
+        return view('pembelian.create', compact('suppliers', 'barangs', 'kodeBaru'));
     }
 
     public function store(Request $request)
@@ -36,13 +38,13 @@ class PembelianController extends Controller
             'harga_beli_snapshot.*' => 'required|numeric|min:0',
         ]);
 
-        // Hitung total
+        // Hitung total harga
         $total = 0;
         foreach ($request->barang_kode as $i => $kode) {
             $total += $request->jumlah[$i] * $request->harga_beli_snapshot[$i];
         }
 
-        // Simpan header pembelian
+        // Simpan data pembelian
         $pembelian = Pembelian::create([
             'kode_transaksi' => 'PB-' . strtoupper(Str::random(6)),
             'supplier_id' => $request->supplier_id,
@@ -53,9 +55,9 @@ class PembelianController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        // Simpan detail pembelian + update stok
+        // Simpan detail pembelian dan update stok
         foreach ($request->barang_kode as $i => $kode) {
-            $barang = Barang::where('kode_barang', $kode)->first();
+            $barang = Barang::where('kode_barang', $kode)->firstOrFail();
 
             $detail = new DetailPembelian([
                 'barang_kode' => $kode,
@@ -72,6 +74,7 @@ class PembelianController extends Controller
 
         return redirect()->route('pembelian.index')->with('success', 'Pembelian berhasil disimpan.');
     }
+
 
     public function show(Pembelian $pembelian)
     {
