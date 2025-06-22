@@ -106,4 +106,52 @@ class LaporanPenjualanController extends Controller
 
         return response()->download($tempFile)->deleteFileAfterSend(true);
     }
+
+    public function exportDetailExcel($id)
+    {
+        $penjualan = Penjualan::with(['pelanggan', 'user', 'detailPenjualan.barang'])->findOrFail($id);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Judul dan informasi utama
+        $sheet->setCellValue('A1', 'Detail Penjualan - ' . $penjualan->kode_transaksi);
+        $sheet->setCellValue('A2', 'Tanggal: ' . \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y'));
+        $sheet->setCellValue('A3', 'Pelanggan: ' . $penjualan->pelanggan->nama);
+        $sheet->setCellValue('A4', 'User Input: ' . $penjualan->user->name);
+        $sheet->setCellValue('A5', 'Status: ' . ucfirst($penjualan->status_transaksi));
+        $sheet->setCellValue('A6', 'Keterangan: ' . ($penjualan->keterangan ?? '-'));
+
+        // Header tabel
+        $sheet->fromArray([
+            ['No', 'Kode Barang', 'Nama', 'Satuan', 'Harga Jual', 'Jumlah', 'Subtotal']
+        ], NULL, 'A8');
+
+        // Isi data
+        $start = 9;
+        foreach ($penjualan->detailPenjualan as $i => $detail) {
+            $sheet->fromArray([
+                $i + 1,
+                $detail->barang_kode,
+                $detail->nama_barang_snapshot,
+                $detail->barang->satuan ?? '-',
+                $detail->harga_jual_snapshot,
+                $detail->jumlah,
+                $detail->harga_jual_snapshot * $detail->jumlah
+            ], NULL, 'A' . ($start + $i));
+        }
+
+        // Total
+        $lastRow = $start + count($penjualan->detailPenjualan);
+        $sheet->setCellValue('F' . $lastRow, 'Total:');
+        $sheet->setCellValue('G' . $lastRow, $penjualan->total_harga);
+
+        // Export
+        $filename = 'Detail_Penjualan_' . $penjualan->kode_transaksi . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $temp_file = tempnam(sys_get_temp_dir(), $filename);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
+    }
 }
