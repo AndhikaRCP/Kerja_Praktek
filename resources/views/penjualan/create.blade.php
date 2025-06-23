@@ -7,7 +7,7 @@
                 <div class="card-header bg-secondary text-white">
                     <h4>Form Transaksi Penjualan</h4>
                 </div>
-                <form action="{{ route('penjualan.store') }}" method="POST">
+                <form action="{{ route('penjualan.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
 
@@ -24,7 +24,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label>Tanggal</label>
-                                <input type="date" name="tanggal" class="form-control" value="{{ now()->toDateString() }}" required>
+                                <input type="date" name="tanggal" class="form-control"
+                                    value="{{ now()->toDateString() }}" required>
                             </div>
                         </div>
 
@@ -44,7 +45,8 @@
                                 </thead>
                                 <tbody></tbody>
                             </table>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="tambahBaris()">+ Tambah Barang</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="tambahBaris()">+ Tambah
+                                Barang</button>
                         </div>
 
                         <!-- Keterangan & Total -->
@@ -58,9 +60,29 @@
                                 <input type="text" id="totalHarga" class="form-control text-end" readonly>
                             </div>
                         </div>
+
+                        <!-- Status & Pembayaran -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label>Status Pembayaran</label>
+                                <select name="status_pembayaran" class="form-select" required onchange="togglePembayaran()">
+                                    <option value="tunai">Tunai</option>
+                                    <option value="kredit">Kredit</option>
+                                    <option value="belum lunas">Belum Lunas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6" id="pembayaranSection">
+                                <label>Nominal Pembayaran Awal</label>
+                                <input type="number" name="bayar_nominal" class="form-control text-end" placeholder="0">
+                                <label class="mt-2">Metode</label>
+                                <input type="text" name="metode" class="form-control"
+                                    placeholder="Contoh: Tunai, Transfer">
+                                <label class="mt-2">Bukti Pembayaran</label>
+                                <input type="file" name="bukti_pembayaran" class="form-control">
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Footer -->
                     <div class="card-footer text-end">
                         <button type="submit" class="btn btn-success">Simpan</button>
                         <a href="{{ route('penjualan.index') }}" class="btn btn-secondary">Batal</a>
@@ -73,13 +95,15 @@
 
 @push('styles')
     <style>
-        #barangTable th, #barangTable td {
+        #barangTable th,
+        #barangTable td {
             font-size: 0.85rem;
             padding: 0.4rem !important;
             vertical-align: middle;
         }
 
-        #barangTable select, #barangTable input {
+        #barangTable select,
+        #barangTable input {
             font-size: 0.85rem;
             padding: 0.3rem 0.5rem;
         }
@@ -114,7 +138,6 @@
 @endpush
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <script>
         const barangList = @json($barangs);
 
@@ -123,7 +146,14 @@
                 placeholder: "Pilih atau cari pelanggan",
                 allowClear: true
             });
+            togglePembayaran();
         });
+
+        function togglePembayaran() {
+            const status = document.querySelector('[name="status_pembayaran"]').value;
+            const section = document.getElementById('pembayaranSection');
+            section.style.display = (status === 'belum lunas') ? 'none' : 'block';
+        }
 
         function tambahBaris() {
             let row = document.createElement('tr');
@@ -131,24 +161,24 @@
             let barangOptions = `<option value="">-- Pilih Barang --</option>`;
             barangList.forEach(barang => {
                 barangOptions += `<option value="${barang.kode_barang}"
-                                    data-nama="${barang.nama}"
-                                    data-harga="${barang.harga_jual}">
-                                    ${barang.kode_barang} - ${barang.nama}
-                                </option>`;
+                data-nama="${barang.nama}"
+                data-harga="${barang.harga_jual}">
+                ${barang.kode_barang} - ${barang.nama}
+            </option>`;
             });
 
             row.innerHTML = `
-                <td>
-                    <select name="barang_kode[]" class="form-select-barang" style="width: 100%" required>
-                        ${barangOptions}
-                    </select>
-                </td>
-                <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
-                <td><input type="number" name="harga_jual_snapshot[]" class="form-control text-end" readonly></td>
-                <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
-                <td><input type="text" class="form-control text-end" readonly></td>
-                <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>
-            `;
+            <td>
+                <select name="barang_kode[]" class="form-select-barang" style="width: 100%" required>
+                    ${barangOptions}
+                </select>
+            </td>
+            <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
+            <td><input type="number" name="harga_jual_snapshot[]" class="form-control text-end" readonly></td>
+            <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
+            <td><input type="text" class="form-control text-end" readonly></td>
+            <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>
+        `;
 
             document.querySelector('#barangTable tbody').appendChild(row);
 
