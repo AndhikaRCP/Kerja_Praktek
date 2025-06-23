@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\DetailPenjualanController;
@@ -40,9 +41,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware('auth')->group(function () {
 
     // === DASHBOARD UMUM ===
-    Route::get('/dashboard', function () {
-        return view('dashboard.admin');
-    })->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'redirect'])->name('dashboard');
+
 
     // === SUPERADMIN ONLY ===
     Route::middleware('role:superadmin')->group(function () {
