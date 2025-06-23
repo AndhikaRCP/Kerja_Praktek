@@ -34,46 +34,52 @@ class PenjualanController extends Controller
             'barang_kode.*' => 'required|exists:barangs,kode_barang',
             'jumlah.*' => 'required|integer|min:1',
             'harga_jual_snapshot.*' => 'required|numeric|min:0',
-            'status_pembayaran' => 'required|in:tunai,kredit,belum lunas',
-            'keterangan' => 'nullable|string',
         ]);
 
+        // Hitung total harga
         $total = 0;
         foreach ($request->barang_kode as $i => $kode) {
             $total += $request->jumlah[$i] * $request->harga_jual_snapshot[$i];
         }
 
-        // Simpan header penjualan
+        // Simpan data penjualan
         $penjualan = Penjualan::create([
             'kode_transaksi' => 'PJ-' . strtoupper(Str::random(6)),
             'pelanggan_id' => $request->pelanggan_id,
-            'user_id' => Auth::id(),
-            'sales_id' => Auth::user()->role === 'sales' ? Auth::id() : null,
+            'user_id' => 1, // <<--- sementara, isi ID user login
+            'created_by' => 1,
             'tanggal' => $request->tanggal,
             'total_harga' => $total,
-            'status_pembayaran' => $request->status_pembayaran,
+            'status_pembayaran' => $request->status_pembayaran ?? 'tunai',
             'status_transaksi' => 'selesai',
             'keterangan' => $request->keterangan,
-            'created_by' => Auth::id(),
         ]);
 
-        // Simpan detail & kurangi stok
+        // Simpan detail penjualan dan update stok
         foreach ($request->barang_kode as $i => $kode) {
-            $barang = Barang::where('kode_barang', $kode)->first();
+            $barang = Barang::where('kode_barang', $kode)->firstOrFail();
 
-            DetailPenjualan::create([
-                'penjualan_id' => $penjualan->id,
+            // Cek stok cukup
+            if ($barang->stok < $request->jumlah[$i]) {
+                return back()->with('error', "Stok barang {$barang->nama} tidak mencukupi.");
+            }
+
+            $detail = new DetailPenjualan([
                 'kode_barang' => $kode,
                 'nama_barang_snapshot' => $barang->nama,
                 'harga_jual_snapshot' => $request->harga_jual_snapshot[$i],
                 'jumlah' => $request->jumlah[$i],
             ]);
 
+            $penjualan->detailPenjualan()->save($detail);
+
+            // Kurangi stok
             $barang->decrement('stok', $request->jumlah[$i]);
         }
 
         return redirect()->route('penjualan.index')->with('success', 'Penjualan berhasil disimpan.');
     }
+
 
     public function show(Penjualan $penjualan)
     {

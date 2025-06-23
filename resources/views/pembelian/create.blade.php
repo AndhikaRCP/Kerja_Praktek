@@ -4,7 +4,7 @@
     <div class="container">
         <div class="page-inner">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-secondary text-white">
                     <h4>Form Transaksi Pembelian</h4>
                 </div>
                 <form action="{{ route('pembelian.store') }}" method="POST">
