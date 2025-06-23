@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-// Controller import
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\SupplierController;
@@ -15,51 +13,78 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\DetailPembelianController;
 use App\Http\Controllers\LaporanPembelianController;
 use App\Http\Controllers\LaporanPenjualanController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/', function () {
-    return view('auth.login');
+// =========================
+// Route Guest (Login/Register)
+// =========================
+Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    });
+
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 });
 
+// =========================
+// Route Logout (siapapun yang login)
+// =========================
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Route resource (CRUD) untuk semua tabel
-Route::resource('user', UserController::class);
-Route::resource('pelanggan', PelangganController::class);
-Route::resource('supplier', SupplierController::class);
-Route::resource('barang', BarangController::class);
-Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
-Route::resource('kategori', KategoriController::class);
-Route::resource('penjualan', PenjualanController::class);
-Route::resource('detail-penjualan', DetailPenjualanController::class);
-Route::resource('pembayaran_penjualan', PembayaranPenjualanController::class);
-Route::resource('pembelian', PembelianController::class);
-Route::resource('detail-pembelian', DetailPembelianController::class);
-Route::resource('laporan_pembelian', LaporanPembelianController::class);
-Route::resource('laporan_pembelian', LaporanPenjualanController::class);
+// =========================
+// Route Setelah Login (Auth)
+// =========================
+Route::middleware('auth')->group(function () {
 
-Route::get('/dashboard', function () {
-    return view('dashboard.admin');
-})->name('dashboard.admin');
+    // Dashboard (untuk semua yang login)
+    Route::get('/dashboard', function () {
+        return view('dashboard.admin');
+    })->name('dashboard');
 
-// LAPORAN PEMBELIAN
-Route::get('/laporan/pembelian/index', [LaporanPembelianController::class, 'index'])->name('laporan.pembelian.index');
-Route::get('/laporan/pembelian/{id}', [LaporanPembelianController::class, 'show'])->name('laporan.pembelian.show');
-Route::get('/laporan/pembelian/export/pdf', [LaporanPembelianController::class, 'exportPdf'])
-    ->name('laporan.pembelian.export.pdf');
-Route::get('/laporan/pembelian/{id}/pdf', [LaporanPembelianController::class, 'exportDetailPdf'])->name('laporan.pembelian.export.detail.pdf');
+    // === SUPERADMIN ONLY ===
+    Route::middleware('role:superadmin')->group(function () {
+        Route::resource('user', UserController::class);
+    });
 
-Route::get('/laporan/pembelian/export/excel', [LaporanPembelianController::class, 'exportExcel'])
-    ->name('laporan.pembelian.export.excel');
-Route::get('/laporan/pembelian/{id}/export-excel', [LaporanPembelianController::class, 'exportDetailExcel'])
-    ->name('laporan.pembelian.export.detail.excel');
+    // === ADMIN + SUPERADMIN ===
+    Route::middleware('role:admin,superadmin')->group(function () {
+        Route::resource('barang', BarangController::class);
+        Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
+        Route::resource('kategori', KategoriController::class);
+        Route::resource('supplier', SupplierController::class);
+        Route::resource('pembelian', PembelianController::class);
+        Route::resource('detail-pembelian', DetailPembelianController::class);
 
-// LAPORAN PENJUALAN
-Route::get('/laporan/penjualan/index', [LaporanPenjualanController::class, 'index'])->name('laporan.penjualan.index');
+        // Laporan Pembelian
+        Route::prefix('laporan/pembelian')->name('laporan.pembelian.')->group(function () {
+            Route::get('/index', [LaporanPembelianController::class, 'index'])->name('index');
+            Route::get('/{id}', [LaporanPembelianController::class, 'show'])->name('show');
+            Route::get('/export/pdf', [LaporanPembelianController::class, 'exportPdf'])->name('export.pdf');
+            Route::get('/{id}/pdf', [LaporanPembelianController::class, 'exportDetailPdf'])->name('export.detail.pdf');
+            Route::get('/export/excel', [LaporanPembelianController::class, 'exportExcel'])->name('export.excel');
+            Route::get('/{id}/export-excel', [LaporanPembelianController::class, 'exportDetailExcel'])->name('export.detail.excel');
+        });
 
-Route::get('/laporan/penjualan/export/pdf', [LaporanPenjualanController::class, 'exportPdf'])
-    ->name('laporan.penjualan.export.pdf');
-Route::get('/laporan/penjualan/{id}/pdf', [LaporanPenjualanController::class, 'exportDetailPdf'])->name('laporan.penjualan.export.detail.pdf');
-Route::get('/laporan/penjualan/{id}', [LaporanPenjualanController::class, 'show'])->name('laporan.penjualan.show');
-Route::get('/laporan/penjualan/export/excel', [LaporanPenjualanController::class, 'exportExcel'])
-    ->name('laporan.penjualan.export.excel');
-Route::get('/laporan/penjualan/{id}/excel', [LaporanPenjualanController::class, 'exportDetailExcel'])->name('laporan.penjualan.export.detail.excel');
+        // Laporan Penjualan
+        Route::prefix('laporan/penjualan')->name('laporan.penjualan.')->group(function () {
+            Route::get('/index', [LaporanPenjualanController::class, 'index'])->name('index');
+            Route::get('/{id}', [LaporanPenjualanController::class, 'show'])->name('show');
+            Route::get('/export/pdf', [LaporanPenjualanController::class, 'exportPdf'])->name('export.pdf');
+            Route::get('/{id}/pdf', [LaporanPenjualanController::class, 'exportDetailPdf'])->name('export.detail.pdf');
+            Route::get('/export/excel', [LaporanPenjualanController::class, 'exportExcel'])->name('export.excel');
+            Route::get('/{id}/excel', [LaporanPenjualanController::class, 'exportDetailExcel'])->name('export.detail.excel');
+        });
+    });
 
+    // === SALES + ADMIN + SUPERADMIN ===
+    Route::middleware('role:sales,admin,superadmin')->group(function () {
+        Route::resource('pelanggan', PelangganController::class);
+        Route::resource('penjualan', PenjualanController::class);
+        Route::resource('detail-penjualan', DetailPenjualanController::class);
+        Route::resource('pembayaran_penjualan', PembayaranPenjualanController::class);
+    });
+});
