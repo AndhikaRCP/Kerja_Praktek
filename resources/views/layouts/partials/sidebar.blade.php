@@ -40,7 +40,7 @@
                       </li>
                       <li class="nav-item">
                           <a data-bs-toggle="collapse" href="#barang">
-                              <i class="fas fa-layer-group"></i>
+                              <i class="fas fa-boxes"></i>
                               <p>Barang</p>
                               <span class="caret"></span>
                           </a>
@@ -71,7 +71,7 @@
                       </li>
                       <li class="nav-item">
                           <a data-bs-toggle="collapse" href="#pelanggan">
-                              <i class="fas fa-th-list"></i>
+                              <i class="fas fa-user-friends"></i>
                               <p>Pelanggan</p>
                               <span class="caret"></span>
                           </a>
@@ -92,7 +92,7 @@
                       </li>
                       <li class="nav-item">
                           <a data-bs-toggle="collapse" href="#supplier">
-                              <i class="fas fa-pen-square"></i>
+                              <i class="fas fa-dolly-flatbed"></i>
                               <p>Supplier</p>
                               <span class="caret"></span>
                           </a>
@@ -123,7 +123,7 @@
                       </li>
                       <li class="nav-item">
                           <a data-bs-toggle="collapse" href="#penjualan">
-                              <i class="fas fa-layer-group"></i>
+                              <i class="fas fa-file-invoice"></i>
                               <p>Penjualan</p>
                               <span class="caret"></span>
                           </a>
@@ -149,7 +149,7 @@
                       </li>
                       <li class="nav-item">
                           <a data-bs-toggle="collapse" href="#pembelian">
-                              <i class="fas fa-th-list"></i>
+                              <i class="fas fa-cart-arrow-down"></i>
                               <p>Pembelian</p>
                               <span class="caret"></span>
                           </a>
@@ -179,13 +179,13 @@
                       </li>
                       <li class="nav-item">
                           <a href="{{ route('laporan.penjualan.index') }}">
-                              <i class="fas fa-th-list"></i>
+                              <i class="fas fa-chart-line">/</i>
                               <p>Laporan Penjualan</p>
                           </a>
                       </li>
                       <li class="nav-item">
                           <a href="{{ route('laporan.pembelian.index') }}">
-                              <i class="fas fa-th-list"></i>
+                              <i class="fas fa-file-invoice-dollar"></i>
                               <p>Laporan Pembelian</p>
                           </a>
                       </li>
@@ -200,14 +200,14 @@
                       </li>
                       <li class="nav-item">
                           <a href="{{ route('user.index') }}">
-                              <i class="fas fa-home"></i>
+                              <i class="fas fa-users-cog"></i>
                               <p>Manajemen Akun</p>
                           </a>
                       </li>
                       <li class="nav-item">
                           <a data-bs-toggle="collapse" href="#log-aktivitas" class="collapsed"
                               aria-expanded="false">
-                              <i class="fas fa-home"></i>
+                              <i class="fas fa-history"></i>
                               <p>Log Aktivitas</p>
                           </a>
                       </li>
