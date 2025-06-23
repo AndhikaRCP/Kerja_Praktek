@@ -57,7 +57,7 @@ class DashboardController extends Controller
             'sales' => User::where('role', 'sales')->count(),
         ];
 
-        return view('dashboard.admin', compact(
+        return view('dashboard.superadmin', compact(
             'totalUsers',
             'totalBarangs',
             'totalPenjualans',

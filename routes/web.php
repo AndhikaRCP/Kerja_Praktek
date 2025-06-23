@@ -78,7 +78,7 @@ Route::get('/dashboard', [DashboardController::class, 'redirect'])->name('dashbo
     });
 
     // === ADMIN ONLY ===
-    Route::middleware('role:admin')->group(function () {
+    Route::middleware('role:superadmin,admin')->group(function () {
         Route::resource('barang', BarangController::class);
         Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
         Route::resource('kategori', KategoriController::class);
