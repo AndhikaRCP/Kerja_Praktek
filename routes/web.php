@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\SupplierController;
@@ -13,11 +14,10 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\DetailPembelianController;
 use App\Http\Controllers\LaporanPembelianController;
 use App\Http\Controllers\LaporanPenjualanController;
-use App\Http\Controllers\AuthController;
 
-// =========================
-// Route Guest (Login/Register)
-// =========================
+// ============================
+// AUTHENTIKASI (GUEST ONLY)
+// ============================
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
         return view('auth.login');
@@ -25,22 +25,21 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// =========================
-// Route Logout (siapapun yang login)
-// =========================
+// ============================
+// LOGOUT (AUTH REQUIRED)
+// ============================
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// =========================
-// Route Setelah Login (Auth)
-// =========================
+// ============================
+// ROUTE SETELAH LOGIN
+// ============================
 Route::middleware('auth')->group(function () {
 
-    // Dashboard (untuk semua yang login)
+    // === DASHBOARD UMUM ===
     Route::get('/dashboard', function () {
         return view('dashboard.admin');
     })->name('dashboard');
@@ -48,10 +47,8 @@ Route::middleware('auth')->group(function () {
     // === SUPERADMIN ONLY ===
     Route::middleware('role:superadmin')->group(function () {
         Route::resource('user', UserController::class);
-    });
 
-    // === ADMIN + SUPERADMIN ===
-    Route::middleware('role:admin,superadmin')->group(function () {
+        // Semua akses admin + superadmin
         Route::resource('barang', BarangController::class);
         Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
         Route::resource('kategori', KategoriController::class);
@@ -59,7 +56,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('pembelian', PembelianController::class);
         Route::resource('detail-pembelian', DetailPembelianController::class);
 
-        // Laporan Pembelian
+        // === Laporan Pembelian ===
         Route::prefix('laporan/pembelian')->name('laporan.pembelian.')->group(function () {
             Route::get('/index', [LaporanPembelianController::class, 'index'])->name('index');
             Route::get('/{id}', [LaporanPembelianController::class, 'show'])->name('show');
@@ -69,7 +66,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/export-excel', [LaporanPembelianController::class, 'exportDetailExcel'])->name('export.detail.excel');
         });
 
-        // Laporan Penjualan
+        // === Laporan Penjualan ===
         Route::prefix('laporan/penjualan')->name('laporan.penjualan.')->group(function () {
             Route::get('/index', [LaporanPenjualanController::class, 'index'])->name('index');
             Route::get('/{id}', [LaporanPenjualanController::class, 'show'])->name('show');
@@ -78,6 +75,17 @@ Route::middleware('auth')->group(function () {
             Route::get('/export/excel', [LaporanPenjualanController::class, 'exportExcel'])->name('export.excel');
             Route::get('/{id}/excel', [LaporanPenjualanController::class, 'exportDetailExcel'])->name('export.detail.excel');
         });
+    });
+
+    // === ADMIN ONLY ===
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('barang', BarangController::class);
+        Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
+        Route::resource('kategori', KategoriController::class);
+        Route::resource('supplier', SupplierController::class);
+        Route::resource('pembelian', PembelianController::class);
+        Route::resource('detail-pembelian', DetailPembelianController::class);
+        // Tidak punya akses ke laporan & user
     });
 
     // === SALES + ADMIN + SUPERADMIN ===
