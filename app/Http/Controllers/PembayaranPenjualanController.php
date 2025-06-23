@@ -11,7 +11,7 @@ class PembayaranPenjualanController extends Controller
     // Tampilkan semua data pembayaran
     public function index()
     {
-        $pembayaran_penjualans = PembayaranPenjualan::with('penjualan')->paginate(10);
+        $pembayaran_penjualans = PembayaranPenjualan::with('penjualan')->get();
         return view('pembayaran_penjualan.index', compact('pembayaran_penjualans'));
     }
 

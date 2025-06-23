@@ -89,7 +89,7 @@
                                 <tbody>
                                     @forelse ($pembayaran_penjualans as $index => $pembayaran)
                                         <tr>
-                                            <td>{{ $index + $pembayaran_penjualans->firstItem() }}</td>
+                                            <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
                                             <td>{{ $pembayaran->penjualan->kode_transaksi ?? '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($pembayaran->tanggal)->format('d-m-Y') }}</td>
                                             <td>Rp {{ number_format($pembayaran->nominal, 0, ',', '.') }}</td>
@@ -127,9 +127,7 @@
                                 </tbody>
                             </table>
 
-                            <div class="d-flex justify-content-center mt-3">
-                                {{ $pembayaran_penjualans->links() }}
-                            </div>
+
                         </div>
                     </div>
                 </div>
