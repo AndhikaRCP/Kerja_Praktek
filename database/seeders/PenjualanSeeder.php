@@ -19,8 +19,8 @@ class PenjualanSeeder extends Seeder
                 'sales_id' => User::where('role', 'sales')->inRandomOrder()->first()->id,
                 'tanggal' => now()->subDays(rand(1, 30)),
                 'total_harga' => rand(100000, 500000),
-                'status_pembayaran' => ['tunai', 'kredit', 'belum lunas'][rand(0, 2)],
-                'status_transaksi' => 'selesai',
+                'metode_pembayaran' => ['tunai', 'kredit'][rand(0, 1)],
+                'status_transaksi' => ['lunas', 'belum lunas'][rand(0, 1)],
                 'keterangan' => 'Penjualan rutin',
                 'created_by' => User::where('role', 'admin')->inRandomOrder()->first()->id,
             ]);

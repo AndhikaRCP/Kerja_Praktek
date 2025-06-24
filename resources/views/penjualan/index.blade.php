@@ -20,7 +20,7 @@
                                         <th>Sales</th>
                                         <th>Tanggal</th>
                                         <th>Total Harga</th>
-                                        <th>Status Pembayaran</th>
+                                        <th>Metode Pembayaran</th>
                                         <th>Status Transaksi</th>
                                         <th style="width: 15%; text-align: center;">Aksi</th>
                                     </tr>
@@ -41,16 +41,22 @@
                                                     'draft' => 'secondary', // Abu
                                                 ];
                                             @endphp
+                                            @php
+                                                $warna_metode = [
+                                                    'tunai' => 'primary', // biru
+                                                    'kredit' => 'warning', // kuning
+                                                ];
+                                            @endphp
 
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $warnaStatus[$penjualan->status_transaksi] ?? 'dark' }}">
-                                                    {{ ucfirst($penjualan->status_transaksi) }}
+                                                    class="badge bg-{{ $warna_metode[$penjualan->metode_pembayaran] ?? 'dark' }}">
+                                                    {{ ucfirst($penjualan->metode_pembayaran) }}
                                                 </span>
                                             </td>
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $penjualan->status_transaksi === 'selesai' ? 'success' : 'secondary' }}">
+                                                    class="badge bg-{{ $penjualan->status_transaksi === 'lunas' ? 'success' : 'secondary' }}">
                                                     {{ ucfirst($penjualan->status_transaksi) }}
                                                 </span>
                                             </td>
