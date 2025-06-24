@@ -13,83 +13,96 @@
 
                         <!-- Pelanggan & Tanggal -->
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label>Pelanggan</label>
-                                <select name="pelanggan_id" class="form-select" required>
-                                    <option value="">-- Pilih Pelanggan --</option>
-                                    @foreach ($pelanggans as $pelanggan)
-                                        <option value="{{ $pelanggan->id }}">{{ $pelanggan->nama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Tanggal</label>
-                                <input type="date" name="tanggal" class="form-control"
-                                    value="{{ now()->toDateString() }}" required>
-                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label>Pelanggan</label>
+                                    <select name="pelanggan_id" class="form-select" required>
+                                        <option value="">-- Pilih Pelanggan --</option>
+                                        @foreach ($pelanggans as $pelanggan)
+                                            <option value="{{ $pelanggan->id }}">{{ $pelanggan->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Referal Sales (Opsional)</label>
+                                    <select name="referal_id" class="form-select">
+                                        <option value="">-- Tidak Ada --</option>
+                                        @foreach ($sales as $salesPerson)
+                                            <option value="{{ $salesPerson->id }}">{{ $salesPerson->name }}
+                                                ({{ $salesPerson->username }})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                         </div>
 
-                        <!-- Tabel Barang -->
-                        <div class="mb-3">
-                            <h5>Daftar Barang</h5>
-                            <table class="table table-bordered" id="barangTable">
-                                <thead>
-                                    <tr>
-                                        <th>Kode Barang</th>
-                                        <th>Nama Barang</th>
-                                        <th>Harga Jual</th>
-                                        <th>Jumlah</th>
-                                        <th>Total</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="tambahBaris()">+ Tambah
-                                Barang</button>
-                        </div>
 
-                        <!-- Keterangan & Total -->
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label>Keterangan</label>
-                                <textarea name="keterangan" class="form-control" rows="3"></textarea>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Total Harga</label>
-                                <input type="text" id="totalHarga" class="form-control text-end" readonly>
-                            </div>
-                        </div>
-
-                        <!-- Status & Pembayaran -->
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label>Status Pembayaran</label>
-                                <select name="status_pembayaran" class="form-select" required onchange="togglePembayaran()">
-                                    <option value="tunai">Tunai</option>
-                                    <option value="kredit">Kredit</option>
-                                    <option value="belum lunas">Belum Lunas</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6" id="pembayaranSection">
-                                <label>Nominal Pembayaran Awal</label>
-                                <input type="number" name="bayar_nominal" class="form-control text-end" placeholder="0">
-                                <label class="mt-2">Metode</label>
-                                <input type="text" name="metode" class="form-control"
-                                    placeholder="Contoh: Tunai, Transfer">
-                                <label class="mt-2">Bukti Pembayaran</label>
-                                <input type="file" name="bukti_pembayaran" class="form-control">
-                            </div>
+                        <div class="col-md-6">
+                            <label>Tanggal Transaksi</label>
+                            <input type="date" name="tanggal" class="form-control" value="{{ now()->toDateString() }}"
+                                required>
                         </div>
                     </div>
 
-                    <div class="card-footer text-end">
-                        <button type="submit" class="btn btn-success">Simpan</button>
-                        <a href="{{ route('penjualan.index') }}" class="btn btn-secondary">Batal</a>
+                    <!-- Tabel Barang -->
+                    <div class="mb-3">
+                        <h5>Daftar Barang</h5>
+                        <table class="table table-bordered" id="barangTable">
+                            <thead>
+                                <tr>
+                                    <th>Kode Barang</th>
+                                    <th>Nama Barang</th>
+                                    <th>Harga Jual</th>
+                                    <th>Jumlah</th>
+                                    <th>Total</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="tambahBaris()">+ Tambah
+                            Barang</button>
                     </div>
-                </form>
+
+                    <!-- Keterangan & Total -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label>Keterangan</label>
+                            <textarea name="keterangan" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Total Harga</label>
+                            <input type="text" id="totalHarga" class="form-control text-end" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Status & Pembayaran -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label>Status Pembayaran</label>
+                            <select name="status_pembayaran" class="form-select" required onchange="togglePembayaran()">
+                                <option value="tunai">Tunai</option>
+                                <option value="kredit">Kredit</option>
+                                <option value="belum lunas">Belum Lunas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6" id="pembayaranSection">
+                            <label>Nominal Pembayaran Awal</label>
+                            <input type="number" name="bayar_nominal" class="form-control text-end" placeholder="0">
+                            <label class="mt-2">Metode</label>
+                            <input type="text" name="metode" class="form-control" placeholder="Contoh: Tunai, Transfer">
+                            <label class="mt-2">Bukti Pembayaran</label>
+                            <input type="file" name="bukti_pembayaran" class="form-control">
+                        </div>
+                    </div>
             </div>
+
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-success">Simpan</button>
+                <a href="{{ route('penjualan.index') }}" class="btn btn-secondary">Batal</a>
+            </div>
+            </form>
         </div>
+    </div>
     </div>
 @endsection
 

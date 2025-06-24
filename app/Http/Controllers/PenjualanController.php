@@ -7,6 +7,7 @@ use App\Models\DetailPenjualan;
 use App\Models\Pelanggan;
 use App\Models\Barang;
 use App\Models\PembayaranPenjualan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -15,7 +16,7 @@ class PenjualanController extends Controller
 {
     public function index()
     {
-        $penjualans = Penjualan::with(['pelanggan'])->latest()->paginate(10);
+        $penjualans = Penjualan::with(['pelanggan'])->latest()->get();
         return view('penjualan.index', compact('penjualans'));
     }
 
@@ -23,8 +24,10 @@ class PenjualanController extends Controller
     {
         $pelanggans = Pelanggan::all();
         $barangs = Barang::all();
-        return view('penjualan.create', compact('pelanggans', 'barangs'));
+        $sales = User::where('role', 'sales')->get(); // hanya sales
+        return view('penjualan.create', compact('pelanggans', 'barangs', 'sales'));
     }
+
     public function store(Request $request)
     {
         $request->validate([

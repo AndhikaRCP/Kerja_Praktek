@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('sales_id')->nullable()->constrained('users');
             $table->date('tanggal');
             $table->decimal('total_harga', 12, 2)->default(0);
-            $table->enum('status_pembayaran', ['tunai', 'kredit', 'belum lunas']);
-            $table->enum('status_transaksi', ['selesai','draft','diproses','batal'])->default('selesai');
+            $table->enum('status_transaksi', ['draft', 'belum lunas', 'lunas', 'batal'])->default('draft');
+            $table->enum('metode_pembayaran', ['tunai', 'kredit'])->nullable();
             $table->text('keterangan')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
