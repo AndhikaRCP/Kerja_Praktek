@@ -14,13 +14,17 @@ class PembayaranPenjualanController extends Controller
         $pembayaran_penjualans = PembayaranPenjualan::with('penjualan')->latest()->get();
 
         // Ambil transaksi penjualan yang belum lunas saja untuk dropdown modal
-        $penjualansBelumLunas = Penjualan::with('pelanggan')
+        $penjualans_belum_lunas = Penjualan::with('pelanggan')
             ->where('status_transaksi', '!=', 'lunas')
             ->get();
 
+        foreach ($penjualans_belum_lunas as $p) {
+            $p->sisa_tagihan = $p->total_harga - $p->total_pembayaran;
+        }
+
         return view('pembayaran_penjualan.index', [
             'pembayaran_penjualans' => $pembayaran_penjualans,
-            'penjualans_belum_lunas' => $penjualansBelumLunas, // hanya yang belum lunas
+            'penjualans_belum_lunas' => $penjualans_belum_lunas, // hanya yang belum lunas
         ]);
     }
 
@@ -38,42 +42,51 @@ class PembayaranPenjualanController extends Controller
         $request->validate([
             'penjualan_id' => 'required|exists:penjualans,id',
             'tanggal' => 'required|date',
-            'nominal' => 'required|numeric|min:1',
+            'nominal' => 'required|string', // masih dalam bentuk string format Rp
             'metode' => 'nullable|string|max:50',
             'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'keterangan' => 'nullable|string',
         ]);
 
+        // Hapus titik ribuan, lalu konversi ke integer
+        $nominal = (int) str_replace('.', '', $request->nominal);
+
+        $penjualan = Penjualan::with('pembayaran')->findOrFail($request->penjualan_id);
+        $totalDibayar = $penjualan->pembayaran->sum('nominal');
+        $sisaTagihan = $penjualan->total_harga - $totalDibayar;
+
+        if ($nominal > $sisaTagihan) {
+            return back()->withErrors([
+                'nominal' => 'Nominal melebihi sisa tagihan. Maksimal: Rp ' . number_format($sisaTagihan, 0, ',', '.')
+            ])->withInput();
+        }
+
+        // Simpan file jika ada
         $path = null;
         if ($request->hasFile('bukti_pembayaran')) {
             $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
         }
 
+        // Simpan ke database
         PembayaranPenjualan::create([
             'penjualan_id' => $request->penjualan_id,
             'tanggal' => $request->tanggal,
-            'nominal' => $request->nominal,
+            'nominal' => $nominal, // sudah bersih dari titik
             'metode' => $request->metode,
             'bukti_pembayaran' => $path,
             'keterangan' => $request->keterangan,
         ]);
 
-        // Hitung total pembayaran yang sudah dilakukan untuk penjualan ini
-        $totalDibayar = PembayaranPenjualan::where('penjualan_id', $request->penjualan_id)->sum('nominal');
-
-        // Ambil total harga penjualan terkait
-        $penjualan = Penjualan::findOrFail($request->penjualan_id);
-
-        // Update status jika total dibayar >= total harga
-        if ($totalDibayar >= $penjualan->total_harga) {
-            $penjualan->update(['status_transaksi' => 'lunas']);
-        } else {
-            $penjualan->update(['status_transaksi' => 'belum lunas']);
-        }
-
+        // Update status transaksi
+        $totalSetelah = $totalDibayar + $nominal;
+        $penjualan->update([
+            'status_transaksi' => $totalSetelah >= $penjualan->total_harga ? 'lunas' : 'belum lunas',
+        ]);
 
         return redirect()->route('pembayaran_penjualan.index')->with('success', 'Pembayaran berhasil ditambahkan.');
     }
+
+
 
 
     // Tampilkan form edit pembayaran

@@ -23,7 +23,7 @@
                                         <th>Nominal Dibayar</th> {{-- Tambahan --}}
                                         <th>Jenis Pembayaran</th>
                                         <th>Status Transaksi</th>
-                                        <th style="width: 15%; text-align: center;">Aksi</th>
+                                        {{-- <th style="width: 15%; text-align: center;">Aksi</th> --}}
                                     </tr>
                                 </thead>
 
@@ -57,7 +57,7 @@
                                                     {{ ucfirst($penjualan->status_transaksi) }}
                                                 </span>
                                             </td>
-                                            <td class="text-center">
+                                            {{-- <td class="text-center">
                                                 <a href="{{ route('penjualan.show', $penjualan->id) }}"
                                                     class="btn btn-sm btn-info" title="Detail">
                                                     <i class="fa fa-eye"></i>
@@ -74,7 +74,7 @@
                                                         <i class="fa fa-times"></i>
                                                     </button>
                                                 </form>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @empty
                                         <tr>
