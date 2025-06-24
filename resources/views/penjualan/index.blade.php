@@ -20,11 +20,13 @@
                                         <th>Sales</th>
                                         <th>Tanggal</th>
                                         <th>Total Harga</th>
+                                        <th>Nominal Dibayar</th> {{-- Tambahan --}}
                                         <th>Jenis Pembayaran</th>
                                         <th>Status Transaksi</th>
                                         <th style="width: 15%; text-align: center;">Aksi</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     @forelse ($penjualans as $penjualan)
                                         <tr>
@@ -33,21 +35,16 @@
                                             <td>{{ $penjualan->sales->name ?? '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
                                             <td>Rp {{ number_format($penjualan->total_harga, 0, ',', '.') }}</td>
-                                            @php
-                                                $warnaStatus = [
-                                                    'selesai' => 'success', // Hijau
-                                                    'batal' => 'danger', // Merah
-                                                    'diproses' => 'warning', // Kuning
-                                                    'draft' => 'secondary', // Abu
-                                                ];
-                                            @endphp
+                                            <td>
+                                                Rp
+                                                {{ number_format($penjualan->pembayaranPenjualans->sum('nominal'), 0, ',', '.') }}
+                                            </td>
                                             @php
                                                 $warna_metode = [
-                                                    'tunai' => 'primary', // biru
-                                                    'kredit' => 'warning', // kuning
+                                                    'tunai' => 'primary',
+                                                    'kredit' => 'warning',
                                                 ];
                                             @endphp
-
                                             <td>
                                                 <span
                                                     class="badge bg-{{ $warna_metode[$penjualan->jenis_pembayaran] ?? 'dark' }}">
@@ -81,10 +78,11 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="8" class="text-center">Belum ada data penjualan.</td>
+                                            <td colspan="9" class="text-center">Belum ada data penjualan.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -125,8 +123,8 @@
     @endpush
 @endsection
 
-    @push('scripts')
-        @include('layouts.components.scripts.form_validation')
-        @include('layouts.components.scripts.sweetalerts')
-        @include('layouts.components.scripts.confirm_delete')
-    @endpush
+@push('scripts')
+    @include('layouts.components.scripts.form_validation')
+    @include('layouts.components.scripts.sweetalerts')
+    @include('layouts.components.scripts.confirm_delete')
+@endpush

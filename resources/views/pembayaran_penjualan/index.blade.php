@@ -5,74 +5,71 @@
         <div class="page-inner">
             <div class="col-md-12">
                 <div class="card">
+                    {{-- Header dan Tombol Modal --}}
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">Riwayat Pembayaran Penjualan</h4>
                             <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
-                                data-bs-target="#addRowModal">
-                                <i class="fa fa-plus"></i>
-                                Add Row
+                                data-bs-target="#modalTambahPembayaran">
+                                <i class="fa fa-plus"></i> Tambah Pembayaran
                             </button>
                         </div>
                     </div>
+
                     <div class="card-body">
-                        <!-- Modal -->
-                        <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header border-0">
-                                        <h5 class="modal-title">
-                                            <span class="fw-mediumbold"> New</span>
-                                            <span class="fw-light"> Row </span>
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                        {{-- Modal Tambah Pembayaran --}}
+                        <div class="modal fade" id="modalTambahPembayaran" tabindex="-1" aria-labelledby="modalTambahLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form action="{{ route('pembayaran_penjualan.store') }}" method="POST" enctype="multipart/form-data" class="modal-content">
+                                    @csrf
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTambahLabel">Tambah Pembayaran</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p class="small">
-                                            Create a new row using this form, make sure you
-                                            fill them all
-                                        </p>
-                                        <form>
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Name</label>
-                                                        <input id="addName" type="text" class="form-control"
-                                                            placeholder="fill name" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 pe-0">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Position</label>
-                                                        <input id="addPosition" type="text" class="form-control"
-                                                            placeholder="fill position" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Office</label>
-                                                        <input id="addOffice" type="text" class="form-control"
-                                                            placeholder="fill office" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
+                                        <div class="mb-3">
+                                            <label for="penjualan_id" class="form-label">Transaksi</label>
+                                            <select name="penjualan_id" id="penjualan_id" class="form-select" required>
+                                                <option value="">-- Pilih Transaksi --</option>
+                                                @foreach ($penjualans as $pj)
+                                                    <option value="{{ $pj->id }}">
+                                                        {{ $pj->kode_transaksi }} - {{ $pj->pelanggan->nama ?? '-' }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="tanggal" class="form-label">Tanggal Pembayaran</label>
+                                            <input type="date" name="tanggal" class="form-control" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nominal" class="form-label">Nominal</label>
+                                            <input type="text" name="nominal" class="form-control" placeholder="contoh: 100000" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="metode" class="form-label">Metode</label>
+                                            <input type="text" name="metode" class="form-control" placeholder="Contoh: Transfer / Tunai">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="bukti_pembayaran" class="form-label">Bukti Pembayaran</label>
+                                            <input type="file" name="bukti_pembayaran" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="keterangan" class="form-label">Keterangan</label>
+                                            <textarea name="keterangan" class="form-control" rows="2" placeholder="Opsional..."></textarea>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer border-0">
-                                        <button type="button" id="addRowButton" class="btn btn-primary">
-                                            Add
-                                        </button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">
-                                            Close
-                                        </button>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Simpan</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
 
-                        <div class="table-responsive">
+                        {{-- Tabel Riwayat Pembayaran --}}
+                        <div class="table-responsive mt-4">
                             <table id="add-row" class="display table table-striped table-hover">
                                 <thead class="table-light">
                                     <tr>
@@ -87,17 +84,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($pembayaran_penjualans as $index => $pembayaran)
+                                    @forelse ($pembayaran_penjualans as $pembayaran)
                                         <tr>
-                                            <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $pembayaran->penjualan->kode_transaksi ?? '-' }}</td>
                                             <td>{{ \Carbon\Carbon::parse($pembayaran->tanggal)->format('d-m-Y') }}</td>
                                             <td>Rp {{ number_format($pembayaran->nominal, 0, ',', '.') }}</td>
                                             <td>{{ ucfirst($pembayaran->metode) }}</td>
                                             <td>
                                                 @if ($pembayaran->bukti_pembayaran)
-                                                    <a href="{{ asset('storage/' . $pembayaran->bukti_pembayaran) }}"
-                                                        target="_blank">Lihat</a>
+                                                    <a href="{{ asset('storage/' . $pembayaran->bukti_pembayaran) }}" target="_blank">Lihat</a>
                                                 @else
                                                     <span class="text-muted">-</span>
                                                 @endif
@@ -126,43 +122,26 @@
                                     @endforelse
                                 </tbody>
                             </table>
-
-
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#add-row').DataTable({
+                pageLength: 5,
+            });
+        });
+    </script>
+@endpush
 
     @push('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#add-row').DataTable({
-                    pageLength: 5,
-                });
-
-                var action =
-                    '<td><div class="form-button-action">' +
-                    '<button type="button" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">' +
-                    '<i class="fa fa-edit"></i></button>' +
-                    '<button type="button" class="btn btn-link btn-danger" data-original-title="Remove">' +
-                    '<i class="fa fa-times"></i></button></div></td>';
-
-                $('#addRowButton').click(function() {
-                    $('#add-row')
-                        .DataTable()
-                        .row.add([
-                            $('#addName').val(),
-                            $('#addPosition').val(),
-                            $('#addOffice').val(),
-                            action,
-                        ])
-                        .draw();
-
-                    $('#addRowModal').modal('hide');
-                });
-            });
-        </script>
+        @include('layouts.components.scripts.form_validation')
+        @include('layouts.components.scripts.sweetalerts')
     @endpush
-@endsection

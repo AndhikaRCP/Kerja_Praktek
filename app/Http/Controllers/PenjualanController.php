@@ -16,7 +16,7 @@ class PenjualanController extends Controller
 {
     public function index()
     {
-        $penjualans = Penjualan::with(['pelanggan'])->latest()->get();
+        $penjualans = Penjualan::with(['pelanggan', 'sales', 'pembayaranPenjualans'])->latest()->get();
         return view('penjualan.index', compact('penjualans'));
     }
 

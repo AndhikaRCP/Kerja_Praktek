@@ -11,8 +11,10 @@ class PembayaranPenjualanController extends Controller
     // Tampilkan semua data pembayaran
     public function index()
     {
-        $pembayaran_penjualans = PembayaranPenjualan::with('penjualan')->get();
-        return view('pembayaran_penjualan.index', compact('pembayaran_penjualans'));
+        $pembayaran_penjualans = PembayaranPenjualan::with('penjualan.pelanggan')->latest()->get();
+        $penjualans = Penjualan::with('pelanggan')->get(); // buat modal
+
+        return view('pembayaran_penjualan.index', compact('pembayaran_penjualans', 'penjualans'));
     }
 
 
@@ -28,16 +30,44 @@ class PembayaranPenjualanController extends Controller
     {
         $request->validate([
             'penjualan_id' => 'required|exists:penjualans,id',
-            'tanggal_pembayaran' => 'required|date',
-            'jumlah_bayar' => 'required|numeric|min:1',
-            'jenis_pembayaran' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            'nominal' => 'required|numeric|min:1',
+            'metode' => 'nullable|string|max:50',
+            'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'keterangan' => 'nullable|string',
         ]);
 
-        PembayaranPenjualan::create($request->all());
+        $path = null;
+        if ($request->hasFile('bukti_pembayaran')) {
+            $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+        }
 
-        return redirect()->route('pembayaran-penjualan.index')
-            ->with('success', 'Data pembayaran berhasil ditambahkan.');
+        PembayaranPenjualan::create([
+            'penjualan_id' => $request->penjualan_id,
+            'tanggal' => $request->tanggal,
+            'nominal' => $request->nominal,
+            'metode' => $request->metode,
+            'bukti_pembayaran' => $path,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        // Hitung total pembayaran yang sudah dilakukan untuk penjualan ini
+        $totalDibayar = PembayaranPenjualan::where('penjualan_id', $request->penjualan_id)->sum('nominal');
+
+        // Ambil total harga penjualan terkait
+        $penjualan = Penjualan::findOrFail($request->penjualan_id);
+
+        // Update status jika total dibayar >= total harga
+        if ($totalDibayar >= $penjualan->total_harga) {
+            $penjualan->update(['status_transaksi' => 'lunas']);
+        } else {
+            $penjualan->update(['status_transaksi' => 'belum lunas']);
+        }
+
+
+        return redirect()->route('pembayaran_penjualan.index')->with('success', 'Pembayaran berhasil ditambahkan.');
     }
+
 
     // Tampilkan form edit pembayaran
     public function edit(PembayaranPenjualan $pembayaran_penjualan)

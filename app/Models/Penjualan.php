@@ -32,4 +32,11 @@ class Penjualan extends Model
     {
         return $this->belongsTo(User::class, 'sales_id');
     }
+
+    // App\Models\Penjualan.php
+
+    public function pembayaranPenjualans()
+    {
+        return $this->hasMany(PembayaranPenjualan::class);
+    }
 }
