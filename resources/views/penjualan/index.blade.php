@@ -20,7 +20,7 @@
                                         <th>Sales</th>
                                         <th>Tanggal</th>
                                         <th>Total Harga</th>
-                                        <th>Metode Pembayaran</th>
+                                        <th>Jenis Pembayaran</th>
                                         <th>Status Transaksi</th>
                                         <th style="width: 15%; text-align: center;">Aksi</th>
                                     </tr>
@@ -50,8 +50,8 @@
 
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $warna_metode[$penjualan->metode_pembayaran] ?? 'dark' }}">
-                                                    {{ ucfirst($penjualan->metode_pembayaran) }}
+                                                    class="badge bg-{{ $warna_metode[$penjualan->jenis_pembayaran] ?? 'dark' }}">
+                                                    {{ ucfirst($penjualan->jenis_pembayaran) }}
                                                 </span>
                                             </td>
                                             <td>

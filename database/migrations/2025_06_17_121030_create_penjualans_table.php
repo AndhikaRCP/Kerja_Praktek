@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->decimal('total_harga', 12, 2)->default(0);
             $table->enum('status_transaksi', ['draft', 'belum lunas', 'lunas', 'batal'])->default('draft');
-            $table->enum('metode_pembayaran', ['tunai', 'kredit'])->nullable();
+            $table->enum('jenis_pembayaran', ['tunai', 'kredit'])->nullable();
             $table->text('keterangan')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();

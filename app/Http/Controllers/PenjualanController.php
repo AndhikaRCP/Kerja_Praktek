@@ -33,7 +33,7 @@ class PenjualanController extends Controller
         $request->validate([
             'pelanggan_id' => 'required|exists:pelanggans,id',
             'tanggal' => 'required|date',
-            'metode_pembayaran' => 'required|in:tunai,kredit',
+            'jenis_pembayaran' => 'required|in:tunai,kredit',
             'barang_kode' => 'required|array|min:1',
             'barang_kode.*' => 'required|exists:barangs,kode_barang',
             'jumlah.*' => 'required|integer|min:1',

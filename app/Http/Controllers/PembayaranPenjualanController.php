@@ -30,7 +30,7 @@ class PembayaranPenjualanController extends Controller
             'penjualan_id' => 'required|exists:penjualans,id',
             'tanggal_pembayaran' => 'required|date',
             'jumlah_bayar' => 'required|numeric|min:1',
-            'metode_pembayaran' => 'required|string|max:255',
+            'jenis_pembayaran' => 'required|string|max:255',
         ]);
 
         PembayaranPenjualan::create($request->all());
@@ -53,7 +53,7 @@ class PembayaranPenjualanController extends Controller
             'penjualan_id' => 'required|exists:penjualans,id',
             'tanggal_pembayaran' => 'required|date',
             'jumlah_bayar' => 'required|numeric|min:1',
-            'metode_pembayaran' => 'required|string|max:255',
+            'jenis_pembayaran' => 'required|string|max:255',
         ]);
 
         $pembayaran_penjualan->update($request->all());
