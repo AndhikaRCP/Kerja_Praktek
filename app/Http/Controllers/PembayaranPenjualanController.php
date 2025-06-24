@@ -11,10 +11,17 @@ class PembayaranPenjualanController extends Controller
     // Tampilkan semua data pembayaran
     public function index()
     {
-        $pembayaran_penjualans = PembayaranPenjualan::with('penjualan.pelanggan')->latest()->get();
-        $penjualans = Penjualan::with('pelanggan')->get(); // buat modal
+        $pembayaran_penjualans = PembayaranPenjualan::with('penjualan')->latest()->get();
 
-        return view('pembayaran_penjualan.index', compact('pembayaran_penjualans', 'penjualans'));
+        // Ambil transaksi penjualan yang belum lunas saja untuk dropdown modal
+        $penjualansBelumLunas = Penjualan::with('pelanggan')
+            ->where('status_transaksi', '!=', 'lunas')
+            ->get();
+
+        return view('pembayaran_penjualan.index', [
+            'pembayaran_penjualans' => $pembayaran_penjualans,
+            'penjualans_belum_lunas' => $penjualansBelumLunas, // hanya yang belum lunas
+        ]);
     }
 
 
@@ -99,5 +106,32 @@ class PembayaranPenjualanController extends Controller
 
         return redirect()->route('pembayaran-penjualan.index')
             ->with('success', 'Data pembayaran berhasil dihapus.');
+    }
+
+    public function cariTransaksiBelumLunas(Request $request)
+    {
+        $search = $request->q;
+
+        $penjualans = Penjualan::with('pelanggan')
+            ->where('status_transaksi', 'belum lunas')
+            ->where(function ($query) use ($search) {
+                $query->where('kode_transaksi', 'like', "%$search%")
+                    ->orWhereHas('pelanggan', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%$search%");
+                    });
+            })
+            ->orderBy('tanggal', 'desc')
+            ->limit(10)
+            ->get();
+
+        $results = [];
+        foreach ($penjualans as $pj) {
+            $results[] = [
+                'id' => $pj->id,
+                'text' => $pj->kode_transaksi . ' - ' . ($pj->pelanggan->nama ?? '-'),
+            ];
+        }
+
+        return response()->json($results);
     }
 }

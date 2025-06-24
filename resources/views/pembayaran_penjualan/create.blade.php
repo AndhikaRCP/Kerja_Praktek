@@ -13,34 +13,36 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label for="penjualan_id" class="form-label">Kode Transaksi Penjualan</label>
-                                <select name="penjualan_id" class="form-select select2" required>
-                                    <option value="">-- Pilih Transaksi --</option>
-                                    @foreach ($penjualans as $penjualan)
-                                        <option value="{{ $penjualan->id }}">
-                                            {{ $penjualan->kode_transaksi }} - {{ $penjualan->pelanggan->nama ?? '-' }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <div class="mb-3">
+                                    <label for="penjualan_id" class="form-label">Transaksi</label>
+                                    <select name="penjualan_id" id="penjualan_id" class="form-select" style="width: 100%"
+                                        required></select>
+                                </div>
+
                             </div>
 
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal Pembayaran</label>
-                                <input type="date" name="tanggal" class="form-control" value="{{ now()->toDateString() }}" required>
+                                <input type="date" name="tanggal" class="form-control"
+                                    value="{{ now()->toDateString() }}" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="nominal" class="form-label">Nominal Pembayaran</label>
-                                <input type="text" name="nominal" class="form-control text-end" placeholder="Contoh: 500.000" required>
+                                <input type="text" name="nominal" class="form-control text-end"
+                                    placeholder="Contoh: 500.000" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="metode" class="form-label">Metode Pembayaran</label>
-                                <input type="text" name="metode" class="form-control" placeholder="Contoh: Transfer, Cash, QRIS" required>
+                                <input type="text" name="metode" class="form-control"
+                                    placeholder="Contoh: Transfer, Cash, QRIS" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="bukti_pembayaran" class="form-label">Upload Bukti Pembayaran (Opsional)</label>
-                                <input type="file" name="bukti_pembayaran" class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+                                <input type="file" name="bukti_pembayaran" class="form-control"
+                                    accept=".jpg,.jpeg,.png,.pdf">
                             </div>
 
                             <div class="mb-3">
@@ -59,19 +61,3 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script>
-        $(document).ready(function () {
-            $('.select2').select2({
-                placeholder: "Pilih transaksi",
-                allowClear: true
-            });
-
-            $('input[name="nominal"]').on('input', function () {
-                let angka = $(this).val().replace(/\./g, '');
-                if (!angka) return $(this).val('');
-                $(this).val(angka.replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-            });
-        });
-    </script>
-@endpush

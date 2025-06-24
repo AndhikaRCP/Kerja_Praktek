@@ -41,7 +41,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware('auth')->group(function () {
 
     // === DASHBOARD UMUM ===
-Route::get('/dashboard', [DashboardController::class, 'redirect'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'redirect'])->name('dashboard');
 
 
     // === SUPERADMIN ONLY ===
@@ -95,4 +95,7 @@ Route::get('/dashboard', [DashboardController::class, 'redirect'])->name('dashbo
         Route::resource('detail-penjualan', DetailPenjualanController::class);
         Route::resource('pembayaran_penjualan', PembayaranPenjualanController::class);
     });
+
+    Route::get('/penjualan/cari-transaksi-belum-lunas', [PembayaranPenjualanController::class, 'cariTransaksiBelumLunas'])
+        ->name('penjualan.search_transaksi_belum_lunas');
 });
