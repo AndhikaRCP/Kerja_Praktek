@@ -78,18 +78,17 @@
                     <!-- Status & Pembayaran -->
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label>Status Pembayaran</label>
-                            <select name="status_pembayaran" class="form-select" required onchange="togglePembayaran()">
+                            <label>Jenis Pembayaran</label>
+                            <select name="jenis_pembayaran" class="form-select" required onchange="togglePembayaran()">
                                 <option value="tunai">Tunai</option>
                                 <option value="kredit">Kredit</option>
-                                <option value="belum lunas">Belum Lunas</option>
                             </select>
                         </div>
                         <div class="col-md-6" id="pembayaranSection">
                             <label>Nominal Pembayaran Awal</label>
                             <input type="number" name="bayar_nominal" class="form-control text-end" placeholder="0">
                             <label class="mt-2">Metode</label>
-                            <input type="text" name="metode" class="form-control" placeholder="Contoh: Tunai, Transfer">
+                            <input type="text" name="metode" class="form-control" placeholder="Contoh: Cash, Transfer">
                             <label class="mt-2">Bukti Pembayaran</label>
                             <input type="file" name="bukti_pembayaran" class="form-control">
                         </div>
@@ -230,3 +229,10 @@
         }
     </script>
 @endpush
+
+    @push('scripts')
+        @include('layouts.components.scripts.form_validation')
+        @include('layouts.components.scripts.sweetalerts')
+        @include('layouts.components.scripts.datatables')
+        @include('layouts.components.scripts.confirm_delete')
+    @endpush

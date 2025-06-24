@@ -43,22 +43,33 @@ class PenjualanController extends Controller
             'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        // Hitung total harga
+        // Hitung total harga penjualan
         $total = 0;
         foreach ($request->barang_kode as $i => $kode) {
             $total += $request->jumlah[$i] * $request->harga_jual_snapshot[$i];
+        }
+
+        // Validasi jika bayar_nominal melebihi total
+        if ($request->bayar_nominal && $request->bayar_nominal > $total) {
+            return back()->with('error', 'Nominal pembayaran tidak boleh melebihi total harga.');
+        }
+
+        // Tentukan status transaksi otomatis
+        $status = 'belum lunas';
+        if ($request->bayar_nominal && $request->bayar_nominal >= $total) {
+            $status = 'lunas';
         }
 
         // Simpan data penjualan
         $penjualan = Penjualan::create([
             'kode_transaksi' => 'PJ-' . strtoupper(Str::random(6)),
             'pelanggan_id' => $request->pelanggan_id,
-            'user_id' => 1, // ganti dengan auth()->id() kalau sudah login
+            'user_id' => 1, // auth()->id() jika sudah login
             'created_by' => 1,
             'tanggal' => $request->tanggal,
             'total_harga' => $total,
-            'status_pembayaran' => $request->status_pembayaran,
-            'status_transaksi' => 'selesai',
+            'jenis_pembayaran' => $request->jenis_pembayaran,
+            'status_transaksi' => $status,
             'keterangan' => $request->keterangan,
         ]);
 
@@ -80,7 +91,7 @@ class PenjualanController extends Controller
             $barang->decrement('stok', $request->jumlah[$i]);
         }
 
-        // Jika ada pembayaran awal (tunai/kredit)
+        // Jika ada pembayaran awal, simpan
         if ($request->bayar_nominal && $request->bayar_nominal > 0) {
             $path = null;
             if ($request->hasFile('bukti_pembayaran')) {
