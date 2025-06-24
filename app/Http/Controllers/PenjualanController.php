@@ -30,6 +30,13 @@ class PenjualanController extends Controller
 
     public function store(Request $request)
     {
+        // Convert format ribuan ke angka mentah
+        $cleanHarga = array_map(function ($harga) {
+            return floatval(str_replace('.', '', $harga));
+        }, $request->harga_jual_snapshot);
+
+        $request->merge(['harga_jual_snapshot' => $cleanHarga]);
+
         $request->validate([
             'pelanggan_id' => 'required|exists:pelanggans,id',
             'tanggal' => 'required|date',
@@ -38,42 +45,47 @@ class PenjualanController extends Controller
             'barang_kode.*' => 'required|exists:barangs,kode_barang',
             'jumlah.*' => 'required|integer|min:1',
             'harga_jual_snapshot.*' => 'required|numeric|min:0',
-            'bayar_nominal' => 'nullable|numeric|min:0',
+            'bayar_nominal' => 'nullable|string', // ribuan (ex: "1.000.000")
             'metode' => 'nullable|string|max:50',
             'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        // Hitung total harga penjualan
+        // Hitung total penjualan
         $total = 0;
         foreach ($request->barang_kode as $i => $kode) {
             $total += $request->jumlah[$i] * $request->harga_jual_snapshot[$i];
         }
 
-        // Validasi jika bayar_nominal melebihi total
-        if ($request->bayar_nominal && $request->bayar_nominal > $total) {
-            return back()->with('error', 'Nominal pembayaran tidak boleh melebihi total harga.');
+        // Bersihkan bayar_nominal (dari format ribuan)
+        $bayarNominal = str_replace('.', '', $request->bayar_nominal ?? 0);
+        $bayarNominal = intval($bayarNominal);
+
+        // Cegah jika pembayaran melebihi total
+        if ($bayarNominal > $total) {
+            return back()->withInput()->with('error', 'Nominal pembayaran tidak boleh melebihi total harga.');
         }
 
-        // Tentukan status transaksi otomatis
+        // Tentukan status otomatis
         $status = 'belum lunas';
-        if ($request->bayar_nominal && $request->bayar_nominal >= $total) {
+        if ($bayarNominal >= $total && $total > 0) {
             $status = 'lunas';
         }
 
-        // Simpan data penjualan
+        // Simpan transaksi penjualan
         $penjualan = Penjualan::create([
             'kode_transaksi' => 'PJ-' . strtoupper(Str::random(6)),
             'pelanggan_id' => $request->pelanggan_id,
-            'user_id' => 1, // auth()->id() jika sudah login
-            'created_by' => 1,
+            'user_id' => Auth::id(),
+            'created_by' => Auth::id(),
             'tanggal' => $request->tanggal,
             'total_harga' => $total,
             'jenis_pembayaran' => $request->jenis_pembayaran,
             'status_transaksi' => $status,
             'keterangan' => $request->keterangan,
+            'sales_id' => $request->sales_id ?? null,
         ]);
 
-        // Simpan detail penjualan dan update stok
+        // Simpan detail penjualan dan kurangi stok
         foreach ($request->barang_kode as $i => $kode) {
             $barang = Barang::where('kode_barang', $kode)->firstOrFail();
 
@@ -91,18 +103,17 @@ class PenjualanController extends Controller
             $barang->decrement('stok', $request->jumlah[$i]);
         }
 
-        // Jika ada pembayaran awal, simpan
-        if ($request->bayar_nominal && $request->bayar_nominal > 0) {
+        // Simpan pembayaran awal jika ada
+        if ($bayarNominal > 0) {
             $path = null;
             if ($request->hasFile('bukti_pembayaran')) {
-                $file = $request->file('bukti_pembayaran');
-                $path = $file->store('bukti_pembayaran', 'public');
+                $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
             }
 
             PembayaranPenjualan::create([
                 'penjualan_id' => $penjualan->id,
                 'tanggal' => $request->tanggal,
-                'nominal' => $request->bayar_nominal,
+                'nominal' => $bayarNominal,
                 'metode' => $request->metode ?? 'Tunai',
                 'bukti_pembayaran' => $path,
                 'keterangan' => 'Pembayaran awal dari form penjualan',
@@ -111,6 +122,7 @@ class PenjualanController extends Controller
 
         return redirect()->route('penjualan.index')->with('success', 'Penjualan berhasil disimpan.');
     }
+
 
 
     public function show(Penjualan $penjualan)
