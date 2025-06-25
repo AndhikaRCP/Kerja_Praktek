@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BarangController extends Controller
 {
@@ -12,7 +13,8 @@ class BarangController extends Controller
     {
         $barangs = Barang::with('kategori')->get();
         $kategoris = Kategori::all();
-        return view('barang.index', compact('barangs', 'kategoris'));
+        $role = Auth::user()->role;
+        return view('barang.index', compact('barangs', 'kategoris','role'));
     }
 
     public function create()

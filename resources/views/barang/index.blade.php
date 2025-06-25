@@ -8,108 +8,114 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">Data Barang</h4>
-                            <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
-                                data-bs-target="#addRowModal">
-                                <i class="fa fa-plus"></i>
-                                Tambah Data Barang
-                            </button>
+                            @if (in_array($role, ['admin', 'superadmin']))
+                                <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
+                                    data-bs-target="#addRowModal">
+                                    <i class="fa fa-plus"></i>
+                                    Tambah Data Barang
+                                </button>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body">
                         <!-- Modal Tambah Barang -->
-                        <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <form action="{{ route('barang.store') }}" method="POST">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header border-0">
-                                            <h5 class="modal-title">
-                                                <span class="fw-mediumbold">Tambah Data Barang</span>
-                                            </h5>
-                                            <button type="button" class="close" data-bs-dismiss="modal"
-                                                aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
+                        @if (in_array($role, ['admin', 'superadmin']))
+                            <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <form action="{{ route('barang.store') }}" method="POST">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header border-0">
+                                                <h5 class="modal-title">
+                                                    <span class="fw-mediumbold">Tambah Data Barang</span>
+                                                </h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
 
-                                        <div class="modal-body">
-                                            <div class="row">
+                                            <div class="modal-body">
+                                                <div class="row">
 
-                                                <div class="col-md-6">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Kode Barang</label>
-                                                        <input name="kode_barang" type="text" class="form-control"
-                                                            value="{{ old('kode_barang') }}" required>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-group-default">
+                                                            <label>Kode Barang</label>
+                                                            <input name="kode_barang" type="text" class="form-control"
+                                                                value="{{ old('kode_barang') }}" required>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-6">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Nama Barang</label>
-                                                        <input name="nama" type="text" class="form-control"
-                                                            value="{{ old('nama') }}" required>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-group-default">
+                                                            <label>Nama Barang</label>
+                                                            <input name="nama" type="text" class="form-control"
+                                                                value="{{ old('nama') }}" required>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-6">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Kategori</label>
-                                                        <select name="kategori_id" class="form-control" required>
-                                                            <option value="">-- Pilih Kategori --</option>
-                                                            @foreach ($kategoris as $kategori)
-                                                                <option value="{{ $kategori->id }}"
-                                                                    {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>
-                                                                    {{ $kategori->nama_kategori }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-group-default">
+                                                            <label>Kategori</label>
+                                                            <select name="kategori_id" class="form-control" required>
+                                                                <option value="">-- Pilih Kategori --</option>
+                                                                @foreach ($kategoris as $kategori)
+                                                                    <option value="{{ $kategori->id }}"
+                                                                        {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>
+                                                                        {{ $kategori->nama_kategori }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-6">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Satuan</label>
-                                                        <input name="satuan" type="text" class="form-control"
-                                                            value="{{ old('satuan', 'pcs') }}" required>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-group-default">
+                                                            <label>Satuan</label>
+                                                            <input name="satuan" type="text" class="form-control"
+                                                                value="{{ old('satuan', 'pcs') }}" required>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Stok</label>
-                                                        <input name="stok" type="number" min="0"
-                                                            class="form-control" value="{{ old('stok', 0) }}" required>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group form-group-default">
+                                                            <label>Stok</label>
+                                                            <input name="stok" type="number" min="0"
+                                                                class="form-control" value="{{ old('stok', 0) }}" required>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Harga Beli</label>
-                                                        <input name="harga_beli" type="number" min="0"
-                                                            class="form-control" value="{{ old('harga_beli') }}" required>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group form-group-default">
+                                                            <label>Harga Beli</label>
+                                                            <input name="harga_beli" type="number" min="0"
+                                                                class="form-control" value="{{ old('harga_beli') }}"
+                                                                required>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group form-group-default">
-                                                        <label>Harga Jual</label>
-                                                        <input name="harga_jual" type="number" min="0"
-                                                            class="form-control" value="{{ old('harga_jual') }}" required>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group form-group-default">
+                                                            <label>Harga Jual</label>
+                                                            <input name="harga_jual" type="number" min="0"
+                                                                class="form-control" value="{{ old('harga_jual') }}"
+                                                                required>
+                                                        </div>
                                                     </div>
-                                                </div>
 
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer border-0">
+                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                                <button type="button" class="btn btn-danger"
+                                                    data-bs-dismiss="modal">Batal</button>
                                             </div>
                                         </div>
-
-                                        <div class="modal-footer border-0">
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
-                                            <button type="button" class="btn btn-danger"
-                                                data-bs-dismiss="modal">Batal</button>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        @endif
 
                         <div class="table-responsive">
                             <table id="add-row" class="display table table-striped table-hover nowrap" style="width:100%">
@@ -121,9 +127,13 @@
                                         <th>Kategori</th>
                                         <th>Satuan</th>
                                         <th>Stok</th>
-                                        <th>Harga Beli</th>
+                                        @if ($role === 'superadmin')
+                                            <th>Harga Beli</th>
+                                        @endif
                                         <th>Harga Jual</th>
-                                        <th style="width: 15%; text-align: center;">Aksi</th>
+                                        @if (in_array($role, ['admin', 'superadmin']))
+                                            <th style="width: 15%; text-align: center;">Aksi</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -136,26 +146,30 @@
                                             </td>
                                             <td style="white-space: nowrap;">{{ $item->satuan }}</td>
                                             <td style="white-space: nowrap;">{{ $item->stok }}</td>
-                                            <td data-order="{{ $item->harga_beli }}" style="white-space: nowrap;" >
-                                                Rp
-                                                {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
+                                            @if ($role === 'superadmin')
+                                                <td data-order="{{ $item->harga_beli }}" style="white-space: nowrap;">
+                                                    Rp
+                                                    {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
+                                            @endif
                                             <td data-order="{{ $item->harga_jual }}" style="white-space: nowrap;">Rp
                                                 {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ route('barang.edit', $item->kode_barang) }}"
-                                                    class="btn btn-sm btn-primary" title="Edit">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('barang.destroy', $item->kode_barang) }}"
-                                                    method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                                        onclick="confirmDelete(event, this)"
-                                                        data-url="{{ route('barang.destroy', $item->kode_barang) }}">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                            </td>
+                                            @if (in_array($role, ['admin', 'superadmin']))
+                                                <td class="text-center">
+                                                    <a href="{{ route('barang.edit', $item->kode_barang) }}"
+                                                        class="btn btn-sm btn-primary" title="Edit">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ route('barang.destroy', $item->kode_barang) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-sm btn-danger"
+                                                            title="Hapus" onclick="confirmDelete(event, this)"
+                                                            data-url="{{ route('barang.destroy', $item->kode_barang) }}">
+                                                            <i class="fa fa-times"></i>
+                                                        </button>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @empty
                                         <tr>
