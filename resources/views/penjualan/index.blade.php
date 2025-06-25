@@ -53,7 +53,7 @@
                                             </td>
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $penjualan->status_transaksi === 'lunas' ? 'success' : 'secondary' }}">
+                                                    class="badge bg-{{ $penjualan->status_transaksi === 'lunas' ? 'success' : 'danger' }}">
                                                     {{ ucfirst($penjualan->status_transaksi) }}
                                                 </span>
                                             </td>

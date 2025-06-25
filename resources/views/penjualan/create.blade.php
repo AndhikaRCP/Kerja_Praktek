@@ -27,7 +27,8 @@
                                     <option value="">-- Tidak Ada --</option>
                                     @foreach ($sales as $salesPerson)
                                         <option value="{{ $salesPerson->id }}">{{ $salesPerson->name }}
-                                            ({{ $salesPerson->username }})</option>
+                                            ({{ $salesPerson->username }})
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -179,7 +180,7 @@
             row.innerHTML = `
         <td><select name="barang_kode[]" class="form-select-barang" style="width: 100%" required>${barangOptions}</select></td>
         <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
-        <td><input type="text" name="harga_jual_snapshot[]" class="form-control text-end" readonly></td>
+        <td><input type="text" name="harga_jual_snapshot[]" class="form-control text-end" oninput="hitungTotal(this)"></td>
         <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
         <td><input type="text" class="form-control text-end" readonly></td>
         <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>
@@ -203,11 +204,21 @@
         function hitungTotal(input) {
             const row = input.closest('tr');
             const harga = unformatRibuan(row.querySelector('[name="harga_jual_snapshot[]"]').value || '0');
-            const jumlah = parseInt(input.value || 0);
+            const jumlah = parseInt(row.querySelector('[name="jumlah[]"]').value || 0);
             const total = harga * jumlah;
             row.querySelector('td:nth-child(5) input').value = formatRibuan(total.toFixed(0));
             hitungGrandTotal();
         }
+
+        $(document).on('input', '[name="harga_jual_snapshot[]"]', function() {
+            const raw = unformatRibuan(this.value);
+            this.value = formatRibuan(raw.toFixed(0));
+
+            // Rehitung total
+            hitungTotal(this);
+        });
+
+
 
         function hitungGrandTotal() {
             let total = 0;
