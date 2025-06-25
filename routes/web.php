@@ -40,21 +40,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // ============================
 Route::middleware('auth')->group(function () {
 
-    // === DASHBOARD UMUM ===
+    // === ROUTES ALL ROLE ===
     Route::get('/dashboard', [DashboardController::class, 'redirect'])->name('dashboard');
-
+    Route::middleware('role:sales,admin,superadmin')->get('/barang', [BarangController::class, 'index'])->name('barang.index');
 
     // === SUPERADMIN ONLY ===
     Route::middleware('role:superadmin')->group(function () {
         Route::resource('user', UserController::class);
-
-        // Semua akses admin + superadmin
-        Route::resource('barang', BarangController::class);
-        Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
-        Route::resource('kategori', KategoriController::class);
-        Route::resource('supplier', SupplierController::class);
-        Route::resource('pembelian', PembelianController::class);
-        Route::resource('detail-pembelian', DetailPembelianController::class);
 
         // === Laporan Pembelian ===
         Route::prefix('laporan/pembelian')->name('laporan.pembelian.')->group(function () {
@@ -77,25 +69,26 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // === ADMIN ONLY ===
+    // === SUPERADMIN & ADMIN ===
     Route::middleware('role:superadmin,admin')->group(function () {
-        Route::resource('barang', BarangController::class);
+        Route::get('/barang/create', [BarangController::class, 'create'])->name('barang.create');
+        Route::post('/barang', [BarangController::class, 'store'])->name('barang.store');
+        Route::get('/barang/{barang}/edit', [BarangController::class, 'edit'])->name('barang.edit');
+        Route::put('/barang/{barang}', [BarangController::class, 'update'])->name('barang.update');
+        Route::delete('/barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
         Route::get('/barang/search', [BarangController::class, 'search'])->name('barang.search');
+
         Route::resource('kategori', KategoriController::class);
         Route::resource('supplier', SupplierController::class);
         Route::resource('pembelian', PembelianController::class);
         Route::resource('detail-pembelian', DetailPembelianController::class);
-        // Tidak punya akses ke laporan & user
-    });
 
-    // === SALES + ADMIN + SUPERADMIN ===
-    Route::middleware('role:sales,admin,superadmin')->group(function () {
         Route::resource('pelanggan', PelangganController::class);
         Route::resource('penjualan', PenjualanController::class);
         Route::resource('detail-penjualan', DetailPenjualanController::class);
         Route::resource('pembayaran_penjualan', PembayaranPenjualanController::class);
-    });
 
-    Route::get('/penjualan/cari-transaksi-belum-lunas', [PembayaranPenjualanController::class, 'cariTransaksiBelumLunas'])
-        ->name('penjualan.search_transaksi_belum_lunas');
+        Route::get('/penjualan/cari-transaksi-belum-lunas', [PembayaranPenjualanController::class, 'cariTransaksiBelumLunas'])
+            ->name('penjualan.search_transaksi_belum_lunas');
+    });
 });
