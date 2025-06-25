@@ -16,13 +16,14 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Kode Transaksi</th>
+                                        <th>Tanggal Transaksi</th>
                                         <th>Pelanggan</th>
                                         <th>Sales</th>
-                                        <th>Tanggal</th>
                                         <th>Total Harga</th>
                                         <th>Nominal Dibayar</th> {{-- Tambahan --}}
                                         <th>Jenis Pembayaran</th>
                                         <th>Status Transaksi</th>
+                                        <th style="width: 15%; text-align: center;">Aksi</th>
                                         {{-- <th style="width: 15%; text-align: center;">Aksi</th> --}}
                                     </tr>
                                 </thead>
@@ -31,9 +32,10 @@
                                     @forelse ($penjualans as $penjualan)
                                         <tr>
                                             <td>{{ $penjualan->kode_transaksi }}</td>
+                                            <td data-order="{{ $penjualan->tanggal }}">
+                                                {{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
                                             <td>{{ $penjualan->pelanggan->nama ?? '-' }}</td>
                                             <td>{{ $penjualan->sales->name ?? '-' }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
                                             <td>Rp {{ number_format($penjualan->total_harga, 0, ',', '.') }}</td>
                                             <td>
                                                 Rp
@@ -57,6 +59,13 @@
                                                     {{ ucfirst($penjualan->status_transaksi) }}
                                                 </span>
                                             </td>
+                                            <td class="text-center">
+                                                <a href="{{ route('penjualan.cetak', $penjualan->id) }}" target="_blank"
+                                                    class="btn btn-sm btn-info" title="Cetak Nota">
+                                                    <i class="fa fa-print"></i>
+                                                </a>
+                                            </td>
+
                                             {{-- <td class="text-center">
                                                 <a href="{{ route('penjualan.show', $penjualan->id) }}"
                                                     class="btn btn-sm btn-info" title="Detail">
@@ -122,9 +131,28 @@
         </script>
     @endpush
 @endsection
-
+{{--
 @push('scripts')
     @include('layouts.components.scripts.form_validation')
-    @include('layouts.components.scripts.sweetalerts')
     @include('layouts.components.scripts.confirm_delete')
+@endpush --}}
+
+
+@push('scripts')
+    <script>
+        @if (session('success') && session('cetak_id'))
+            Swal.fire({
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'Cetak Nota',
+                cancelButtonText: 'Nanti Saja'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.open("{{ route('penjualan.cetak', session('cetak_id')) }}", "_blank");
+                }
+            });
+        @endif
+    </script>
 @endpush

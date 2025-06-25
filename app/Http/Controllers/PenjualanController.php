@@ -120,7 +120,10 @@ class PenjualanController extends Controller
             ]);
         }
 
-        return redirect()->route('penjualan.index')->with('success', 'Penjualan berhasil disimpan.');
+        return redirect()->route('penjualan.index')->with([
+            'success' => 'Data berhasil disimpan!',
+            'cetak_id' => $penjualan->id
+        ]);
     }
 
 
@@ -129,5 +132,17 @@ class PenjualanController extends Controller
     {
         $penjualan->load(['pelanggan', 'detailPenjualans']);
         return view('penjualan.show', compact('penjualan'));
+    }
+
+    public function cetakNota($id)
+    {
+        $penjualan = Penjualan::with([
+            'pelanggan',
+            'sales',
+            'detailPenjualan.barang',
+            'pembayaranPenjualans'
+        ])->findOrFail($id);
+
+        return view('penjualan.cetak', compact('penjualan'));
     }
 }

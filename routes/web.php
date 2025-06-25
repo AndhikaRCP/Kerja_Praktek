@@ -90,5 +90,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/penjualan/cari-transaksi-belum-lunas', [PembayaranPenjualanController::class, 'cariTransaksiBelumLunas'])
             ->name('penjualan.search_transaksi_belum_lunas');
+
+        Route::get('/penjualan/{id}/cetak', [PenjualanController::class, 'cetakNota'])->name('penjualan.cetak');
     });
 });

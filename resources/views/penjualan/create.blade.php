@@ -63,7 +63,7 @@
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label>Keterangan</label>
-                                <textarea name="keterangan" class="form-control" rows="3"></textarea>
+                                <textarea name="keterangan" class="form-control" rows="3" placeholder="cth: pelanggan minta diantar tgl 20 april, jam sekian.."></textarea>
                             </div>
                             <div class="col-md-6">
                                 <label>Total Harga</label>
