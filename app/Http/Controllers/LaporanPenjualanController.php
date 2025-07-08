@@ -16,9 +16,14 @@ class LaporanPenjualanController extends Controller
         $query = Penjualan::with(['pelanggan', 'user', 'sales']);
         $pelanggans = Pelanggan::orderBy('nama')->get();
 
-        if ($request->filled('dari') && $request->filled('sampai')) {
-            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
         }
+
+        if ($request->filled('pelanggan_id')) {
+            $query->where('pelanggan_id', $request->pelanggan_id);
+        }
+
 
         $penjualans = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
         $total_penjualan = (clone $query)->sum('total_harga');
