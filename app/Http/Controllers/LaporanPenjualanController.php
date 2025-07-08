@@ -25,7 +25,7 @@ class LaporanPenjualanController extends Controller
         }
 
 
-        $penjualans = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
+        $penjualans = $query->orderBy('tanggal', 'desc')->get();
         $total_penjualan = (clone $query)->sum('total_harga');
 
         return view('laporan.penjualan.index', compact('penjualans', 'total_penjualan', 'pelanggans'));

@@ -68,7 +68,7 @@
 
                     <!-- Tabel -->
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table id="add-row" class="display table table-striped table-hover nowrap" style="width:100%">
                             <thead class="table-light">
                                 <tr>
                                     <th>No</th>
@@ -87,7 +87,7 @@
                             <tbody>
                                 @forelse ($penjualans as $index => $penjualan)
                                     <tr>
-                                        <td>{{ $index + $penjualans->firstItem() }}</td>
+                                        <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
                                         <td>{{ $penjualan->kode_transaksi }}</td>
                                         <td>{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
                                         <td>{{ $penjualan->pelanggan->nama ?? '-' }}</td>
@@ -135,13 +135,14 @@
                             </span>
                         </h5>
                     </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $penjualans->links() }}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+
+@push('scripts')
+    @include('layouts.components.scripts.sweetalerts')
+    @include('layouts.components.scripts.datatables')
+@endpush
