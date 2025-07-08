@@ -33,7 +33,7 @@ class LaporanPembelianController extends Controller
         }
 
         // Ambil data yang sudah difilter
-        $pembelians = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
+        $pembelians = $query->orderBy('tanggal', 'desc')->get();
         $total_pembelian = $query->sum('total_harga');
 
         // Ambil semua supplier untuk dropdown filter

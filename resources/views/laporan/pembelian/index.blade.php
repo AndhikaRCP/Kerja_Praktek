@@ -65,13 +65,10 @@
 
                             </div>
                         </div>
-
                     </form>
-
-
                     <!-- Tabel -->
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table id="add-row" class="display table table-striped table-hover nowrap" style="width:100%">
                             <thead class="table-light">
                                 <tr>
                                     <th class="text-nowrap">No</th>
@@ -88,7 +85,7 @@
                             <tbody>
                                 @forelse ($pembelians as $index => $pembelian)
                                     <tr>
-                                        <td class="text-nowrap">{{ $index + $pembelians->firstItem() }}</td>
+                                        <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
                                         <td class="text-nowrap">{{ $pembelian->kode_transaksi }}</td>
                                         <td class="text-nowrap">
                                             {{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
@@ -137,13 +134,13 @@
                             </span>
                         </h5>
                     </div>
-
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $pembelians->links() }}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    @include('layouts.components.scripts.sweetalerts')
+    @include('layouts.components.scripts.datatables')
+@endpush
