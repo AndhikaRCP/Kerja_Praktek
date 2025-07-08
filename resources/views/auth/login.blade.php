@@ -50,13 +50,12 @@
                     <div class="col-lg-8 col-md-10">
                         <div class="card shadow-lg rounded-4 overflow-hidden">
                             <div class="row g-0">
-                                <!-- Gambar di sisi kiri -->
+
                                 <div class="col-md-5 d-none d-md-block">
                                     <img src="{{ asset('images/gudang_image_for_login_page.jpg') }}" alt="Login Image"
                                         class="img-fluid h-100 w-100" style="object-fit: cover;">
                                 </div>
 
-                                <!-- Form Login -->
                                 <div class="col-md-7 d-flex align-items-center">
                                     <div class="card-body px-4 py-5">
                                         <div class="text-center mb-4">
@@ -68,14 +67,12 @@
                                         <form method="POST" action="{{ route('login') }}">
                                             @csrf
 
-                                            {{-- Tampilkan error umum (contoh: email/password salah) --}}
                                             @if ($errors->has('email'))
                                                 <div class="alert alert-danger">
                                                     {{ $errors->first('email') }}
                                                 </div>
                                             @endif
 
-                                            {{-- Email --}}
                                             <div class="mb-3">
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" id="email" name="email"
@@ -88,8 +85,6 @@
                                                     </div>
                                                 @enderror
                                             </div>
-
-                                            {{-- Password --}}
                                             <div class="mb-4">
                                                 <label for="password" class="form-label">Password</label>
                                                 <input type="password" id="password" name="password"
@@ -101,20 +96,11 @@
                                                     </div>
                                                 @enderror
                                             </div>
-
-                                            {{-- Tombol --}}
                                             <div class="d-grid mb-3">
                                                 <button type="submit"
                                                     class="btn btn-warning text-white fw-bold">Login</button>
                                             </div>
-
-                                            <div class="text-center">
-                                                <a href="#" class="text-decoration-none text-muted small">Forgot
-                                                    password?</a>
-                                            </div>
                                         </form>
-
-
                                     </div>
                                 </div>
                             </div>

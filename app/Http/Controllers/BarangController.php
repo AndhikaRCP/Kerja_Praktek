@@ -49,7 +49,7 @@ class BarangController extends Controller
         );
 
         Barang::create($request->all());
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Data berhasil ditambahkan.');
     }
 
     public function edit(Barang $barang)

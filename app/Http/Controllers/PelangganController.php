@@ -39,7 +39,7 @@ class PelangganController extends Controller
         );
 
         Pelanggan::create($request->all());
-        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Pelanggan berhasil ditambahkan.');
     }
 
     public function edit(Pelanggan $pelanggan)
