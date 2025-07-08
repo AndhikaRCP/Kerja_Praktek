@@ -9,19 +9,19 @@ use App\Models\Penjualan;
 use App\Models\Pembelian;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         $role = Auth::user()->role;
 
         return match ($role) {
             'superadmin' => $this->superadminDashboard(),
             'admin' => $this->adminDashboard(),
-            'sales' => $this->salesDashboard(),
+            'sales' => $this->salesDashboard($request),
             default => abort(403, 'Akses tidak diizinkan'),
         };
     }
@@ -77,22 +77,36 @@ class DashboardController extends Controller
         return view('dashboard.admin', compact('totalBarangs', 'totalPenjualans', 'totalPembelians'));
     }
 
-    public function salesDashboard()
-    {
-        $totalPenjualans = Penjualan::where('sales_id', Auth::id())->count();
 
-        return view('dashboard.sales', compact('totalPenjualans'));
-    }
+public function salesDashboard(Request $request)
+{
+    $salesId = Auth::user()->id;
 
+    $from = $request->input('from') ?? now()->subDays(30)->toDateString();
+    $to = $request->input('to') ?? now()->toDateString();
 
-    public function redirect()
+    $days = Carbon::parse($from)->diffInDays(Carbon::parse($to)) + 1;
+
+    $penjualans = \App\Models\Penjualan::where('sales_id', $salesId)
+        ->whereBetween('tanggal', [$from, $to])
+        ->get();
+
+    $totalPenjualans = $penjualans->count();
+    $omset = $penjualans->sum('total_harga');
+
+    return view('dashboard.sales', compact(
+        'totalPenjualans', 'omset', 'days'
+    ));
+}
+
+    public function redirect(Request $request)
     {
         $role = Auth::user()->role;
 
         return match ($role) {
             'superadmin' => $this->superadminDashboard(),
             'admin' => $this->adminDashboard(),
-            'sales' => $this->salesDashboard(),
+            'sales' => $this->salesDashboard($request),
             default => abort(403, 'Akses tidak diizinkan'),
         };
     }
