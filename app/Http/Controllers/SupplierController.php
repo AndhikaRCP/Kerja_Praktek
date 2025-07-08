@@ -39,7 +39,7 @@ class SupplierController extends Controller
         );
 
         Supplier::create($request->all());
-        return redirect()->route('supplier.index')->with('success', 'Supplier berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Supplier berhasil ditambahkan.');
     }
 
     public function edit(Supplier $supplier)

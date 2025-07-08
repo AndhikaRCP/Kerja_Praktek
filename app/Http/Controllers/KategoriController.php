@@ -33,7 +33,7 @@ class KategoriController extends Controller
         );
 
         Kategori::create($request->only('nama_kategori'));
-        return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     public function edit(Kategori $kategori)
