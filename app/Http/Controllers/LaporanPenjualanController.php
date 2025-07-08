@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
+use App\Models\User;
 use App\Models\Penjualan;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -15,6 +16,7 @@ class LaporanPenjualanController extends Controller
     {
         $query = Penjualan::with(['pelanggan', 'user', 'sales']);
         $pelanggans = Pelanggan::orderBy('nama')->get();
+        $salesList = User::where('role', 'sales')->orderBy('name')->get();
 
         if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
@@ -24,11 +26,15 @@ class LaporanPenjualanController extends Controller
             $query->where('pelanggan_id', $request->pelanggan_id);
         }
 
+        if ($request->filled('sales_id')) {
+            $query->where('sales_id', $request->sales_id);
+        }
+
 
         $penjualans = $query->orderBy('tanggal', 'desc')->get();
         $total_penjualan = (clone $query)->sum('total_harga');
 
-        return view('laporan.penjualan.index', compact('penjualans', 'total_penjualan', 'pelanggans'));
+        return view('laporan.penjualan.index', compact('penjualans', 'total_penjualan', 'pelanggans', 'salesList'));
     }
 
 
@@ -53,6 +59,10 @@ class LaporanPenjualanController extends Controller
 
         if ($request->filled('status_transaksi')) {
             $query->where('status_transaksi', $request->status_transaksi);
+        }
+
+        if ($request->filled('sales_id')) {
+            $query->where('sales_id', $request->sales_id);
         }
 
 
@@ -86,6 +96,10 @@ class LaporanPenjualanController extends Controller
 
         if ($request->filled('status_transaksi')) {
             $query->where('status_transaksi', $request->status_transaksi);
+        }
+
+        if ($request->filled('sales_id')) {
+            $query->where('sales_id', $request->sales_id);
         }
 
         $penjualans = $query->orderBy('tanggal', 'desc')->get();

@@ -34,6 +34,18 @@
                             </select>
                         </div>
                         <div class="col-md-3">
+                            <label>Sales</label>
+                            <select name="sales_id" class="form-control">
+                                <option value="">-- Semua Sales --</option>
+                                @foreach ($salesList as $sales)
+                                    <option value="{{ $sales->id }}"
+                                        {{ request('sales_id') == $sales->id ? 'selected' : '' }}>
+                                        {{ $sales->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <label>Status Transaksi</label>
                             <select name="status_transaksi" class="form-control">
                                 <option value="">-- Semua Status --</option>
@@ -89,7 +101,8 @@
                                     <tr>
                                         <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
                                         <td>{{ $penjualan->kode_transaksi }}</td>
-                                        <td  data-order="{{ $penjualan->tanggal }}">{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
+                                        <td data-order="{{ $penjualan->tanggal }}">
+                                            {{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
                                         <td>{{ $penjualan->pelanggan->nama ?? '-' }}</td>
                                         <td>{{ $penjualan->sales->name ?? '-' }}</td>
                                         <td>{{ $penjualan->user->name ?? '-' }}</td>
