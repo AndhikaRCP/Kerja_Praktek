@@ -87,7 +87,7 @@
                                     <tr>
                                         <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
                                         <td class="text-nowrap">{{ $pembelian->kode_transaksi }}</td>
-                                        <td class="text-nowrap">
+                                        <td class="text-nowrap" data-order="{{ $pembelian->tanggal }}">
                                             {{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
                                         <td class="text-nowrap">{{ $pembelian->supplier->nama ?? '-' }}</td>
                                         <td class="text-nowrap">{{ $pembelian->user->name ?? '-' }}</td>

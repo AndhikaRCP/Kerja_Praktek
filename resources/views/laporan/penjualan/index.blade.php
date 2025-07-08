@@ -89,7 +89,7 @@
                                     <tr>
                                         <td style="white-space: nowrap;">{{ $loop->iteration }}</td>
                                         <td>{{ $penjualan->kode_transaksi }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
+                                        <td  data-order="{{ $penjualan->tanggal }}">{{ \Carbon\Carbon::parse($penjualan->tanggal)->format('d-m-Y') }}</td>
                                         <td>{{ $penjualan->pelanggan->nama ?? '-' }}</td>
                                         <td>{{ $penjualan->sales->name ?? '-' }}</td>
                                         <td>{{ $penjualan->user->name ?? '-' }}</td>
