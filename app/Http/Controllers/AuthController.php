@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         if (! $user->is_active) {
             return back()->withErrors([
-                'email' => 'Akun Anda nonaktif. Silakan hubungi admin.',
+                'email' => 'Akun Anda nonaktif. Silakan hubungi superadmin.',
             ]);
         }
 
