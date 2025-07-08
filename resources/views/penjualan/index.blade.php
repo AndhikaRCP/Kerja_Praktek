@@ -65,7 +65,6 @@
                                                     <i class="fa fa-print"></i>
                                                 </a>
                                             </td>
-
                                             {{-- <td class="text-center">
                                                 <a href="{{ route('penjualan.show', $penjualan->id) }}"
                                                     class="btn btn-sm btn-info" title="Detail">
