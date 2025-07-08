@@ -43,9 +43,18 @@ class LaporanPenjualanController extends Controller
     {
         $query = Penjualan::with(['pelanggan', 'user', 'sales']);
 
-        if ($request->filled('dari') && $request->filled('sampai')) {
-            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
         }
+
+        if ($request->filled('pelanggan_id')) {
+            $query->where('pelanggan_id', $request->pelanggan_id);
+        }
+
+        if ($request->filled('status_transaksi')) {
+            $query->where('status_transaksi', $request->status_transaksi);
+        }
+
 
         $penjualans = $query->orderBy('tanggal', 'desc')->get();
         $total_penjualan = $penjualans->sum('total_harga');
@@ -67,8 +76,16 @@ class LaporanPenjualanController extends Controller
     {
         $query = Penjualan::with(['pelanggan', 'user', 'sales']);
 
-        if ($request->filled('dari') && $request->filled('sampai')) {
-            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
+        }
+
+        if ($request->filled('pelanggan_id')) {
+            $query->where('pelanggan_id', $request->pelanggan_id);
+        }
+
+        if ($request->filled('status_transaksi')) {
+            $query->where('status_transaksi', $request->status_transaksi);
         }
 
         $penjualans = $query->orderBy('tanggal', 'desc')->get();

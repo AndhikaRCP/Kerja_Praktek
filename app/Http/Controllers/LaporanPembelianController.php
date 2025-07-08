@@ -17,17 +17,14 @@ class LaporanPembelianController extends Controller
     {
         $query = Pembelian::with(['supplier', 'user']);
 
-        // Filter tanggal
         if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_akhir]);
         }
 
-        // Filter supplier
         if ($request->filled('supplier_id')) {
             $query->where('supplier_id', $request->supplier_id);
         }
 
-        // Filter status transaksi
         if ($request->filled('status_transaksi')) {
             $query->where('status_transaksi', $request->status_transaksi);
         }
