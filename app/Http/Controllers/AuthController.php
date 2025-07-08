@@ -17,11 +17,25 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (! $user) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah.',
+            ]);
+        }
+
+        if (! $user->is_active) {
+            return back()->withErrors([
+                'email' => 'Akun Anda nonaktif. Silakan hubungi admin.',
+            ]);
+        }
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->route('dashboard');
         }
+
 
         return back()->withErrors([
             'email' => 'Email atau password salah.',
