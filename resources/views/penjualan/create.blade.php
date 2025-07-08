@@ -14,7 +14,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Pelanggan</label>
-                                <select name="pelanggan_id" class="form-select" required>
+                                <select name="pelanggan_id" class="form-select w-100" required>
                                     <option value="">-- Pilih Pelanggan --</option>
                                     @foreach ($pelanggans as $pelanggan)
                                         <option value="{{ $pelanggan->id }}">{{ $pelanggan->nama }}</option>
@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label>Referal Sales (Opsional)</label>
-                                <select name="sales_id" class="form-select">
+                                <select name="sales_id" class="form-select w-100">
                                     <option value="">-- Tidak Ada --</option>
                                     @foreach ($sales as $salesPerson)
                                         <option value="{{ $salesPerson->id }}">{{ $salesPerson->name }}
@@ -47,6 +47,7 @@
                                     <tr>
                                         <th>Kode Barang</th>
                                         <th>Nama Barang</th>
+                                        <th>Stok Tersedia</th>
                                         <th>Harga Jual</th>
                                         <th>Jumlah</th>
                                         <th>Total</th>
@@ -63,7 +64,8 @@
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label>Keterangan</label>
-                                <textarea name="keterangan" class="form-control" rows="3" placeholder="cth: pelanggan minta diantar tgl 20 april, jam sekian.."></textarea>
+                                <textarea name="keterangan" class="form-control" rows="3"
+                                    placeholder="cth: pelanggan minta diantar tgl 20 april, jam sekian.."></textarea>
                             </div>
                             <div class="col-md-6">
                                 <label>Total Harga</label>
@@ -128,17 +130,13 @@
         }
 
         #barangTable th:nth-child(3),
-        #barangTable td:nth-child(3),
-        #barangTable th:nth-child(4),
-        #barangTable td:nth-child(4),
-        #barangTable th:nth-child(5),
-        #barangTable td:nth-child(5) {
-            max-width: 100px;
+        #barangTable td:nth-child(3) {
+            max-width: 80px;
         }
 
         #barangTable th:nth-child(6),
         #barangTable td:nth-child(6) {
-            width: 50px;
+            max-width: 120px;
             text-align: center;
         }
     </style>
@@ -174,12 +172,14 @@
             let barangOptions = `<option value="">-- Pilih Barang --</option>`;
             barangList.forEach(barang => {
                 barangOptions +=
-                    `<option value="${barang.kode_barang}" data-nama="${barang.nama}" data-harga="${barang.harga_jual}">${barang.kode_barang} - ${barang.nama}</option>`;
+                    `<option value="${barang.kode_barang}" data-nama="${barang.nama}" data-harga="${barang.harga_jual}" data-stok="${barang.stok}">${barang.kode_barang} - ${barang.nama}</option>`;
+
             });
 
             row.innerHTML = `
         <td><select name="barang_kode[]" class="form-select-barang" style="width: 100%" required>${barangOptions}</select></td>
         <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
+        <td><input type="text" name="stok[]"" class="form-control text-end bg-light" readonly></td>
         <td><input type="text" name="harga_jual_snapshot[]" class="form-control text-end" oninput="hitungTotal(this)"></td>
         <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
         <td><input type="text" class="form-control text-end" readonly></td>
@@ -194,10 +194,13 @@
             }).on('change', function() {
                 let selected = $(this).find('option:selected');
                 let rowEl = $(this).closest('tr');
+                let stok = selected.data('stok') || 0;
+                rowEl.find('[name="stok[]"]').val(stok);
                 let harga = selected.data('harga') || 0;
                 rowEl.find('[name="nama_barang_snapshot[]"]').val(selected.data('nama'));
                 rowEl.find('[name="harga_jual_snapshot[]"]').val(formatRibuan(harga));
                 hitungTotal(rowEl.find('[name="jumlah[]"]')[0]);
+
             });
         }
 
@@ -206,7 +209,7 @@
             const harga = unformatRibuan(row.querySelector('[name="harga_jual_snapshot[]"]').value || '0');
             const jumlah = parseInt(row.querySelector('[name="jumlah[]"]').value || 0);
             const total = harga * jumlah;
-            row.querySelector('td:nth-child(5) input').value = formatRibuan(total.toFixed(0));
+            row.querySelector('td:nth-child(6) input').value = formatRibuan(total.toFixed(0));
             hitungGrandTotal();
         }
 
