@@ -64,8 +64,8 @@
                                     </option>
                                     <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>
                                         Admin</option>
-                                    <option value="staff" {{ old('role', $user->role) === 'staff' ? 'selected' : '' }}>
-                                        Staff</option>
+                                    <option value="sales" {{ old('role', $user->role) === 'sales' ? 'selected' : '' }}>
+                                        Sales</option>
                                 </select>
                                 @error('role')
                                     <div class="text-danger mt-1">{{ $message }}</div>
