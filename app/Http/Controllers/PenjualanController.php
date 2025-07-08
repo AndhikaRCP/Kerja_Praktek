@@ -71,6 +71,18 @@ class PenjualanController extends Controller
             $status = 'lunas';
         }
 
+        // Cek stok semua barang terlebih dahulu
+        foreach ($request->barang_kode as $i => $kode) {
+            $barang = Barang::where('kode_barang', $kode)->first();
+            if (!$barang) {
+                return back()->with('error', "Barang dengan kode {$kode} tidak ditemukan.");
+            }
+
+            if ($barang->stok < $request->jumlah[$i]) {
+                return back()->with('error', "Stok barang {$barang->nama} tidak mencukupi.");
+            }
+        }
+
         // Simpan transaksi penjualan
         $penjualan = Penjualan::create([
             'kode_transaksi' => 'PJ-' . strtoupper(Str::random(6)),
