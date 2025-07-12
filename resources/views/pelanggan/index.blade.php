@@ -8,7 +8,7 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">Data Pelanggan</h4>
-                            <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
+                            <button class="btn btn-secondary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
                                 <i class="fa fa-plus"></i>
                                 Tambah Data Pelanggan
                             </button>
@@ -49,7 +49,7 @@
                                         </div>
 
                                         <div class="modal-footer border-0">
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <button type="submit" class="btn btn-secondary">Simpan</button>
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                                         </div>
                                     </div>

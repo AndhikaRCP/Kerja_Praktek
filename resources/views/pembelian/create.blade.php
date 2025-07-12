@@ -96,16 +96,18 @@
 
         #barangTable th:nth-child(2),
         #barangTable td:nth-child(2) {
-            min-width: 150px;
+            width: 100px;
         }
 
         #barangTable th:nth-child(3),
-        #barangTable td:nth-child(3),
+        #barangTable td:nth-child(3) {
+            width: 130px;
+        }
+
         #barangTable th:nth-child(4),
         #barangTable td:nth-child(4),
         #barangTable th:nth-child(5),
         #barangTable td:nth-child(5) {
-            max-width: 100px;
             width: 100px;
         }
 
@@ -148,7 +150,7 @@
                 </select>
             </td>
             <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
-            <td><input type="number" name="harga_beli_snapshot[]" class="form-control text-end" readonly></td>
+            <td><input type="number" name="harga_beli_snapshot[]" class="form-control text-end" ></td>
             <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
             <td><input type="text" class="form-control text-end" readonly></td>
             <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>

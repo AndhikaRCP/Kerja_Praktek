@@ -77,7 +77,7 @@
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" id="email" name="email"
                                                     class="form-control @error('email') is-invalid @enderror"
-                                                    value="{{ old('email') }}" placeholder="you@example.com" required
+                                                    value="{{ old('email') }}" placeholder="contoh@gmail.com" required
                                                     autocomplete="username">
                                                 @error('email')
                                                     <div class="invalid-feedback">

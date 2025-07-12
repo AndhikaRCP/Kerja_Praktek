@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:superadmin')->group(function () {
         Route::resource('user', UserController::class);
 
+        Route::resource('pembelian', PembelianController::class);
+        Route::resource('detail-pembelian', DetailPembelianController::class);
+
         // === Laporan Pembelian ===
         Route::prefix('laporan/pembelian')->name('laporan.pembelian.')->group(function () {
             Route::get('/index', [LaporanPembelianController::class, 'index'])->name('index');
@@ -80,8 +83,6 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('kategori', KategoriController::class);
         Route::resource('supplier', SupplierController::class);
-        Route::resource('pembelian', PembelianController::class);
-        Route::resource('detail-pembelian', DetailPembelianController::class);
 
         Route::resource('pelanggan', PelangganController::class);
         Route::resource('penjualan', PenjualanController::class);

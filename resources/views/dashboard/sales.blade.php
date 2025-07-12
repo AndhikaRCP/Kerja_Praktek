@@ -25,7 +25,7 @@
                                     value="{{ request('to', now()->format('Y-m-d')) }}">
                             </div>
                             <div class="col-md-2 d-grid">
-                                <button type="submit" class="btn btn-primary">Terapkan</button>
+                                <button type="submit" class="btn btn-secondary">Terapkan</button>
                             </div>
                         </div>
                     </form>

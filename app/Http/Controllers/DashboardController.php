@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Barang;
+use App\Models\Kategori;
+use App\Models\Pelanggan;
 use App\Models\Penjualan;
 use App\Models\Pembelian;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -74,7 +77,15 @@ class DashboardController extends Controller
         $totalPenjualans = Penjualan::count();
         $totalPembelians = Pembelian::count();
 
-        return view('dashboard.admin', compact('totalBarangs', 'totalPenjualans', 'totalPembelians'));
+         return view('dashboard.admin', [
+        'totalBarangs' => Barang::count(),
+        'totalPenjualans' => Penjualan::count(),
+        'totalKategoris' => Kategori::count(),
+        'totalSuppliers' => Supplier::count(),
+        'totalPelanggans' => Pelanggan::count(),
+        'penjualanTerbaru' => Penjualan::with('pelanggan')->latest()->take(5)->get(),
+    ]);
+
     }
 
 

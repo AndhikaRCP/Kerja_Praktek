@@ -9,7 +9,7 @@
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">Data Barang</h4>
                             @if (in_array($role, ['admin', 'superadmin']))
-                                <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
+                                <button class="btn btn-secondary btn-round ms-auto" data-bs-toggle="modal"
                                     data-bs-target="#addRowModal">
                                     <i class="fa fa-plus"></i>
                                     Tambah Data Barang
@@ -107,7 +107,7 @@
                                             </div>
 
                                             <div class="modal-footer border-0">
-                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                                <button type="submit" class="btn btn-secondary">Simpan</button>
                                                 <button type="button" class="btn btn-danger"
                                                     data-bs-dismiss="modal">Batal</button>
                                             </div>

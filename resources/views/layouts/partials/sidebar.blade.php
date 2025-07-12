@@ -125,8 +125,8 @@
                     </li>
                 @endif
 
-                <!-- PEMBELIAN (ADMIN + SUPERADMIN) -->
-                @if (in_array($role, ['admin', 'superadmin']))
+                <!-- PEMBELIAN (SUPERADMIN) -->
+                @if ($role === 'superadmin')
                     <li class="nav-item">
                         <a data-bs-toggle="collapse" href="#pembelian">
                             <i class="fas fa-cart-arrow-down"></i>

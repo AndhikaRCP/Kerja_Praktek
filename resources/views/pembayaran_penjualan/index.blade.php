@@ -9,7 +9,7 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center">
                         <h4 class="card-title">Riwayat Pembayaran Penjualan</h4>
-                        <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#modalTambahPembayaran">
+                        <button class="btn btn-secondary ms-auto" data-bs-toggle="modal" data-bs-target="#modalTambahPembayaran">
                             <i class="fa fa-plus"></i> Tambah Pembayaran
                         </button>
                     </div>
@@ -58,8 +58,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Simpan</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-secondary">Simpan</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                                 </div>
                             </form>
                         </div>
@@ -77,7 +77,7 @@
                                     <th>Metode</th>
                                     <th>Bukti</th>
                                     <th>Keterangan</th>
-                                    <th class="text-center">Aksi</th>
+                                     {{-- <th class="text-center">Aksi</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -96,7 +96,7 @@
                                             @endif
                                         </td>
                                         <td>{{ $pembayaran->keterangan ?? '-' }}</td>
-                                        <td class="text-center">
+                                        {{-- <td class="text-center">
                                             <a href="{{ route('pembayaran_penjualan.edit', $pembayaran->id) }}" class="btn btn-sm btn-primary">
                                                 <i class="fa fa-edit"></i>
                                             </a>
@@ -106,7 +106,7 @@
                                                     <i class="fa fa-times"></i>
                                                 </button>
                                             </form>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @empty
                                     <tr>
