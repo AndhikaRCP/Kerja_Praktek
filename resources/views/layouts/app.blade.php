@@ -81,7 +81,7 @@
         $role = Auth::user()->role;
         $dashboardRoute = route('dashboard');
     @endphp
-    
+
     <div class="wrapper">
         <!-- Sidebar -->
         @include('layouts.partials.sidebar')

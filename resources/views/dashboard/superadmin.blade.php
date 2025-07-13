@@ -7,7 +7,7 @@
                 <div>
                     <h3 class="fw-bold mb-1">Dashboard Superadmin</h3>
                     <p class="text-muted mb-0">Selamat datang, <strong>{{ Auth::user()->name }}</strong>! Berikut ringkasan
-                        data operasional hari ini.</p>
+                        data operasional PD Karya Citra Mandiri</p>
                 </div>
             </div>
 

@@ -5,20 +5,45 @@
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
                 <a href="{{ $dashboardRoute }}" class="logo">
-                    <img src="{{ asset('assets/img/logo-perusahaan-text.png') }}" alt="navbar brand" class="navbar-brand"
-                        height="90" />
+                    <img src="{{ asset('assets/img/logo-perusahaan-text.png') }}" alt="navbar brand"
+                        class="navbar-brand mb-5" height="90" />
                 </a>
                 <div class="nav-toggle">
                     <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
                     <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
                 </div>
-                <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
+                <!-- USER DROPDOWN (KHUSUS MOBILE) -->
+                <div class="dropdown d-lg-none ms-auto">
+                    <button class="btn d-flex align-items-center text-white p-1 dropdown-toggle" type="button"
+                        id="dropdownUserMobile" data-bs-toggle="dropdown" aria-expanded="false"
+                        style="background: transparent; border: none; box-shadow: none;">
+                        <img src="{{ asset('assets/img/logo_profile_white.png') }}" alt="Profile"
+                            class="rounded-circle me-2" style="width: 28px; height: 28px; object-fit: cover;">
+                        <span class="fw-bold d-none d-sm-inline ms-2 text-truncate"
+                            style="max-width: 100px;">{{ auth()->user()->name }}</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="dropdownUserMobile">
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger px-3 py-2"
+                                    style="font-size: 14px; background: none;">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
             <!-- End Logo Header -->
         </div>
 
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
             <div class="sidebar-content">
+
+                {{-- User menu khusus versi mobile --}}
+
                 <ul class="nav nav-secondary">
 
                     <!-- DASHBOARD -->
