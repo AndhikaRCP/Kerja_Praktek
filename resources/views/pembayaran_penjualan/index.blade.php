@@ -99,7 +99,7 @@
                                             <td>{{ ucfirst($pembayaran->metode) }}</td>
                                             <td>
                                                 @if ($pembayaran->bukti_pembayaran)
-                                                    <a href="{{ asset('storage/' . $pembayaran->bukti_pembayaran) }}"
+                                                    <a href="{{ asset('public/storage/' . $pembayaran->bukti_pembayaran) }}"
                                                         target="_blank">Lihat</a>
                                                 @else
                                                     <span class="text-muted">-</span>
