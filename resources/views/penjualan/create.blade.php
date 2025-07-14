@@ -70,6 +70,7 @@
                             <div class="col-md-6">
                                 <label>Total Harga</label>
                                 <input type="text" id="totalHarga" class="form-control text-end" readonly>
+                                <input type="hidden" name="total_harga" id="totalHargaHidden">
                             </div>
                         </div>
 
@@ -103,6 +104,7 @@
         </div>
     </div>
 @endsection
+
 
 @push('styles')
     <style>
@@ -179,7 +181,7 @@
             row.innerHTML = `
         <td><select name="barang_kode[]" class="form-select-barang" style="width: 100%" required>${barangOptions}</select></td>
         <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
-        <td><input type="text" name="stok[]"" class="form-control text-end bg-light" readonly></td>
+        <td><input type="text" name="stok[]" class="form-control text-end bg-light" readonly></td>
         <td><input type="text" name="harga_jual_snapshot[]" class="form-control text-end" oninput="hitungTotal(this)"></td>
         <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" onchange="hitungTotal(this)"></td>
         <td><input type="text" class="form-control text-end" readonly></td>
@@ -226,7 +228,7 @@
         function hitungGrandTotal() {
             let total = 0;
             document.querySelectorAll('#barangTable tbody tr').forEach(row => {
-                total += unformatRibuan(row.querySelector('td:nth-child(5) input').value || '0');
+                total += unformatRibuan(row.querySelector('td:nth-child(6) input').value || '0');
             });
             document.getElementById('totalHarga').value = formatRibuan(total.toFixed(0));
         }
