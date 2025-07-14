@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PembayaranPenjualan;
 use App\Models\Penjualan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PembayaranPenjualanController extends Controller
 {
@@ -78,7 +79,6 @@ class PembayaranPenjualanController extends Controller
 
             // **Path disimpan di DB** agar bisa diakses dari browser
             $path = 'bukti_pembayaran/' . $filename;
-
         }
 
 
@@ -130,10 +130,28 @@ class PembayaranPenjualanController extends Controller
     // Hapus data pembayaran
     public function destroy(PembayaranPenjualan $pembayaran_penjualan)
     {
+        // Cek langsung tanpa function tambahan
+        if (Auth::user()->role !== 'superadmin') {
+            abort(403, 'Akses ditolak. Hanya superadmin yang bisa menghapus pembayaran.');
+        }
+
+        $penjualan = $pembayaran_penjualan->penjualan;
+
+        // Hapus file bukti jika ada
+        if ($pembayaran_penjualan->bukti_pembayaran && file_exists(public_path('storage/' . $pembayaran_penjualan->bukti_pembayaran))) {
+            unlink(public_path('storage/' . $pembayaran_penjualan->bukti_pembayaran));
+        }
+
+        // Hapus data pembayaran
         $pembayaran_penjualan->delete();
 
-        return redirect()->route('pembayaran-penjualan.index')
-            ->with('success', 'Data pembayaran berhasil dihapus.');
+        // Hitung ulang dan update status transaksi
+        $totalPembayaran = $penjualan->pembayaran()->sum('nominal');
+        $penjualan->update([
+            'status_transaksi' => $totalPembayaran >= $penjualan->total_harga ? 'lunas' : 'belum lunas',
+        ]);
+        
+        return redirect()->back()->with('success', 'Data pembayaran berhasil dihapus.');
     }
 
     public function cariTransaksiBelumLunas(Request $request)

@@ -85,7 +85,9 @@
                                         <th>Metode</th>
                                         <th>Bukti</th>
                                         <th>Keterangan</th>
-                                        {{-- <th class="text-center">Aksi</th> --}}
+                                        @if (auth()->user()->role === 'superadmin')
+                                            <th class="text-center">Aksi</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,8 +106,26 @@
                                                 @else
                                                     <span class="text-muted">-</span>
                                                 @endif
-                                            </td>       
+                                            </td>
                                             <td>{{ $pembayaran->keterangan ?? '-' }}</td>
+                                            @if (auth()->user()->role === 'superadmin')
+                                                <td class="text-center">
+
+                                                    <form id="delete-form-{{ $pembayaran->id }}"
+                                                        action="{{ route('pembayaran_penjualan.destroy', $pembayaran->id) }}"
+                                                        method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-sm btn-danger"
+                                                            onclick="confirmDelete(event, this)"
+                                                            data-url="{{ route('pembayaran_penjualan.destroy', $pembayaran->id) }}">
+                                                            <i class="fa fa-times"></i>
+                                                        </button>
+                                                    </form>
+
+                                                </td>
+                                            @endif
+
                                             {{-- <td class="text-center">
                                             <a href="{{ route('pembayaran_penjualan.edit', $pembayaran->id) }}" class="btn btn-sm btn-primary">
                                                 <i class="fa fa-edit"></i>
@@ -167,4 +187,5 @@
 @push('scripts')
     @include('layouts.components.scripts.form_validation')
     @include('layouts.components.scripts.sweetalerts')
+    @include('layouts.components.scripts.confirm_delete')
 @endpush
