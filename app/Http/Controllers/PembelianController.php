@@ -103,4 +103,75 @@ class PembelianController extends Controller
         return redirect()->route('pembelian.index')
             ->with('success', 'Data pembelian berhasil dihapus dan stok diperbarui.');
     }
+
+    public function edit(Pembelian $pembelian)
+    {
+        // Load relasi yang dibutuhkan
+        $pembelian->load(['supplier', 'detailPembelian']);
+
+        // Ambil semua data supplier dan barang untuk ditampilkan di dropdown
+        $suppliers = Supplier::all();
+        $barangs = Barang::all();
+
+        return view('pembelian.edit', compact('pembelian', 'suppliers', 'barangs'));
+    }
+
+    public function update(Request $request, Pembelian $pembelian)
+{
+    $request->validate([
+        'supplier_id' => 'required|exists:suppliers,id',
+        'tanggal' => 'required|date',
+        'barang_kode' => 'required|array',
+        'barang_kode.*' => 'required|string|exists:barangs,kode_barang',
+        'nama_barang_snapshot.*' => 'required|string',
+        'harga_beli_snapshot.*' => 'required|numeric|min:0',
+        'jumlah.*' => 'required|integer|min:1',
+    ]);
+
+    // 1. Kembalikan stok dari detail lama
+    foreach ($pembelian->detailPembelian as $detail) {
+        $barang = \App\Models\Barang::where('kode_barang', $detail->barang_kode)->first();
+        if ($barang) {
+            $barang->stok -= $detail->jumlah;
+            $barang->save();
+        }
+    }
+
+    // 2. Hapus detail lama
+    $pembelian->detailPembelian()->delete();
+
+    // 3. Hitung total harga baru
+    $totalHarga = 0;
+    foreach ($request->barang_kode as $i => $kode) {
+        $subtotal = $request->harga_beli_snapshot[$i] * $request->jumlah[$i];
+        $totalHarga += $subtotal;
+    }
+
+    // 4. Update data pembelian utama
+    $pembelian->supplier_id = $request->supplier_id;
+    $pembelian->tanggal = $request->tanggal;
+    $pembelian->keterangan = $request->keterangan;
+    $pembelian->total_harga = $totalHarga;
+    $pembelian->save();
+
+    // 5. Tambahkan detail baru + update stok baru
+    foreach ($request->barang_kode as $i => $kode) {
+        $pembelian->detailPembelian()->create([
+            'barang_kode' => $kode,
+            'nama_barang_snapshot' => $request->nama_barang_snapshot[$i],
+            'harga_beli_snapshot' => $request->harga_beli_snapshot[$i],
+            'jumlah' => $request->jumlah[$i],
+        ]);
+
+        // Tambah stok baru
+        $barang = \App\Models\Barang::where('kode_barang', $kode)->first();
+        if ($barang) {
+            $barang->stok += $request->jumlah[$i];
+            $barang->save();
+        }
+    }
+
+    return redirect()->route('pembelian.index')->with('success', 'Data pembelian berhasil diperbarui.');
+}
+
 }
