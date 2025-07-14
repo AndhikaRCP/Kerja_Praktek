@@ -64,6 +64,20 @@
                                                     class="btn btn-sm btn-info" title="Cetak Nota">
                                                     <i class="fa fa-print"></i>
                                                 </a>
+
+                                                <form id="delete-form-{{ $penjualan->id }}"
+                                                    action="{{ route('penjualan.destroy', $penjualan->id) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="confirmDelete(event, this)"
+                                                        data-url="{{ route('penjualan.destroy', $penjualan->id) }}"
+                                                        title="Hapus Penjualan">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </form>
+
                                             </td>
                                             {{-- <td class="text-center">
                                                 <a href="{{ route('penjualan.show', $penjualan->id) }}"
@@ -154,4 +168,11 @@
             });
         @endif
     </script>
+@endpush
+
+
+@push('scripts')
+    @include('layouts.components.scripts.form_validation')
+    @include('layouts.components.scripts.sweetalerts')
+    @include('layouts.components.scripts.confirm_delete')
 @endpush

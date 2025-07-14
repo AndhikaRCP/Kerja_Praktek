@@ -157,4 +157,28 @@ class PenjualanController extends Controller
 
         return view('penjualan.cetak', compact('penjualan'));
     }
+
+    public function destroy(Penjualan $penjualan)
+    {
+        // Cek apakah penjualan sudah punya pembayaran
+        if ($penjualan->pembayaranPenjualans()->count() > 0) {
+            return redirect()->route('penjualan.index')->with('error', 'Transaksi tidak dapat dihapus karena sudah memiliki riwayat pembayaran.');
+        }
+
+        // Kembalikan stok barang (restitusi)
+        foreach ($penjualan->detailPenjualan as $detail) {
+            $barang = $detail->barang;
+            if ($barang) {
+                $barang->increment('stok', $detail->jumlah);
+            }
+        }
+
+        // Hapus detail penjualan
+        $penjualan->detailPenjualan()->delete();
+
+        // Hapus penjualan
+        $penjualan->delete();
+
+        return redirect()->route('penjualan.index')->with('success', 'Data penjualan berhasil dihapus.');
+    }
 }
