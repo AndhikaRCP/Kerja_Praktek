@@ -28,8 +28,10 @@
                                             <td>{{ $pembelian->kode_transaksi }}</td>
                                             <td>{{ $pembelian->supplier->nama ?? '-' }}</td>
                                             <td>{{ $pembelian->user->name ?? '-' }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
-                                            <td data-order="{{ $pembelian->total_harga }}">Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}</td>
+                                            <td data-order="{{ $pembelian->tanggal }}">
+                                                {{ \Carbon\Carbon::parse($pembelian->tanggal)->format('d-m-Y') }}</td>
+                                            <td data-order="{{ $pembelian->total_harga }}">Rp
+                                                {{ number_format($pembelian->total_harga, 0, ',', '.') }}</td>
                                             @php
                                                 $warnaStatus = [
                                                     'selesai' => 'success', // Hijau
@@ -54,14 +56,19 @@
                                                     class="btn btn-sm btn-primary" title="Edit">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('pembelian.destroy', $pembelian->id) }}"
+                                                <form id="delete-form-{{ $pembelian->id }}"
+                                                    action="{{ route('pembelian.destroy', $pembelian->id) }}"
                                                     method="POST" style="display:inline;">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Yakin ingin menghapus?')" title="Hapus">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="confirmDelete(event, this)"
+                                                        data-url="{{ route('pembelian.destroy', $pembelian->id) }}"
+                                                        title="Hapus Penjualan">
                                                         <i class="fa fa-times"></i>
                                                     </button>
                                                 </form>
+
                                             </td>
                                         </tr>
                                     @empty
@@ -84,4 +91,3 @@
     @include('layouts.components.scripts.datatables')
     @include('layouts.components.scripts.confirm_delete')
 @endpush
-

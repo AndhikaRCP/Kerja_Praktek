@@ -63,7 +63,7 @@
                                     <div class="form-group form-group-default">
                                         <label>Stok</label>
                                         <input type="number" name="stok" class="form-control"
-                                            value="{{ $barang->stok }}" required>
+                                            value="{{ $barang->stok }}" required readonly>
                                     </div>
                                 </div>
 

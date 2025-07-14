@@ -22,9 +22,9 @@
                 <tr>
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $item->barang->nama ?? '-' }}</td>
-                    <td class="text-end">Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
+                    <td class="text-end">Rp {{ number_format($item->harga_jual_snapshot, 0, ',', '.') }}</td>
                     <td class="text-center">{{ $item->jumlah }}</td>
-                    <td class="text-end">Rp {{ number_format($item->harga_jual * $item->jumlah, 0, ',', '.') }}</td>
+                    <td class="text-end">Rp {{ number_format($item->harga_jual_snapshot * $item->jumlah, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>

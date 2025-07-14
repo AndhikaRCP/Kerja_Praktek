@@ -78,9 +78,29 @@ class PembelianController extends Controller
     }
 
 
-    public function show(Pembelian $pembelian)
+    public function show($id)
     {
-        $pembelian->load(['supplier', 'detailPembelians']);
+
+        $pembelian = Pembelian::with(['supplier', 'user', 'detailPembelian.barang'])->findOrFail($id);
+
         return view('pembelian.show', compact('pembelian'));
+    }
+
+    public function destroy($id)
+    {
+        $pembelian = Pembelian::with('detailPembelian.barang')->findOrFail($id);
+        foreach ($pembelian->detailPembelian as $detail) {
+            $barang = $detail->barang;
+            if ($barang) {
+                $barang->stok = max(0, $barang->stok - $detail->jumlah); // hindari negatif
+                $barang->save();
+            }
+        }
+
+        $pembelian->detailPembelian()->delete();
+        $pembelian->delete();
+
+        return redirect()->route('pembelian.index')
+            ->with('success', 'Data pembelian berhasil dihapus dan stok diperbarui.');
     }
 }
