@@ -90,7 +90,7 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Grafik Penjualan (7 Hari Terakhir)</h4>
+                            <h4 class="card-title">Grafik Penjualan (30 Hari Terakhir)</h4>
                         </div>
                         <div class="card-body">
                             <canvas id="salesChart" style="min-height: 350px;"></canvas>
@@ -116,22 +116,38 @@
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Distribusi Pengguna</h4>
+                        <div class="card-header py-1 px-2">
+                            <h6 class="card-title mb-0" style="font-size: 0.8rem;">Distribusi Pengguna</h6>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                @php $total = max($totalUsers, 1); @endphp
-                                <li class="list-group-item">Manager <span
-                                        class="float-end">{{ $userPerRole['manager'] ?? 0 }}
-                                        ({{ round((($userPerRole['manager'] ?? 0) / $total) * 100) }}%)</span></li>
-                                <li class="list-group-item">Admin <span class="float-end">{{ $userPerRole['admin'] ?? 0 }}
-                                        ({{ round((($userPerRole['admin'] ?? 0) / $total) * 100) }}%)</span></li>
-                                <li class="list-group-item">Sales <span class="float-end">{{ $userPerRole['sales'] ?? 0 }}
-                                        ({{ round((($userPerRole['sales'] ?? 0) / $total) * 100) }}%)</span></li>
-                            </ul>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm mb-0" style="font-size: 0.65rem;">
+                                    <thead>
+                                        <tr>
+                                            <th class="py-1 px-1">Role</th>
+                                            <th class="py-1 px-1 text-end">Jumlah</th>
+                                            <th class="py-1 px-1 text-end">%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php $total = max($totalUsers, 1); @endphp
+                                        @foreach (['superadmin', 'admin', 'sales'] as $role)
+                                            @php
+                                                $count = $userPerRole[$role] ?? 0;
+                                                $percentage = round(($count / $total) * 100);
+                                            @endphp
+                                            <tr>
+                                                <td class="py-1 px-1 text-capitalize">{{ $role }}</td>
+                                                <td class="py-1 px-1 text-end">{{ $count }}</td>
+                                                <td class="py-1 px-1 text-end">{{ $percentage }}%</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

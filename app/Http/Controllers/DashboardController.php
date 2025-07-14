@@ -30,47 +30,59 @@ class DashboardController extends Controller
     }
 
 
-    public function superadminDashboard()
-    {
-        $totalUsers = User::count();
-        $totalBarangs = Barang::count();
-        $totalPenjualans = Penjualan::count();
-        $totalPembelians = Pembelian::count();
+   public function superadminDashboard()
+{
+    $totalUsers = User::count();
+    $totalBarangs = Barang::count();
+    $totalPenjualans = Penjualan::count();
+    $totalPembelians = Pembelian::count();
 
-        // Ubah jadi array biasa agar bisa pakai array_column di view
-        $penjualanChart = Penjualan::selectRaw('DATE(tanggal) as tanggal, SUM(total_harga) as total')
-            ->groupBy('tanggal')
-            ->orderBy('tanggal', 'desc')
-            ->take(7)
-            ->get()
-            ->reverse()
-            ->values()
-            ->toArray(); // <-- ini penting!
+    // Ambil 30 hari terakhir penjualan
+    $startDate = Carbon::now()->subDays(29)->startOfDay();
 
-        $topBarangs = DB::table('detail_penjualans')
-            ->select('nama_barang_snapshot', DB::raw('SUM(jumlah) as jumlah'))
-            ->groupBy('nama_barang_snapshot')
-            ->orderByDesc('jumlah')
-            ->limit(5)
-            ->get();
+    // Data dari DB yang sudah dijumlah per tanggal
+    $dataFromDB = Penjualan::selectRaw('DATE(tanggal) as tanggal, SUM(total_harga) as total')
+        ->where('tanggal', '>=', $startDate)
+        ->groupBy('tanggal')
+        ->orderBy('tanggal', 'asc')
+        ->get()
+        ->keyBy('tanggal');
 
-        $userPerRole = [
-            'manager' => User::where('role', 'manager')->count(),
-            'admin' => User::where('role', 'admin')->count(),
-            'sales' => User::where('role', 'sales')->count(),
+    // Generate semua tanggal dari 30 hari terakhir
+    $penjualanChart = [];
+    for ($i = 0; $i < 30; $i++) {
+        $date = Carbon::now()->subDays(29 - $i)->toDateString();
+        $penjualanChart[] = [
+            'tanggal' => Carbon::parse($date)->format('d M'),
+            'total' => isset($dataFromDB[$date]) ? (int)$dataFromDB[$date]->total : 0,
         ];
-
-        return view('dashboard.superadmin', compact(
-            'totalUsers',
-            'totalBarangs',
-            'totalPenjualans',
-            'totalPembelians',
-            'penjualanChart',
-            'topBarangs',
-            'userPerRole'
-        ));
     }
 
+    // Top 5 barang terlaris
+    $topBarangs = DB::table('detail_penjualans')
+        ->select('nama_barang_snapshot', DB::raw('SUM(jumlah) as jumlah'))
+        ->groupBy('nama_barang_snapshot')
+        ->orderByDesc('jumlah')
+        ->limit(5)
+        ->get();
+
+    // Jumlah user per role
+    $userPerRole = [
+        'superadmin' => User::where('role', 'superadmin')->count(),
+        'admin' => User::where('role', 'admin')->count(),
+        'sales' => User::where('role', 'sales')->count(),
+    ];
+
+    return view('dashboard.superadmin', compact(
+        'totalUsers',
+        'totalBarangs',
+        'totalPenjualans',
+        'totalPembelians',
+        'penjualanChart',
+        'topBarangs',
+        'userPerRole'
+    ));
+}
     public function adminDashboard()
     {
         $totalBarangs = Barang::count();
