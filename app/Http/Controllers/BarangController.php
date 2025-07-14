@@ -14,7 +14,7 @@ class BarangController extends Controller
         $barangs = Barang::with('kategori')->get();
         $kategoris = Kategori::all();
         $role = Auth::user()->role;
-        return view('barang.index', compact('barangs', 'kategoris','role'));
+        return view('barang.index', compact('barangs', 'kategoris', 'role'));
     }
 
     public function create()
@@ -47,6 +47,12 @@ class BarangController extends Controller
                 'harga_jual.required' => 'Harga jual wajib diisi.',
             ]
         );
+
+        if ($request->harga_jual <= $request->harga_beli) {
+            return redirect()->back()->withInput()->withErrors([
+                'harga_jual' => 'Harga jual harus lebih besar dari harga beli.',
+            ]);
+        }
 
         Barang::create($request->all());
         return redirect()->back()->with('success', 'Data berhasil ditambahkan.');
