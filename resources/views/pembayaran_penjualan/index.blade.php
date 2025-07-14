@@ -110,6 +110,10 @@
                                             <td>{{ $pembayaran->keterangan ?? '-' }}</td>
                                             @if (auth()->user()->role === 'superadmin')
                                                 <td class="text-center">
+                                                    <a href="{{ route('pembayaran_penjualan.edit', $pembayaran->id) }}"
+                                                        class="btn btn-sm btn-primary me-1" title="Edit">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
 
                                                     <form id="delete-form-{{ $pembayaran->id }}"
                                                         action="{{ route('pembayaran_penjualan.destroy', $pembayaran->id) }}"
@@ -122,7 +126,6 @@
                                                             <i class="fa fa-times"></i>
                                                         </button>
                                                     </form>
-
                                                 </td>
                                             @endif
 

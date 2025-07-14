@@ -105,27 +105,78 @@ class PembayaranPenjualanController extends Controller
 
 
     // Tampilkan form edit pembayaran
-    public function edit(PembayaranPenjualan $pembayaran_penjualan)
+    public function edit($id)
     {
-        $penjualan = Penjualan::all();
-        return view('pembayaran_penjualan.edit', compact('pembayaran_penjualan', 'penjualan'));
+        $pembayaran = PembayaranPenjualan::with('penjualan.pelanggan')->findOrFail($id);
+
+        if (Auth::user()->role !== 'superadmin') {
+            abort(403, 'Hanya superadmin yang dapat mengedit pembayaran');
+        }
+
+        return view('pembayaran_penjualan.edit', compact('pembayaran'));
     }
 
-    // Simpan perubahan
-    public function update(Request $request, PembayaranPenjualan $pembayaran_penjualan)
+    public function update(Request $request, $id)
     {
+        if (Auth::user()->role !== 'superadmin') {
+            abort(403, 'Hanya superadmin yang dapat mengupdate pembayaran');
+        }
+
         $request->validate([
-            'penjualan_id' => 'required|exists:penjualans,id',
-            'tanggal_pembayaran' => 'required|date',
-            'jumlah_bayar' => 'required|numeric|min:1',
-            'jenis_pembayaran' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            'nominal' => 'required|string', // misal: "100.000"
+            'metode' => 'required|string|max:50',
+            'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'keterangan' => 'nullable|string',
         ]);
 
-        $pembayaran_penjualan->update($request->all());
+        $pembayaran = PembayaranPenjualan::findOrFail($id);
+        $penjualan = $pembayaran->penjualan;
 
-        return redirect()->route('pembayaran-penjualan.index')
-            ->with('success', 'Data pembayaran berhasil diperbarui.');
+        // Bersihkan nominal dari titik dan ubah jadi integer
+        $nominalBaru = (int) str_replace('.', '', $request->nominal);
+
+        // Hitung total pembayaran tanpa nominal yang sedang diedit
+        $totalPembayaranSebelum = $penjualan->pembayaran()
+            ->where('id', '!=', $pembayaran->id)
+            ->sum('nominal');
+
+        $totalSetelahEdit = $totalPembayaranSebelum + $nominalBaru;
+
+        if ($totalSetelahEdit > $penjualan->total_harga) {
+            return back()->withErrors([
+                'nominal' => 'Total pembayaran melebihi total tagihan. Maksimal: Rp ' . number_format($penjualan->total_harga - $totalPembayaranSebelum, 0, ',', '.')
+            ])->withInput();
+        }
+
+        // Update file jika diupload
+        if ($request->hasFile('bukti_pembayaran')) {
+            // Hapus bukti lama kalau ada
+            if ($pembayaran->bukti_pembayaran && file_exists(public_path('storage/' . $pembayaran->bukti_pembayaran))) {
+                unlink(public_path('storage/' . $pembayaran->bukti_pembayaran));
+            }
+
+            // Simpan file baru
+            $pathBaru = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+            $pembayaran->bukti_pembayaran = $pathBaru;
+        }
+
+        // Update data pembayaran
+        $pembayaran->update([
+            'tanggal' => $request->tanggal,
+            'nominal' => $nominalBaru,
+            'metode' => $request->metode,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        // Update status penjualan
+        $penjualan->update([
+            'status_transaksi' => $totalSetelahEdit >= $penjualan->total_harga ? 'lunas' : 'belum lunas',
+        ]);
+
+        return redirect()->route('pembayaran_penjualan.index')->with('success', 'Data pembayaran berhasil diperbarui.');
     }
+
 
     // Hapus data pembayaran
     public function destroy(PembayaranPenjualan $pembayaran_penjualan)
@@ -150,7 +201,7 @@ class PembayaranPenjualanController extends Controller
         $penjualan->update([
             'status_transaksi' => $totalPembayaran >= $penjualan->total_harga ? 'lunas' : 'belum lunas',
         ]);
-        
+
         return redirect()->back()->with('success', 'Data pembayaran berhasil dihapus.');
     }
 
