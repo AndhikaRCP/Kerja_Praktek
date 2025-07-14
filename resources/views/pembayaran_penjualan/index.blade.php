@@ -104,7 +104,7 @@
                                                 @else
                                                     <span class="text-muted">-</span>
                                                 @endif
-                                            </td>
+                                            </td>       
                                             <td>{{ $pembayaran->keterangan ?? '-' }}</td>
                                             {{-- <td class="text-center">
                                             <a href="{{ route('pembayaran_penjualan.edit', $pembayaran->id) }}" class="btn btn-sm btn-primary">

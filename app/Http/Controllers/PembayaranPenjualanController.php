@@ -64,8 +64,23 @@ class PembayaranPenjualanController extends Controller
         // Simpan file jika ada
         $path = null;
         if ($request->hasFile('bukti_pembayaran')) {
-            $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+            $filename = time() . '_' . $request->file('bukti_pembayaran')->getClientOriginalName();
+
+            // **GANTI**: Simpan ke folder real: public/storage/bukti_pembayaran
+            $destination = public_path('storage/bukti_pembayaran');
+
+            // **PASTIKAN** foldernya ada
+            if (!file_exists($destination)) {
+                mkdir($destination, 0755, true);
+            }
+
+            $request->file('bukti_pembayaran')->move($destination, $filename);
+
+            // **Path disimpan di DB** agar bisa diakses dari browser
+            $path = 'bukti_pembayaran/' . $filename;
+
         }
+
 
         // Simpan ke database
         PembayaranPenjualan::create([
