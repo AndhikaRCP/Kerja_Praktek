@@ -31,6 +31,11 @@ class LaporanPenjualanController extends Controller
         }
 
 
+        if ($request->filled('status_transaksi')) {
+            $query->where('status_transaksi', $request->status_transaksi);
+        }
+
+        // Ambil data hasil filter dan total penjualan
         $penjualans = $query->orderBy('tanggal', 'desc')->get();
         $total_penjualan = (clone $query)->sum('total_harga');
 
