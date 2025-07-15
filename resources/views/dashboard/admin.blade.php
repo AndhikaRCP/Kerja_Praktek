@@ -113,7 +113,6 @@
                 </div>
             </div>
 
-            {{-- Tombol Akses Cepat --}}
             <div class="row mt-4">
                 <div class="col-md-3 mb-2">
                     <a href="{{ route('barang.index') }}" class="btn btn-outline-primary w-100"><i class="fas fa-box"></i>

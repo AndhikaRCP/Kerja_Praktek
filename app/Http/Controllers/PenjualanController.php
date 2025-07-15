@@ -65,7 +65,7 @@ class PenjualanController extends Controller
             return back()->withInput()->with('error', 'Nominal pembayaran tidak boleh melebihi total harga.');
         }
 
-        // Tentukan status otomatis
+        //  status otomatis
         $status = 'belum lunas';
         if ($bayarNominal >= $total && $total > 0) {
             $status = 'lunas';
@@ -119,7 +119,15 @@ class PenjualanController extends Controller
         if ($bayarNominal > 0) {
             $path = null;
             if ($request->hasFile('bukti_pembayaran')) {
-                $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+                $filename = time() . '_' . $request->file('bukti_pembayaran')->getClientOriginalName();
+                $destination = public_path('storage/bukti_pembayaran');
+
+                if (!file_exists($destination)) {
+                    mkdir($destination, 0755, true);
+                }
+
+                $request->file('bukti_pembayaran')->move($destination, $filename);
+                $path = 'bukti_pembayaran/' . $filename;
             }
 
             PembayaranPenjualan::create([

@@ -36,11 +36,10 @@ class DashboardController extends Controller
     $totalBarangs = Barang::count();
     $totalPenjualans = Penjualan::count();
     $totalPembelians = Pembelian::count();
-
-    // Ambil 30 hari terakhir penjualan
+    
     $startDate = Carbon::now()->subDays(29)->startOfDay();
 
-    // Data dari DB yang sudah dijumlah per tanggal
+    // Data dari DB yg sudah dijumlah per tgl
     $dataFromDB = Penjualan::selectRaw('DATE(tanggal) as tanggal, SUM(total_harga) as total')
         ->where('tanggal', '>=', $startDate)
         ->groupBy('tanggal')
