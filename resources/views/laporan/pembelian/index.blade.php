@@ -33,7 +33,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <label>Status Transaksi</label>
                             <select name="status_transaksi" class="form-control">
                                 <option value="">-- Semua Status --</option>
@@ -42,7 +42,7 @@
                                 <option value="batal" {{ request('status_transaksi') == 'batal' ? 'selected' : '' }}>Batal
                                 </option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-12">
                             <div class="d-flex flex-wrap justify-content-end gap-2">
                                 <button type="submit" class="btn btn-primary">
