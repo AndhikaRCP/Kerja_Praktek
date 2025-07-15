@@ -62,12 +62,10 @@
 
     @stack('styles')
 
-    {{-- Custom Theme CSS --}}
+    {{--CSS --}}
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/kaiadmin.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}"> --}}
-    <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
@@ -85,13 +83,8 @@
     <div class="wrapper">
         <!-- Sidebar -->
         @include('layouts.partials.sidebar')
-        {{-- END OF SIDE BAR --}}
 
         <div class="main-panel">
-            {{-- <div class="main-header"> --}}
-            <!-- Navbar Header -->
-            <!-- End Navbar -->
-            {{-- </div> --}}
             <div class="main-header">
                 @include('layouts.partials.navbar')
                 <div class="main-header-logo">
@@ -115,17 +108,9 @@
 
     {{-- Plugin JS --}}
     <script src="{{ asset('assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugin/chart.js/chart.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugin/chart-circle/circles.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugin/jsvectormap/world.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- Kaiadmin JS --}}
     <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/setting-demo.js') }}"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     {{-- Tambahan JS dari child view --}}
