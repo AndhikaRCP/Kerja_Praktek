@@ -48,10 +48,8 @@ class PembelianController extends Controller
         $pembelian = Pembelian::create([
             'kode_transaksi' => 'PB-' . strtoupper(Str::random(6)),
             'supplier_id' => $request->supplier_id,
-            // 'user_id' => Auth::id(),
-            // 'created_by' => Auth::id(),
-            'user_id' => 1, // <<--- sementara, isi dengan ID user yang sudah ada
-            'created_by' => 1, // atau 'Testing'
+            'user_id' => Auth::id(),
+            'created_by' => Auth::id(),
             'tanggal' => $request->tanggal,
             'total_harga' => $total,
             'keterangan' => $request->keterangan,

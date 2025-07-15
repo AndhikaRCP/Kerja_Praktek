@@ -90,7 +90,7 @@
                                     <th>Sales</th>
                                     <th>User Input</th>
                                     <th>Total Harga</th>
-                                    <th>Status Pembayaran</th>
+                                    <th>Jenis Pembayaran</th>
                                     <th>Status Transaksi</th>
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
@@ -107,10 +107,10 @@
                                         <td>{{ $penjualan->sales->name ?? '-' }}</td>
                                         <td>{{ $penjualan->user->name ?? '-' }}</td>
                                         <td>Rp {{ number_format($penjualan->total_harga, 0, ',', '.') }}</td>
-                                        <td>{{ ucfirst($penjualan->status_pembayaran) }}</td>
+                                        <td>{{ ucfirst($penjualan->jenis_pembayaran) }}</td>
                                         <td>
                                             <span
-                                                class="badge bg-{{ $penjualan->status_transaksi == 'selesai' ? 'success' : 'secondary' }}">
+                                                class="badge bg-{{ $penjualan->status_transaksi == 'lunas' ? 'success' : 'danger' }}">
                                                 {{ ucfirst($penjualan->status_transaksi) }}
                                             </span>
                                         </td>
