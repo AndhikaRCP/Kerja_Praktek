@@ -49,9 +49,9 @@
                             <label>Status Transaksi</label>
                             <select name="status_transaksi" class="form-control">
                                 <option value="">-- Semua Status --</option>
-                                <option value="selesai" {{ request('status_transaksi') == 'selesai' ? 'selected' : '' }}>
-                                    Selesai</option>
-                                <option value="batal" {{ request('status_transaksi') == 'batal' ? 'selected' : '' }}>Batal
+                                <option value="selesai" {{ request('status_transaksi') == 'lunas' ? 'selected' : '' }}>
+                                    lunas</option>
+                                <option value="batal" {{ request('status_transaksi') == 'belum lunas' ? 'selected' : '' }}>belum lunas
                                 </option>
                             </select>
                         </div>
