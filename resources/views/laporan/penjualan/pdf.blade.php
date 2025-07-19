@@ -12,7 +12,7 @@
 </head>
 <body>
     <h3>Laporan Penjualan</h3>
-    <p>Periode: {{ request('dari') ?? '-' }} s/d {{ request('sampai') ?? '-' }}</p>
+    <p>Periode: {{ $tanggal_mulai ?? '-' }} s/d {{ $tanggal_akhir ?? '-' }}</p>
 
     <table>
         <thead>
@@ -24,7 +24,7 @@
                 <th>Sales</th>
                 <th>User</th>
                 <th>Total</th>
-                <th>Status Pembayaran</th>
+                <th>Jenis Pembayaran</th>
                 <th>Status Transaksi</th>
                 <th>Keterangan</th>
             </tr>
@@ -39,7 +39,7 @@
                     <td>{{ $penjualan->sales->name ?? '-' }}</td>
                     <td>{{ $penjualan->user->name ?? '-' }}</td>
                     <td>Rp {{ number_format($penjualan->total_harga, 0, ',', '.') }}</td>
-                    <td>{{ ucfirst($penjualan->status_pembayaran) }}</td>
+                    <td>{{ ucfirst($penjualan->jenis_pembayaran) }}</td>
                     <td>{{ ucfirst($penjualan->status_transaksi) }}</td>
                     <td>{{ $penjualan->keterangan ?? '-' }}</td>
                 </tr>

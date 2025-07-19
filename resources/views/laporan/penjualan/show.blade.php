@@ -39,7 +39,7 @@
                                     @foreach ($penjualan->detailPenjualan as $i => $detail)
                                         <tr>
                                             <td>{{ $i + 1 }}</td>
-                                            <td>{{ $detail->barang_kode }}</td>
+                                            <td>{{ $detail->kode_barang  }}</td>
                                             <td>{{ $detail->nama_barang_snapshot }}</td>
                                             <td>{{ $detail->barang->satuan ?? '-' }}</td>
                                             <td>Rp {{ number_format($detail->harga_jual_snapshot, 0, ',', '.') }}</td>

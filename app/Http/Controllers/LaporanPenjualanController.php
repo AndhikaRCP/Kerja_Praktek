@@ -73,8 +73,10 @@ class LaporanPenjualanController extends Controller
 
         $penjualans = $query->orderBy('tanggal', 'desc')->get();
         $total_penjualan = $penjualans->sum('total_harga');
+        $tanggal_mulai = $request->tanggal_mulai;
+        $tanggal_akhir = $request->tanggal_akhir;
 
-        $pdf = Pdf::loadView('laporan.penjualan.pdf', compact('penjualans', 'total_penjualan'))
+        $pdf = Pdf::loadView('laporan.penjualan.pdf', compact('penjualans', 'total_penjualan','tanggal_mulai', 'tanggal_akhir'))
             ->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-penjualan.pdf');
@@ -114,7 +116,7 @@ class LaporanPenjualanController extends Controller
 
         // Header
         $sheet->fromArray([
-            ['No', 'Kode Transaksi', 'Tanggal', 'Pelanggan', 'Sales', 'User Input', 'Total Harga', 'Status Pembayaran', 'Status Transaksi', 'Keterangan']
+            ['No', 'Kode Transaksi', 'Tanggal', 'Pelanggan', 'Sales', 'User Input', 'Total Harga', 'Jenis Pembayaran', 'Status Transaksi', 'Keterangan']
         ], NULL, 'A1');
 
         // Data
@@ -128,7 +130,7 @@ class LaporanPenjualanController extends Controller
                 $penjualan->sales->name ?? '-',
                 $penjualan->user->name ?? '-',
                 $penjualan->total_harga,
-                ucfirst($penjualan->status_pembayaran),
+                ucfirst($penjualan->jenis_pembayaran),
                 ucfirst($penjualan->status_transaksi),
                 $penjualan->keterangan ?? '-'
             ], NULL, 'A' . $row);
@@ -173,7 +175,7 @@ class LaporanPenjualanController extends Controller
         foreach ($penjualan->detailPenjualan as $i => $detail) {
             $sheet->fromArray([
                 $i + 1,
-                $detail->barang_kode,
+                $detail->kode_barang,
                 $detail->nama_barang_snapshot,
                 $detail->barang->satuan ?? '-',
                 $detail->harga_jual_snapshot,
