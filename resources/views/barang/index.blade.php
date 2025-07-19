@@ -80,8 +80,8 @@
                                                     <div class="col-md-4">
                                                         <div class="form-group form-group-default">
                                                             <label>Stok</label>
-                                                            <input name="stok" type="number" min="0"
-                                                                class="form-control" value="{{ old('stok', 0) }}" required>
+                                                            <input name="stok" type="number" min="1"  onkeydown="return event.key !== '-' && event.key !== 'e'"
+                                                                class="form-control" value="{{ old('stok', 1) }}" required>
                                                         </div>
                                                     </div>
 
