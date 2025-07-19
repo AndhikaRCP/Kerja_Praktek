@@ -11,6 +11,48 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <form method="GET" action="{{ route('penjualan.index') }}" class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <label>Tanggal Mulai</label>
+                                <input type="date" name="tanggal_mulai" class="form-control"
+                                    value="{{ request('tanggal_mulai') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Tanggal Akhir</label>
+                                <input type="date" name="tanggal_sampai" class="form-control"
+                                    value="{{ request('tanggal_sampai') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Pelanggan</label>
+                                <select name="pelanggan_id" class="form-control">
+                                    <option value="">-- Semua Pelanggan --</option>
+                                    @foreach ($pelanggans as $pelanggan)
+                                        <option value="{{ $pelanggan->id }}"
+                                            {{ request('pelanggan_id') == $pelanggan->id ? 'selected' : '' }}>
+                                            {{ $pelanggan->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Status</label>
+                                <select name="status" class="form-control">
+                                    <option value="">-- Semua Status --</option>
+                                    <option value="lunas" {{ request('status') == 'lunas' ? 'selected' : '' }}>Lunas
+                                    </option>
+                                    <option value="belum lunas" {{ request('status') == 'belum lunas' ? 'selected' : '' }}>
+                                        Belum Lunas
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
+                                <a href="{{ route('penjualan.index') }}" class="btn btn-secondary"><i
+                                        class="fa fa-sync-alt"></i> Reset</a>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
                         <div class="table-responsive">
                             <table id="add-row" class="display table table-striped table-hover">
                                 <thead class="table-light">
@@ -55,8 +97,8 @@
                                             </td>
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $penjualan->status_transaksi === 'lunas' ? 'success' : 'danger' }}">
-                                                    {{ ucfirst($penjualan->status_transaksi) }}
+                                                    class="badge bg-{{ $penjualan->status === 'lunas' ? 'success' : 'danger' }}">
+                                                    {{ ucfirst($penjualan->status) }}
                                                 </span>
                                             </td>
                                             <td class="text-center">

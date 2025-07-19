@@ -14,11 +14,51 @@ use Illuminate\Support\Str;
 
 class PenjualanController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        $penjualans = Penjualan::with(['pelanggan', 'sales', 'pembayaranPenjualans'])->latest()->get();
-        return view('penjualan.index', compact('penjualans'));
+        $query = Penjualan::with(['pelanggan', 'sales', 'pembayaranPenjualans'])->latest();
+
+        // Filter tanggal
+        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_sampai')) {
+            $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_sampai]);
+        }
+
+        // Filter pelanggan
+        if ($request->filled('pelanggan_id')) {
+            $query->where('pelanggan_id', $request->pelanggan_id);
+        }
+
+        // Filter sales
+        if ($request->filled('sales_id')) {
+            $query->where('sales_id', $request->sales_id);
+        }
+
+        // Filter status pembayaran
+        if ($request->filled('status')) {
+            if ($request->status === 'lunas') {
+                $query->whereHas('pembayaranPenjualans', function ($q) {
+                    $q->selectRaw('penjualan_id, SUM(jumlah_dibayar) as total_bayar')
+                        ->groupBy('penjualan_id')
+                        ->havingRaw('SUM(jumlah_dibayar) >= (SELECT total_bayar FROM penjualans WHERE penjualans.id = pembayaran_penjualans.penjualan_id)');
+                });
+            } elseif ($request->status === 'belum_lunas') {
+                $query->whereHas('pembayaranPenjualans', function ($q) {
+                    $q->selectRaw('penjualan_id, SUM(jumlah_dibayar) as total_bayar')
+                        ->groupBy('penjualan_id')
+                        ->havingRaw('SUM(jumlah_dibayar) < (SELECT total_bayar FROM penjualans WHERE penjualans.id = pembayaran_penjualans.penjualan_id)');
+                });
+            }
+        }
+
+        $penjualans = $query->get();
+
+        $pelanggans = Pelanggan::all();
+        $sales = User::where('role', 'sales')->get(); // ganti jika logika 'sales'-mu beda
+
+        return view('penjualan.index', compact('penjualans', 'pelanggans', 'sales'));
     }
+
 
     public function create()
     {
