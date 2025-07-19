@@ -97,8 +97,8 @@
                                             </td>
                                             <td>
                                                 <span
-                                                    class="badge bg-{{ $penjualan->status === 'lunas' ? 'success' : 'danger' }}">
-                                                    {{ ucfirst($penjualan->status) }}
+                                                    class="badge bg-{{ $penjualan->status_transaksi == 'lunas' ? 'success' : 'danger' }}">
+                                                    {{ ucfirst($penjualan->status_transaksi) }}
                                                 </span>
                                             </td>
                                             <td class="text-center">
@@ -119,26 +119,7 @@
                                                         <i class="fa fa-times"></i>
                                                     </button>
                                                 </form>
-
                                             </td>
-                                            {{-- <td class="text-center">
-                                                <a href="{{ route('penjualan.show', $penjualan->id) }}"
-                                                    class="btn btn-sm btn-info" title="Detail">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('penjualan.edit', $penjualan->id) }}"
-                                                    class="btn btn-sm btn-primary" title="Edit">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('penjualan.destroy', $penjualan->id) }}"
-                                                    method="POST" style="display:inline;">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Yakin ingin menghapus?')" title="Hapus">
-                                                        <i class="fa fa-times"></i>
-                                                    </button>
-                                                </form>
-                                            </td> --}}
                                         </tr>
                                     @empty
                                         <tr>
