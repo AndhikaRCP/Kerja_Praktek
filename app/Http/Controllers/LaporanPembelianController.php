@@ -68,8 +68,10 @@ class LaporanPembelianController extends Controller
 
         $pembelians = $query->orderBy('tanggal', 'desc')->get();
         $total_pembelian = $pembelians->sum('total_harga');
+        $tanggal_mulai = $request->tanggal_mulai;
+        $tanggal_akhir = $request->tanggal_akhir;
 
-        $pdf = Pdf::loadView('laporan.pembelian.pdf', compact('pembelians', 'total_pembelian'))
+        $pdf = Pdf::loadView('laporan.pembelian.pdf', compact('pembelians', 'total_pembelian','tanggal_mulai', 'tanggal_akhir'))
             ->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-pembelian.pdf');
