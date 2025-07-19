@@ -182,7 +182,7 @@
         <td><select name="barang_kode[]" class="form-select-barang" style="width: 100%" required>${barangOptions}</select></td>
         <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
         <td><input type="text" name="stok[]" class="form-control text-end bg-light" readonly></td>
-        <td><input type="text" name="harga_jual_snapshot[]" class="form-control text-end" oninput="hitungTotal(this)"></td>
+        <td><input type="text" name="harga_jual_snapshot[]" class="form-control text-end" value="1" min="1"  onkeydown="return event.key !== '-' && event.key !== 'e'" oninput="hitungTotal(this)"></td>
         <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" min="1"  onkeydown="return event.key !== '-' && event.key !== 'e'" onchange="hitungTotal(this)"></td>
         <td><input type="text" class="form-control text-end" readonly></td>
         <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>

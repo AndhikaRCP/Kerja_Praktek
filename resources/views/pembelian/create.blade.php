@@ -150,7 +150,7 @@
                 </select>
             </td>
             <td><input type="text" name="nama_barang_snapshot[]" class="form-control" readonly></td>
-            <td><input type="number" name="harga_beli_snapshot[]" class="form-control text-end" ></td>
+            <td><input type="number" name="harga_beli_snapshot[]" value="1" min="1"  onkeydown="return event.key !== '-' && event.key !== 'e'" class="form-control text-end" ></td>
             <td><input type="number" name="jumlah[]" class="form-control text-end" value="1" min="1"  onkeydown="return event.key !== '-' && event.key !== 'e'" onchange="hitungTotal(this)"></td>
             <td><input type="text" class="form-control text-end" readonly></td>
             <td><button type="button" class="btn btn-sm btn-danger" onclick="hapusBaris(this)">X</button></td>
